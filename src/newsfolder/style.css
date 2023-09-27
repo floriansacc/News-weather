@@ -1,0 +1,50 @@
+*{
+    margin: 0;
+    padding: o;
+}
+
+h1 {
+    font-size: 2rem;
+    margin: 2rem auto;
+}
+
+#container {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+#get-news-button,
+#get-weather-button {
+    border: 2px solid red;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #ebd5d3;
+    margin: 0.5rem auto;
+}
+
+#news-box,
+#weather-box {
+    display: flex;
+    flex-flow: column nowrap;
+    border: 1px solid red;
+    margin: 0.5rem auto;
+    padding: 1rem;
+    width: 60%;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#weather-box {
+    width: 30%;
+}
+
+#news-input {
+    border: 1px solid red;
+    border-radius: 5px;
+    width: 25%;
+    margin: 2rem auto;
+    padding: 1rem;
+}

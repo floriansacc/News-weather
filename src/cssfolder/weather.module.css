@@ -1,0 +1,57 @@
+.container2 {
+    display: flex;
+    flex-flow: column nowrap
+}
+
+.weatherBigBox {
+    display: flex;
+    flex-flow: column nowrap;
+    width: 300px;
+    height: 300px;
+    border: 1px solid blue;
+}
+
+.weatherBox {
+    display: flex;
+    justify-content: space-around;
+    flex-flow: row wrap;
+    width: 300px;
+    height: 250px;
+    border: 1px solid purple;
+}
+
+.buttonBox {
+    display: flex;
+    margin: 5px;
+}
+
+.buttonResetRefresh {
+    width: fit-content;
+    padding: 5px;
+    margin: 5px;
+}
+
+.weatherHeader {
+    display: flex;
+    justify-content: space-around;
+    align-items: start;
+    width: 100%;
+    height: 20%;
+    border: 1px solid red;
+}
+
+.weatherHeadText {
+    padding: 5px;
+}
+
+.imageAndRain {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 55%;
+}
+
+.image {
+    height: 75px;
+    width: 75px;
+}
