@@ -1,5 +1,6 @@
 import { useState } from "react";
-
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 import styles from "../cssfolder/weather.module.css";
 
 export default function WeatherDisplay(props) {
@@ -31,7 +32,7 @@ export default function WeatherDisplay(props) {
           Refresh
         </button>
       </div>
-
+      {!loadstate && <Skeleton count={1} className={styles.skeleton} />}
       {loadstate && (
         <div className={styles.weatherBox}>
           <div className={styles.weatherHeader}>
