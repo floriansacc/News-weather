@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import WeatherDisplay from "./weatherDisplay";
+import WeatherDisplay from "./WeatherDisplay";
 import { todayDate } from "../newsfolder/settings";
 import styles from "../cssfolder/weather.module.css";
 
@@ -13,6 +13,8 @@ const images = [sunny, "", pCloudy, cloudy, rainy];
 export default function WeatherNow() {
   const [weatherInfoNow, setWeatherInfoNow] = useState([]);
   const [weatherForecast, setWeatherForecast] = useState([]);
+  const [skyForecast, setSkyForecast] = useState([]);
+  const [tempForecast, setTempForecast] = useState([]);
   const [imgSrc, setImgSrc] = useState(0);
   const [locationCity, setLocationCity] = useState("Jeonju");
   const [refreshData, setRefreshData] = useState("");
@@ -31,7 +33,7 @@ export default function WeatherNow() {
     "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
   const weatherUrlForecast =
     "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst";
-  const serviceKey = process.env.REACT_APP_WEATHER_KEY
+  const serviceKey = process.env.REACT_APP_WEATHER_KEY;
   const numbRow = 60;
   const pageNo = 1;
   const baseDate = todayDate();
@@ -50,6 +52,13 @@ export default function WeatherNow() {
       }
     }
   };
+
+  const updateDates = () => {
+    hours = date.getHours();
+    minutes = date.getMinutes();
+    day = date.getDate();
+  };
+
   const baseTimeCalcForecast = () => {
     if (hours < 10) {
       return `0${hours - 1}00`;
@@ -58,11 +67,6 @@ export default function WeatherNow() {
     }
   };
 
-  const updateDates = () => {
-    hours = date.getHours();
-    minutes = date.getMinutes();
-    day = date.getDate();
-  };
   const baseTime = baseTimeCalcNow();
   const baseTimeForecast = baseTimeCalcForecast();
   const nx = 63;
@@ -75,6 +79,7 @@ export default function WeatherNow() {
   const handleReset = (e) => {
     setWeatherInfoNow([]);
     setWeatherForecast([]);
+    setTempForecast([]);
     setIsLoaded(false);
     setIsLoadedForecast(false);
   };
@@ -82,21 +87,11 @@ export default function WeatherNow() {
   const handleRefresh = (e) => {
     setWeatherInfoNow([]);
     setWeatherForecast([]);
+    setTempForecast([]);
     setIsLoaded(false);
     setIsLoadedForecast(false);
     setRefreshData((prev) => prev + 1);
-    //{ isLoadedForecast && handlePhotoChange() }
   };
-  /* 
-  const handlePhotoChange = () => {
-    if (weatherForecast[0].value === 1) {
-      setImgSrc(4);
-      window.console.log(`OUI`)
-    } else {
-      setImgSrc(`${weatherForecast[7].value - 1}`);
-      window.console.log(`OUI${weatherForecast[7].value - 1}`)
-    }
-  };*/
 
   const handleDisplayCity = (e) => {
     setLocationCity(e.target.value);
@@ -111,7 +106,6 @@ export default function WeatherNow() {
           throw new Error("Pas de météo pour toi");
         }
         const jsonResponse = await response.json();
-        window.console.log(jsonResponse)
         window.console.log(jsonResponse.response.header);
         window.console.log(jsonResponse.response.body.items.item);
         await jsonResponse.response.body.items.item.forEach((x) => {
@@ -120,6 +114,7 @@ export default function WeatherNow() {
             {
               category: x.category,
               value: x.obsrValue,
+              time: x.baseTime,
             },
           ]);
         });
@@ -150,8 +145,28 @@ export default function WeatherNow() {
         window.console.log(jsonResponse.response.body.items.item);
         const getData = await jsonResponse.response.body.items.item.forEach(
           (x) => {
-            if (x.category === "PTY" || x.category === "SKY") {
+            if (x.category === "PTY") {
               setWeatherForecast((prev) => [
+                ...prev,
+                {
+                  category: x.category,
+                  time: x.fcstTime,
+                  value: x.fcstValue,
+                  basetime: x.baseTime,
+                },
+              ]);
+            } else if (x.category === "T1H") {
+              setTempForecast((prev) => [
+                ...prev,
+                {
+                  category: x.category,
+                  time: x.fcstTime,
+                  value: x.fcstValue,
+                  basetime: x.baseTime,
+                },
+              ]);
+            } else if (x.category === "SKY") {
+              setSkyForecast((prev) => [
                 ...prev,
                 {
                   category: x.category,
@@ -164,6 +179,8 @@ export default function WeatherNow() {
           }
         );
         window.console.log(weatherForecast);
+        window.console.log(tempForecast);
+        window.console.log(skyForecast);
         setIsLoadedForecast(true);
       } catch (error) {
         console.log(error);
@@ -194,6 +211,8 @@ export default function WeatherNow() {
         winddir={weatherInfoNow[5]}
         windspeed={weatherInfoNow[7]}
         sky={weatherForecast[7]}
+        tempforecast={tempForecast}
+        skyforecast={skyForecast}
       />
       {!isLoaded && <p>Fetching</p>}
     </div>
