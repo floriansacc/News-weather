@@ -44,6 +44,12 @@ export default function WeatherNow() {
       } else {
         return `0${hours}00`;
       }
+    } else if (hours === 10) {
+      if (minutes < 30) {
+        return `0${hours - 1}00`;
+      } else {
+        return `${hours}00`;
+      }
     } else {
       if (minutes < 30) {
         return `${hours - 1}00`;
@@ -52,7 +58,7 @@ export default function WeatherNow() {
       }
     }
   };
-
+  window.console.log(baseDate);
   const updateDates = () => {
     hours = date.getHours();
     minutes = date.getMinutes();
@@ -60,7 +66,7 @@ export default function WeatherNow() {
   };
 
   const baseTimeCalcForecast = () => {
-    if (hours < 10) {
+    if (hours <= 10) {
       return `0${hours - 1}00`;
     } else {
       return `${hours - 1}00`;
