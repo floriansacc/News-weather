@@ -17,7 +17,7 @@
   flex-flow: row wrap;
   width: 300px;
   height: 250px;
-  border: 1px solid purple;
+  border-radius: 20px;
 }
 
 .buttonBox {
@@ -61,6 +61,7 @@
   align-items: center;
   width: 45%;
   margin-top: 10px;
+  border: 1px solid red;
 }
 
 .image {
@@ -88,6 +89,7 @@
   flex-flow: row nowrap;
   justify-content: space-between;
   width: 100%;
+  border: 1px solid red;
 }
 
 .predictonByHour {

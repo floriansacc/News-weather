@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import WeatherDisplay from "./WeatherDisplay";
 import { todayDate } from "../newsfolder/settings";
 import styles from "../cssfolder/weather.module.css";
+import citycoord from "./citycoord.json";
 
 import sunny from "../cssfolder/sunny logo.png";
 import pCloudy from "../cssfolder/partial cloudy logo.png";
@@ -15,8 +16,7 @@ export default function WeatherNow() {
   const [weatherForecast, setWeatherForecast] = useState([]);
   const [skyForecast, setSkyForecast] = useState([]);
   const [tempForecast, setTempForecast] = useState([]);
-  const [imgSrc, setImgSrc] = useState(0);
-  const [locationCity, setLocationCity] = useState("Jeonju");
+  const [locationCity, setLocationCity] = useState([0, 63, 89]);
   const [refreshData, setRefreshData] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoadedForecast, setIsLoadedForecast] = useState(false);
@@ -58,7 +58,6 @@ export default function WeatherNow() {
       }
     }
   };
-  window.console.log(baseDate);
   const updateDates = () => {
     hours = date.getHours();
     minutes = date.getMinutes();
@@ -75,8 +74,8 @@ export default function WeatherNow() {
 
   const baseTime = baseTimeCalcNow();
   const baseTimeForecast = baseTimeCalcForecast();
-  const nx = 63;
-  const ny = 89;
+  const nx = locationCity[1];
+  const ny = locationCity[2];
 
   const getUrlWeatherNow = `${weatherUrlNow}?serviceKey=${serviceKey}&numOfRows=${numbRow}&dataType=JSON&pageNo=${pageNo}&base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
 
@@ -86,6 +85,7 @@ export default function WeatherNow() {
     setWeatherInfoNow([]);
     setWeatherForecast([]);
     setTempForecast([]);
+    setSkyForecast([]);
     setIsLoaded(false);
     setIsLoadedForecast(false);
   };
@@ -94,13 +94,25 @@ export default function WeatherNow() {
     setWeatherInfoNow([]);
     setWeatherForecast([]);
     setTempForecast([]);
+    setSkyForecast([]);
     setIsLoaded(false);
     setIsLoadedForecast(false);
     setRefreshData((prev) => prev + 1);
   };
 
   const handleDisplayCity = (e) => {
-    setLocationCity(e.target.value);
+    setLocationCity([
+      e.target.value,
+      citycoord[e.target.value].nx,
+      citycoord[e.target.value].ny,
+    ]);
+    handleRefresh();
+  };
+
+  const handleDisplayInfo = () => {
+    window.console.log(weatherForecast);
+    window.console.log(tempForecast);
+    window.console.log(skyForecast);
   };
 
   useEffect(() => {
@@ -136,7 +148,7 @@ export default function WeatherNow() {
     return () => {
       setIsLoaded(false);
     };
-  }, [refreshData]);
+  }, [refreshData, locationCity]);
 
   useEffect(() => {
     updateDates();
@@ -184,9 +196,6 @@ export default function WeatherNow() {
             }
           }
         );
-        window.console.log(weatherForecast);
-        window.console.log(tempForecast);
-        window.console.log(skyForecast);
         setIsLoadedForecast(true);
       } catch (error) {
         console.log(error);
@@ -194,17 +203,18 @@ export default function WeatherNow() {
       }
     };
     getWeather2();
-
     return () => {
       setIsLoadedForecast(false);
     };
-  }, [refreshData]);
+  }, [refreshData, locationCity]);
 
   return (
     <div className={styles.container2}>
       <WeatherDisplay
+        displayinfo={handleDisplayInfo}
         displaycity={handleDisplayCity}
-        city={locationCity}
+        citydata={citycoord}
+        setcity={locationCity}
         srcimage={images}
         loadstate={isLoaded}
         loadforecast={isLoadedForecast}
@@ -216,9 +226,9 @@ export default function WeatherNow() {
         temp={weatherInfoNow[3]}
         winddir={weatherInfoNow[5]}
         windspeed={weatherInfoNow[7]}
-        sky={weatherForecast[7]}
         tempforecast={tempForecast}
         skyforecast={skyForecast}
+        rainforecast={weatherForecast}
       />
       {!isLoaded && <p>Fetching</p>}
     </div>

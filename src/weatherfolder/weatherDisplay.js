@@ -7,6 +7,7 @@ import WeatherPrediction from "./WeatherPrediction";
 export default function WeatherDisplay(props) {
   const [imgSrc, setImgSrc] = useState(0);
   const {
+    displayinfo,
     raincond,
     humidity,
     hourrain,
@@ -17,13 +18,18 @@ export default function WeatherDisplay(props) {
     refresh,
     loadstate,
     loadforecast,
-    sky,
     srcimage,
     displaycity,
-    city,
+    citydata,
+    setcity,
     tempforecast,
     skyforecast,
+    rainforecast,
   } = props;
+
+  const toStyleWeatherBox = {
+    background: "linear-gradient(#92bad2,#53789E)",
+  };
 
   return (
     <div className={styles.weatherBigBox}>
@@ -34,10 +40,13 @@ export default function WeatherDisplay(props) {
         <button className={styles.buttonResetRefresh} onClick={refresh}>
           Refresh
         </button>
+        <button className={styles.buttonResetRefresh} onClick={displayinfo}>
+          Command
+        </button>
       </div>
       {!loadstate && <Skeleton count={1} className={styles.skeleton} />}
       {loadstate && loadforecast && (
-        <div className={styles.weatherBox}>
+        <div style={toStyleWeatherBox} className={styles.weatherBox}>
           <div className={styles.weatherHeader}>
             <div className={styles.weatherHeaderSubdiv}>
               <p className={styles.weatherHeadText}>Weather</p>
@@ -46,8 +55,10 @@ export default function WeatherDisplay(props) {
               </p>
             </div>
             <label>
-              <select value="" onChange={displaycity}>
-                <option value="Jeonju" label="Jeonju" />
+              <select value={setcity[0]} onChange={displaycity}>
+                {citydata.map((x, i) => (
+                  <option value={i} label={x.city}></option>
+                ))}
               </select>
             </label>
           </div>
@@ -57,7 +68,7 @@ export default function WeatherDisplay(props) {
               className={styles.image}
               src={
                 srcimage[
-                  raincond.value === 1 ? 4 : `${skyforecast[0].value - 1}`
+                  raincond.value === "1" ? 4 : `${skyforecast[0].value - 1}`
                 ]
               }
             />
@@ -74,10 +85,8 @@ export default function WeatherDisplay(props) {
                 ? "Sunny"
                 : "No information"}
             </p>
-            <p>
-              {raincond.value === "1"
-                ? `Amount of rain this hour: ${hourrain.value} mm`
-                : ""}
+            <p className={styles.smallText}>
+              {raincond.value === "1" ? `Rain hour: ${hourrain.value} mm` : ""}
             </p>
           </div>
 
@@ -99,6 +108,7 @@ export default function WeatherDisplay(props) {
             srcimage={srcimage}
             raincond={raincond}
             skyforecast={skyforecast}
+            rainforecast={rainforecast}
           />
         </div>
       )}
