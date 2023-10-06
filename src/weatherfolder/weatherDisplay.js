@@ -3,10 +3,14 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import styles from "../cssfolder/weather.module.css";
 import WeatherPrediction from "./WeatherPrediction";
+import WeatherCitySelector from "./WeatherCitySelector";
 
 export default function WeatherDisplay(props) {
   const [imgSrc, setImgSrc] = useState(0);
   const {
+    handlecityselector,
+    cityselector,
+    dataimport,
     displayinfo,
     raincond,
     humidity,
@@ -27,10 +31,6 @@ export default function WeatherDisplay(props) {
     rainforecast,
   } = props;
 
-  const toStyleWeatherBox = {
-    background: "linear-gradient(#92bad2,#53789E)",
-  };
-
   return (
     <div className={styles.weatherBigBox}>
       <div className={styles.buttonBox}>
@@ -44,9 +44,26 @@ export default function WeatherDisplay(props) {
           Command
         </button>
       </div>
+
       {!loadstate && <Skeleton count={1} className={styles.skeleton} />}
       {loadstate && loadforecast && (
-        <div style={toStyleWeatherBox} className={styles.weatherBox}>
+        <div
+          style={{
+            background:
+              raincond.value === "1"
+                ? "linear-gradient(300deg,#c5e2f7 2%,#92bad2 20%,#53789E 70%)"
+                : raincond.value === "3"
+                ? "linear-gradient(105deg, #cce5ec, #fffafa 50%, #93e7fb 100%)"
+                : skyforecast[0].value === "4"
+                ? "linear-gradient(45deg, #d8d2cf, #d4e6ed 80%)"
+                : skyforecast[0].value === "3"
+                ? "linear-gradient(45deg, #d8d2cf, #d4e6ed 60%, #ffcc00 110%)"
+                : skyforecast[0].value === "1"
+                ? "linear-gradient(225deg, #ffcc00, #e5d075 30%, #f5e0b0 70%)"
+                : "transparent",
+          }}
+          className={styles.weatherBox}
+        >
           <div className={styles.weatherHeader}>
             <div className={styles.weatherHeaderSubdiv}>
               <p className={styles.weatherHeadText}>Weather</p>
@@ -54,8 +71,17 @@ export default function WeatherDisplay(props) {
                 (Base time: {temp.time.slice(0, 2)}:30)
               </p>
             </div>
-            <label>
-              <select value={setcity[0]} onChange={displaycity}>
+            <WeatherCitySelector
+              dataimport={dataimport}
+              cityselector={cityselector}
+              handlecityselector={handlecityselector}
+            />
+            <label style={{ display: "none" }}>
+              <select
+                value={setcity[0]}
+                onChange={displaycity}
+                className={styles.cityselector}
+              >
                 {citydata.map((x, i) => (
                   <option value={i} label={x.city}></option>
                 ))}

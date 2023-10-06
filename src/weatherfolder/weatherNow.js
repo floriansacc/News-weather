@@ -3,6 +3,7 @@ import WeatherDisplay from "./WeatherDisplay";
 import { todayDate } from "../newsfolder/settings";
 import styles from "../cssfolder/weather.module.css";
 import citycoord from "./citycoord.json";
+import dataimport from "./dataimport.json";
 
 import sunny from "../cssfolder/sunny logo.png";
 import pCloudy from "../cssfolder/partial cloudy logo.png";
@@ -17,6 +18,7 @@ export default function WeatherNow() {
   const [skyForecast, setSkyForecast] = useState([]);
   const [tempForecast, setTempForecast] = useState([]);
   const [locationCity, setLocationCity] = useState([0, 63, 89]);
+  const [citySelector, setCitySelector] = useState(["선택", "", "", 63, 89]);
   const [refreshData, setRefreshData] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoadedForecast, setIsLoadedForecast] = useState(false);
@@ -74,8 +76,8 @@ export default function WeatherNow() {
 
   const baseTime = baseTimeCalcNow();
   const baseTimeForecast = baseTimeCalcForecast();
-  const nx = locationCity[1];
-  const ny = locationCity[2];
+  const nx = citySelector[3];
+  const ny = citySelector[4];
 
   const getUrlWeatherNow = `${weatherUrlNow}?serviceKey=${serviceKey}&numOfRows=${numbRow}&dataType=JSON&pageNo=${pageNo}&base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
 
@@ -86,6 +88,7 @@ export default function WeatherNow() {
     setWeatherForecast([]);
     setTempForecast([]);
     setSkyForecast([]);
+    setCitySelector(["선택"]);
     setIsLoaded(false);
     setIsLoadedForecast(false);
   };
@@ -109,10 +112,36 @@ export default function WeatherNow() {
     handleRefresh();
   };
 
+  const handleCitySelector = (e) => {
+    if (e.target.name === "one") {
+      setCitySelector(["선택"]);
+      setCitySelector([e.target.value]);
+    } else if (e.target.name === "two") {
+      setCitySelector([citySelector[0], e.target.value]);
+    } else if (e.target.name === "three") {
+      let [coord] = Array.from(
+        new Set(
+          dataimport
+            .filter((word) => word.Part3 === e.target.value)
+            .map((x) => [x.nx, x.ny])
+        )
+      );
+      setCitySelector([
+        citySelector[0],
+        citySelector[1],
+        e.target.value,
+        coord[0],
+        coord[1],
+      ]);
+      handleRefresh();
+    }
+  };
+
   const handleDisplayInfo = () => {
     window.console.log(weatherForecast);
     window.console.log(tempForecast);
     window.console.log(skyForecast);
+    window.console.log(citySelector);
   };
 
   useEffect(() => {
@@ -148,7 +177,7 @@ export default function WeatherNow() {
     return () => {
       setIsLoaded(false);
     };
-  }, [refreshData, locationCity]);
+  }, [refreshData]);
 
   useEffect(() => {
     updateDates();
@@ -206,11 +235,14 @@ export default function WeatherNow() {
     return () => {
       setIsLoadedForecast(false);
     };
-  }, [refreshData, locationCity]);
+  }, [refreshData]);
 
   return (
     <div className={styles.container2}>
       <WeatherDisplay
+        handlecityselector={handleCitySelector}
+        cityselector={citySelector}
+        dataimport={dataimport}
         displayinfo={handleDisplayInfo}
         displaycity={handleDisplayCity}
         citydata={citycoord}
