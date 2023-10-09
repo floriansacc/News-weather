@@ -27,10 +27,13 @@
 }
 
 .buttonResetRefresh {
+  background: linear-gradient(-90deg, #d8d2cf, #d4e6ed);
+  border: 2px solid #bebebe;
   width: fit-content;
   padding: 5px;
   margin: 5px;
   height: 30px;
+  border-radius: 30px;
 }
 
 .weatherHeader {
@@ -124,4 +127,50 @@
 
 .skeleton {
   height: 200px;
+}
+
+.listBigBox {
+  width: 100%;
+}
+
+.listeSelectionBox {
+  margin-top: 3rem;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  border: 1px solid;
+}
+
+.listButtonBox {
+  display: flex;
+  margin: 5px;
+  flex-flow: column nowrap;
+  align-items: center;
+}
+
+.listBox {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-items: center;
+  border: 2px solid #bebebe;
+  border-radius: 10px;
+  grid-auto-rows: 30px;
+}
+
+.listGridTitle {
+  font-weight: 600;
+  margin: 5px 0;
+}
+
+.listStyle {
+  min-width: 130px;
+  text-align: center;
+}
+
+.listStyleLast {
+  width: fit-content;
+  min-width: 100px;
+  text-align: center;
 }

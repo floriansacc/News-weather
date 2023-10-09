@@ -9,6 +9,7 @@ import sunny from "../cssfolder/sunny logo.png";
 import pCloudy from "../cssfolder/partial cloudy logo.png";
 import cloudy from "../cssfolder/cloudy logo.png";
 import rainy from "../cssfolder/rainy logo.png";
+import WeatherCreateMyList from "./WeatherCreateMyList";
 
 const images = [sunny, "", pCloudy, cloudy, rainy];
 
@@ -144,6 +145,16 @@ export default function WeatherNow() {
     window.console.log(citySelector);
   };
 
+  const handleButtonEnter = (e) => {
+    e.target.style.cursor = "pointer";
+    e.target.style.filter = "brightness(1.05)";
+  };
+
+  const handleButtonLeave = (e) => {
+    e.target.style.cursor = "";
+    e.target.style.filter = "";
+  };
+
   useEffect(() => {
     updateDates();
     const getWeather = async () => {
@@ -261,8 +272,15 @@ export default function WeatherNow() {
         tempforecast={tempForecast}
         skyforecast={skyForecast}
         rainforecast={weatherForecast}
+        mouseenter={handleButtonEnter}
+        mouseleave={handleButtonLeave}
       />
       {!isLoaded && <p>Fetching</p>}
+      <WeatherCreateMyList
+        dataimport={dataimport}
+        mouseenter={handleButtonEnter}
+        mouseleave={handleButtonLeave}
+      />
     </div>
   );
 }

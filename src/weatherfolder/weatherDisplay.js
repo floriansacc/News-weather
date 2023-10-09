@@ -29,18 +29,35 @@ export default function WeatherDisplay(props) {
     tempforecast,
     skyforecast,
     rainforecast,
+    mouseenter,
+    mouseleave,
   } = props;
 
   return (
     <div className={styles.weatherBigBox}>
       <div className={styles.buttonBox}>
-        <button className={styles.buttonResetRefresh} onClick={reset}>
+        <button
+          className={styles.buttonResetRefresh}
+          onClick={reset}
+          onMouseEnter={mouseenter}
+          onMouseLeave={mouseleave}
+        >
           Reset
         </button>
-        <button className={styles.buttonResetRefresh} onClick={refresh}>
+        <button
+          className={styles.buttonResetRefresh}
+          onClick={refresh}
+          onMouseEnter={mouseenter}
+          onMouseLeave={mouseleave}
+        >
           Refresh
         </button>
-        <button className={styles.buttonResetRefresh} onClick={displayinfo}>
+        <button
+          className={styles.buttonResetRefresh}
+          onClick={displayinfo}
+          onMouseEnter={mouseenter}
+          onMouseLeave={mouseleave}
+        >
           Command
         </button>
       </div>
@@ -75,6 +92,8 @@ export default function WeatherDisplay(props) {
               dataimport={dataimport}
               cityselector={cityselector}
               handlecityselector={handlecityselector}
+              mouseenter={mouseenter}
+              mouseleave={mouseleave}
             />
             <label style={{ display: "none" }}>
               <select

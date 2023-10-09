@@ -7,6 +7,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "react": "^18.2.0",
+    "react-chosen": "^0.3.8",
     "react-dom": "^18.2.0",
     "react-loading-skeleton": "^3.3.1",
     "react-rainfall": "^0.1.533",
