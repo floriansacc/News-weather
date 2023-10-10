@@ -1,15 +1,45 @@
 import styles from "../cssfolder/weather.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import WeatherDisplay from "./WeatherDisplay";
 
 export default function WeatherCreateMyList(props) {
-  const { dataimport, mouseenter, mouseleave } = props;
+  const {
+    dataimport,
+    mouseenter,
+    mouseleave,
+    basetime,
+    basetimeforecast,
+    servicekey,
+    srcimage,
+    updatedate,
+    basedate,
+  } = props;
   const [liste, setListe] = useState([]);
   const [elem, setElem] = useState([]);
   const [displayWeatherList, setDisplayWeatherList] = useState(false);
 
-  const handleResetListe = () => {
+  const [weatherInfoNow, setWeatherInfoNow] = useState({});
+  const [weatherForecast, setWeatherForecast] = useState([]);
+  const [skyForecast, setSkyForecast] = useState([]);
+  const [tempForecast, setTempForecast] = useState([]);
+  const [refreshData, setRefreshData] = useState("");
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoadedForecast, setIsLoadedForecast] = useState(false);
+
+  const weatherUrlNow =
+    "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
+  const weatherUrlForecast =
+    "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst";
+
+  const handleResetListe = (e) => {
     setListe([]);
+    setDisplayWeatherList(false);
+    setWeatherInfoNow({});
+    setWeatherForecast([]);
+    setTempForecast([]);
+    setSkyForecast([]);
+    setIsLoaded(false);
+    setIsLoadedForecast(false);
   };
 
   const handleFillListe = () => {
@@ -49,10 +79,152 @@ export default function WeatherCreateMyList(props) {
   };
 
   const handleWeatherListeDisplay = (e) => {
-    displayWeatherList
-      ? setDisplayWeatherList(false)
-      : setDisplayWeatherList(true);
+    if (!liste[0]) {
+      return;
+    } else {
+      if (displayWeatherList) {
+        e.preventDefault();
+        e.target.style.background = "";
+        setDisplayWeatherList(false);
+        setWeatherInfoNow({});
+        setWeatherForecast([]);
+        setTempForecast([]);
+        setSkyForecast([]);
+        setIsLoaded(false);
+        setIsLoadedForecast(false);
+      } else {
+        e.preventDefault();
+        e.target.style.background = "red";
+        setDisplayWeatherList(true);
+        setRefreshData((prev) => prev + 1);
+      }
+    }
   };
+
+  const handleCommand = () => {
+    window.console.log(weatherInfoNow);
+    window.console.log(weatherForecast);
+    window.console.log(tempForecast);
+    window.console.log(skyForecast);
+  };
+
+  useEffect(() => {
+    if (!liste[0]) {
+      return;
+    } else {
+      const getWeatherList = async () => {
+        liste.forEach(async (e, i) => {
+          const urlWeatherList = `${weatherUrlNow}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetimeforecast}&nx=${e.nx}&ny=${e.ny}`;
+          try {
+            const response = await fetch(urlWeatherList, {});
+            if (!response.ok) {
+              throw new Error("Pas de météo pour toi");
+            }
+            const jsonResponse = await response.json();
+            window.console.log([
+              "LIST",
+              jsonResponse.response.header["resultMsg"],
+              jsonResponse.response.body.items.item,
+            ]);
+            await jsonResponse.response.body.items.item.forEach((x) => {
+              let newData = [
+                {
+                  category: x.category,
+                  value: x.obsrValue,
+                  time: x.baseTime,
+                },
+              ];
+              //setWeatherInfoNow((prev) => [...prev, ...newData]);
+              setWeatherInfoNow((prev) => ({
+                ...prev,
+                [weatherInfoNow.i]: [{ ...newData }],
+              }));
+            });
+          } catch (error) {
+            console.log(error);
+            setIsLoaded(false);
+          }
+        });
+      };
+      getWeatherList();
+      setIsLoaded(true);
+    }
+    return () => {
+      setIsLoaded(false);
+    };
+  }, [refreshData]);
+
+  useEffect(() => {
+    if (!liste[0]) {
+      return;
+    } else {
+      const getWeather2List = async () => {
+        liste.forEach(async (e, index) => {
+          const urlWeatherForecast = `${weatherUrlForecast}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetime}&nx=${e.nx}&ny=${e.ny}`;
+          try {
+            const response = await fetch(urlWeatherForecast, {});
+            if (!response.ok) {
+              throw new Error("Pas de météo pour toi");
+            }
+            const jsonResponse = await response.json();
+            window.console.log([
+              `List Predi ${e.Phase3}`,
+              jsonResponse.response.header["resultMsg"],
+              jsonResponse.response.body.items.item,
+            ]);
+            await jsonResponse.response.body.items.item.forEach((x) => {
+              let newData = [
+                {
+                  category: x.category,
+                  time: x.fcstTime,
+                  value: x.fcstValue,
+                  basetime: x.baseTime,
+                  nx: x.nx,
+                  ny: x.ny,
+                },
+              ];
+              if (x.category === "PTY") {
+                setWeatherForecast((prev) => [...prev, ...newData]);
+              } else if (x.category === "T1H") {
+                setTempForecast((prev) => [...prev, ...newData]);
+              } else if (x.category === "SKY") {
+                setSkyForecast((prev) => [...prev, ...newData]);
+              }
+            });
+          } catch (error) {
+            console.log(error);
+            setIsLoadedForecast(false);
+          }
+        });
+      };
+      setIsLoadedForecast(true);
+      getWeather2List();
+    }
+    return () => {
+      setIsLoadedForecast(false);
+    };
+  }, [refreshData]);
+
+  /**
+    {displayWeatherList && (
+        <WeatherDisplay
+          dataimport={dataimport}
+          srcimage={srcimage}
+          loadstate={isLoaded}
+          loadforecast={isLoadedForecast}
+          raincond={weatherInfoNow[0]}
+          humidity={weatherInfoNow[1]}
+          hourrain={weatherInfoNow[2]}
+          temp={weatherInfoNow[3]}
+          winddir={weatherInfoNow[5]}
+          windspeed={weatherInfoNow[7]}
+          tempforecast={tempForecast}
+          skyforecast={skyForecast}
+          rainforecast={weatherForecast[0]}
+          showbutton={false}
+        />
+      )}
+   */
 
   return (
     <div className={styles.listBigBox}>
@@ -155,7 +327,14 @@ export default function WeatherCreateMyList(props) {
       >
         Display
       </button>
-      {displayWeatherList && <WeatherDisplay />}
+      <button
+        className={styles.buttonResetRefresh}
+        onMouseEnter={mouseenter}
+        onMouseLeave={mouseleave}
+        onClick={handleCommand}
+      >
+        Command
+      </button>
     </div>
   );
 }

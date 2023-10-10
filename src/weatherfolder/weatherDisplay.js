@@ -23,19 +23,20 @@ export default function WeatherDisplay(props) {
     loadstate,
     loadforecast,
     srcimage,
-    displaycity,
-    citydata,
-    setcity,
     tempforecast,
     skyforecast,
     rainforecast,
     mouseenter,
     mouseleave,
+    showbutton,
   } = props;
 
   return (
     <div className={styles.weatherBigBox}>
-      <div className={styles.buttonBox}>
+      <div
+        style={{ display: showbutton ? "" : "none" }}
+        className={styles.buttonBox}
+      >
         <button
           className={styles.buttonResetRefresh}
           onClick={reset}
@@ -88,24 +89,15 @@ export default function WeatherDisplay(props) {
                 (Base time: {temp.time.slice(0, 2)}:30)
               </p>
             </div>
-            <WeatherCitySelector
-              dataimport={dataimport}
-              cityselector={cityselector}
-              handlecityselector={handlecityselector}
-              mouseenter={mouseenter}
-              mouseleave={mouseleave}
-            />
-            <label style={{ display: "none" }}>
-              <select
-                value={setcity[0]}
-                onChange={displaycity}
-                className={styles.cityselector}
-              >
-                {citydata.map((x, i) => (
-                  <option value={i} label={x.city}></option>
-                ))}
-              </select>
-            </label>
+            {showbutton && (
+              <WeatherCitySelector
+                dataimport={dataimport}
+                cityselector={cityselector}
+                handlecityselector={handlecityselector}
+                mouseenter={mouseenter}
+                mouseleave={mouseleave}
+              />
+            )}
           </div>
 
           <div className={styles.imageAndRain}>
@@ -147,6 +139,7 @@ export default function WeatherDisplay(props) {
             </p>
             <p>Humidity: {humidity.value}%</p>
           </div>
+
           <WeatherPrediction
             loadforecast={loadforecast}
             tempforecast={tempforecast}

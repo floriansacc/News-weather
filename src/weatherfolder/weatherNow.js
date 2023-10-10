@@ -89,7 +89,7 @@ export default function WeatherNow() {
     setWeatherForecast([]);
     setTempForecast([]);
     setSkyForecast([]);
-    setCitySelector(["선택"]);
+    setCitySelector(["선택", "", "", 63, 89]);
     setIsLoaded(false);
     setIsLoadedForecast(false);
   };
@@ -102,15 +102,6 @@ export default function WeatherNow() {
     setIsLoaded(false);
     setIsLoadedForecast(false);
     setRefreshData((prev) => prev + 1);
-  };
-
-  const handleDisplayCity = (e) => {
-    setLocationCity([
-      e.target.value,
-      citycoord[e.target.value].nx,
-      citycoord[e.target.value].ny,
-    ]);
-    handleRefresh();
   };
 
   const handleCitySelector = (e) => {
@@ -143,6 +134,9 @@ export default function WeatherNow() {
     window.console.log(tempForecast);
     window.console.log(skyForecast);
     window.console.log(citySelector);
+    window.console.log(baseDate);
+    window.console.log(baseTime);
+    window.console.log(minutes);
   };
 
   const handleButtonEnter = (e) => {
@@ -182,8 +176,6 @@ export default function WeatherNow() {
         setIsLoaded(false);
       }
     };
-    window.console.log(baseTime);
-    window.console.log(minutes);
     getWeather();
     return () => {
       setIsLoaded(false);
@@ -255,9 +247,6 @@ export default function WeatherNow() {
         cityselector={citySelector}
         dataimport={dataimport}
         displayinfo={handleDisplayInfo}
-        displaycity={handleDisplayCity}
-        citydata={citycoord}
-        setcity={locationCity}
         srcimage={images}
         loadstate={isLoaded}
         loadforecast={isLoadedForecast}
@@ -274,12 +263,19 @@ export default function WeatherNow() {
         rainforecast={weatherForecast}
         mouseenter={handleButtonEnter}
         mouseleave={handleButtonLeave}
+        showbutton={true}
       />
       {!isLoaded && <p>Fetching</p>}
       <WeatherCreateMyList
         dataimport={dataimport}
         mouseenter={handleButtonEnter}
         mouseleave={handleButtonLeave}
+        basetime={baseTime}
+        basetimeforecast={baseTimeForecast}
+        servicekey={serviceKey}
+        srcimage={images}
+        updatedate={updateDates}
+        basedate={baseDate}
       />
     </div>
   );
