@@ -29,7 +29,15 @@ export default function WeatherDisplay(props) {
     mouseenter,
     mouseleave,
     showbutton,
+    titlename,
   } = props;
+
+  /*const raincond=weatherInfoNow[0]
+  const humidity=weatherInfoNow[1]
+  const hourrain=weatherInfoNow[2]
+  const temp=weatherInfoNow[3]
+  const winddir=weatherInfoNow[5]
+  const windspeed=weatherInfoNow[7]*/
 
   return (
     <div className={styles.weatherBigBox}>
@@ -89,6 +97,13 @@ export default function WeatherDisplay(props) {
                 (Base time: {temp.time.slice(0, 2)}:30)
               </p>
             </div>
+            {titlename && (
+              <div>
+                <p>{rainforecast[0].phase1}</p>
+                <p>{rainforecast[0].phase2}</p>
+                <p>{rainforecast[0].phase3}</p>
+              </div>
+            )}
             {showbutton && (
               <WeatherCitySelector
                 dataimport={dataimport}

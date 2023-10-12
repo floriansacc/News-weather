@@ -21,8 +21,12 @@ export default function WeatherPrediction(props) {
               }
               className={styles.predictionImage}
             ></img>
-            <li className={styles.smallText}>{x.value}°</li>
-            <li className={styles.smallText}>{x.time.slice(0, 2)}h</li>
+            <li className={styles.smallText} key={`${x.value}no${i}`}>
+              {x.value}°
+            </li>
+            <li className={styles.smallText} key={`2no${i}`}>
+              {x.time.slice(0, 2)}h
+            </li>
           </ul>
         ))}
       </div>

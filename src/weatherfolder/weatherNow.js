@@ -130,6 +130,7 @@ export default function WeatherNow() {
   };
 
   const handleDisplayInfo = () => {
+    window.console.log(weatherInfoNow);
     window.console.log(weatherForecast);
     window.console.log(tempForecast);
     window.console.log(skyForecast);
@@ -167,6 +168,8 @@ export default function WeatherNow() {
               category: x.category,
               value: x.obsrValue,
               time: x.baseTime,
+              nx: x.nx,
+              ny: x.ny,
             },
           ]);
         });
@@ -264,6 +267,7 @@ export default function WeatherNow() {
         mouseenter={handleButtonEnter}
         mouseleave={handleButtonLeave}
         showbutton={true}
+        titlename={false}
       />
       {!isLoaded && <p>Fetching</p>}
       <WeatherCreateMyList
