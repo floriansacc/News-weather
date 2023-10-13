@@ -17,23 +17,19 @@ export default function WeatherCreateMyList(props) {
   const [liste, setListe] = useState([]);
   const [elem, setElem] = useState([]);
   const [listeCounter, setListeCounter] = useState(0);
-
-  const [isConfirmed, setIsConfirmed] = useState(false);
-  const [displayWeatherList, setDisplayWeatherList] = useState(false);
-
-  const [temporary, setTemporary] = useState([]);
-  const [temporary2, setTemporary2] = useState([]);
   const [isFetch, setIsFetch] = useState(false);
+  const [isFetch2, setIsFetch2] = useState(false);
+  const [displayWeatherList, setDisplayWeatherList] = useState(false);
 
   const [weatherInfoNow, setWeatherInfoNow] = useState({});
   const [weatherForecast, setWeatherForecast] = useState({});
   const [skyForecast, setSkyForecast] = useState({});
   const [tempForecast, setTempForecast] = useState({});
-  const [refreshData, setRefreshData] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoadedForecast, setIsLoadedForecast] = useState(false);
 
   const [countSlide, setCountSlide] = useState(0);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const weatherUrlNow =
     "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
@@ -60,7 +56,7 @@ export default function WeatherCreateMyList(props) {
 
   const handleAddToList = () => {
     if (liste.some((e) => e.Phase3 === elem[2]) || !elem[2]) {
-      window.console.log("nothing added");
+      window.console.log("nothing to add");
       return false;
     } else {
       setListe((prev) => [
@@ -78,110 +74,51 @@ export default function WeatherCreateMyList(props) {
       setDisplayWeatherList(false);
       setIsLoaded(false);
       setIsLoadedForecast(false);
-      setIsConfirmed(false);
       setIsFetch(false);
-      document.getElementById("Confirmbutton").style.background = "";
-      document.getElementById("Confirmbutton").style.color = "";
+      setIsFetch2(false);
+      setCountSlide("0");
+      document.getElementById("Displaybutton").style.background = "";
+      document.getElementById("Displaybutton").style.color = "";
     }
-    setRefreshData((prev) => prev + 1);
   };
 
   const handleResetListe = (e) => {
     setListe([]);
+    setDisplayWeatherList(false);
+    setIsLoaded(false);
+    setIsLoadedForecast(false);
     setIsFetch(false);
+    setIsFetch2(false);
     setWeatherInfoNow({});
     setWeatherForecast({});
     setTempForecast({});
     setSkyForecast({});
-    setTemporary([]);
-    setTemporary2([]);
-    setIsLoaded(false);
-    setIsLoadedForecast(false);
     setListeCounter(0);
-    setDisplayWeatherList(false);
-    document.getElementById("Confirmbutton").style.background = "";
-    document.getElementById("Confirmbutton").style.color = "";
+    setCountSlide("0");
+    document.getElementById("Displaybutton").style.background = "";
+    document.getElementById("Displaybutton").style.color = "";
   };
 
-  const handleWeatherListeFetch = (e) => {
-    /* if (!liste[0]) {
-      return;
-    } else {
-      if (isFetch) {
-        e.preventDefault();
-        e.target.style.background = "";
-        //setWeatherInfoNow({});
-        //setWeatherForecast({});
-        //setTempForecast({});
-        //setSkyForecast({});
-        //setTemporary([]);
-        //setTemporary2([]);
-        //setIsLoaded(false);
-        //setIsLoadedForecast(false);
-        setIsFetch(false);
-      } else {
-        e.preventDefault();
-        e.target.style.background = "red";
-        setRefreshData((prev) => prev + 1);
-        setIsFetch(true);
-      }
-    } */
-  };
-
-  const handleConfirmListe = (y) => {
-    liste.forEach((e, i) => {
-      setWeatherInfoNow((prev) => ({
-        ...prev,
-        [e.Phase3]: temporary.filter((x) => x.phase3 === e.Phase3),
-      }));
-    });
-    liste.forEach((e, i) => {
-      setWeatherForecast((prev) => ({
-        ...prev,
-        [e.Phase3]: temporary2.filter(
-          (x) => x.phase3 === e.Phase3 && x.category === "PTY"
-        ),
-      }));
-      setSkyForecast((prev) => ({
-        ...prev,
-        [e.Phase3]: temporary2.filter(
-          (x) => x.phase3 === e.Phase3 && x.category === "SKY"
-        ),
-      }));
-      setTempForecast((prev) => ({
-        ...prev,
-        [e.Phase3]: temporary2.filter(
-          (x) => x.phase3 === e.Phase3 && x.category === "T1H"
-        ),
-      }));
-    });
-    if (liste.length === listeCounter && listeCounter !== 0) {
-      return [
-        (y.target.style.color = "#fff"),
-        setIsConfirmed(true),
-        (y.target.style.background =
-          "linear-gradient(-90deg, #5f9c51, #31871e)"),
-      ];
-    } else if (listeCounter === 0) {
-      y.target.style.background = "";
-      setIsConfirmed(false);
-    }
-  };
-
-  const handleDisplayWeatherSlide = () => {
-    if (isConfirmed) {
+  const handleDisplayWeatherSlide = (e) => {
+    if (isFetch && isFetch2 && displayWeatherList === false) {
       setDisplayWeatherList(true);
       setIsLoaded(true);
       setIsLoadedForecast(true);
+      e.target.style.color = "#fff";
+    }
+    if (displayWeatherList === true) {
+      setDisplayWeatherList(false);
+      setIsLoaded(false);
+      setIsLoadedForecast(false);
+      e.target.style.color = "";
+      setCountSlide("0");
     }
   };
 
   const handleCommand = () => {
     window.console.log("MAP");
-    window.console.log(temporary);
     window.console.log(weatherInfoNow);
     window.console.log("MAP2");
-    window.console.log(temporary2);
     window.console.log(weatherForecast);
     window.console.log(skyForecast);
     window.console.log(tempForecast);
@@ -190,11 +127,33 @@ export default function WeatherCreateMyList(props) {
   const handleBullet = (e) => {
     setCountSlide(e.target.innerHTML);
   };
+
+  const handleDisplayDescription = (e) => {
+    document.getElementById("displaydescription").style.display =
+      isFetch && isFetch2 ? "none" : "block";
+    setMousePosition({ x: e.clientX, y: e.clientY });
+  };
+
+  const toStyleDisplayButton = {
+    filter: isFetch && isFetch2 ? "" : "brightness(0.8)",
+  };
+
+  const toStyleDisplayDescription = {
+    display: isFetch && isFetch2 ? "" : "block",
+    left: mousePosition.x,
+    top: mousePosition.y + 15,
+  };
+
+  const handleDisplayMouseLeave = (e) => {
+    document.getElementById("displaydescription").style.display = "none";
+  };
+
   useEffect(() => {
     if (!liste[0]) {
       return;
     } else {
       const getWeatherList = async (name, nx, ny) => {
+        let temporary = [];
         const urlWeatherList = `${weatherUrlNow}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetimeforecast}&nx=${nx}&ny=${ny}`;
         try {
           const response = await fetch(urlWeatherList, {});
@@ -207,43 +166,52 @@ export default function WeatherCreateMyList(props) {
             jsonResponse.response.header["resultMsg"],
             jsonResponse.response.body.items.item,
           ]);
-          jsonResponse.response.body.items.item.forEach((x) => {
-            setTemporary((prev) => [
-              ...prev,
-              {
-                phase1: name[0],
-                phase2: name[1],
-                phase3: name[2],
-                category: x.category,
-                value: x.obsrValue,
-                time: x.baseTime,
-                nx: x.nx,
-                ny: x.ny,
-              },
-            ]);
+          await jsonResponse.response.body.items.item.map((x, i) => {
+            temporary[i] = {
+              phase1: name[0],
+              phase2: name[1],
+              phase3: name[2],
+              category: x.category,
+              value: x.obsrValue,
+              time: x.baseTime,
+              nx: x.nx,
+              ny: x.ny,
+            };
           });
-          //return setIsReady(true);
+          return [temporary, setIsFetch(true)];
         } catch (error) {
           console.log(error);
           setIsLoaded(false);
+        }
+      };
+      let saveData = async () => {
+        let resultsFirstFetch = await getWeatherList(
+          [
+            liste[listeCounter - 1]["Phase1"],
+            liste[listeCounter - 1]["Phase2"],
+            liste[listeCounter - 1]["Phase3"],
+          ],
+          liste[listeCounter - 1]["nx"],
+          liste[listeCounter - 1]["ny"]
+        );
+        try {
+          setWeatherInfoNow((prev) => ({
+            ...prev,
+            [liste[listeCounter - 1]["Phase3"]]: resultsFirstFetch[0],
+          }));
+        } catch (error) {
+          window.console.log(error);
         }
       };
       setWeatherInfoNow((prev) => ({
         ...prev,
         [liste[listeCounter - 1]["Phase3"]]: [],
       }));
-      getWeatherList(
-        [
-          liste[listeCounter - 1]["Phase1"],
-          liste[listeCounter - 1]["Phase2"],
-          liste[listeCounter - 1]["Phase3"],
-        ],
-        liste[listeCounter - 1]["nx"],
-        liste[listeCounter - 1]["ny"]
-      );
+      saveData();
     }
     return () => {
       setIsLoaded(false);
+      setIsFetch(false);
     };
   }, [listeCounter]);
 
@@ -252,6 +220,7 @@ export default function WeatherCreateMyList(props) {
       return;
     } else {
       const getWeatherList = async (name, nx, ny) => {
+        let temporary = [];
         const urlWeatherForecast = `${weatherUrlForecast}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetime}&nx=${nx}&ny=${ny}`;
         try {
           const response = await fetch(urlWeatherForecast, {});
@@ -264,7 +233,7 @@ export default function WeatherCreateMyList(props) {
             jsonResponse.response.header["resultMsg"],
             jsonResponse.response.body.items.item,
           ]);
-          jsonResponse.response.body.items.item.forEach((x) => {
+          jsonResponse.response.body.items.item.forEach((x, i) => {
             let newData = {
               phase1: name[0],
               phase2: name[1],
@@ -277,17 +246,50 @@ export default function WeatherCreateMyList(props) {
               ny: x.ny,
             };
             if (x.category === "PTY") {
-              setTemporary2((prev) => [...prev, newData]);
+              temporary[i] = newData;
             } else if (x.category === "T1H") {
-              setTemporary2((prev) => [...prev, newData]);
+              temporary[i] = newData;
             } else if (x.category === "SKY") {
-              setTemporary2((prev) => [...prev, newData]);
+              temporary[i] = newData;
             }
           });
-          return setIsFetch(true);
+          return [temporary, setIsFetch2(true)];
         } catch (error) {
           console.log(error);
           setIsLoadedForecast(false);
+        }
+      };
+      let saveData = async () => {
+        let resultsFirstFetch = await getWeatherList(
+          [
+            liste[listeCounter - 1]["Phase1"],
+            liste[listeCounter - 1]["Phase2"],
+            liste[listeCounter - 1]["Phase3"],
+          ],
+          liste[listeCounter - 1]["nx"],
+          liste[listeCounter - 1]["ny"]
+        );
+        try {
+          setWeatherForecast((prev) => ({
+            ...prev,
+            [liste[listeCounter - 1]["Phase3"]]: resultsFirstFetch[0].filter(
+              (x) => x.category === "PTY"
+            ),
+          }));
+          setSkyForecast((prev) => ({
+            ...prev,
+            [liste[listeCounter - 1]["Phase3"]]: resultsFirstFetch[0].filter(
+              (x) => x.category === "SKY"
+            ),
+          }));
+          setTempForecast((prev) => ({
+            ...prev,
+            [liste[listeCounter - 1]["Phase3"]]: resultsFirstFetch[0].filter(
+              (x) => x.category === "T1H"
+            ),
+          }));
+        } catch (error) {
+          window.console.log(error);
         }
       };
       setWeatherForecast((prev) => ({
@@ -302,30 +304,23 @@ export default function WeatherCreateMyList(props) {
         ...prev,
         [liste[listeCounter - 1]["Phase3"]]: [],
       }));
-      getWeatherList(
-        [
-          liste[listeCounter - 1]["Phase1"],
-          liste[listeCounter - 1]["Phase2"],
-          liste[listeCounter - 1]["Phase3"],
-        ],
-        liste[listeCounter - 1]["nx"],
-        liste[listeCounter - 1]["ny"]
-      );
+      saveData();
     }
+
     return () => {
       setIsLoaded(false);
-      setIsFetch(false);
+      setIsFetch2(false);
     };
   }, [listeCounter]);
 
   useEffect(() => {
-    if (isFetch) {
-      document.getElementById("Confirmbutton").style.borderColor = "red";
+    if (isFetch && isFetch2) {
+      document.getElementById("Displaybutton").style.borderColor = "red";
     }
     return () => {
-      document.getElementById("Confirmbutton").style.borderColor = "";
+      document.getElementById("Displaybutton").style.borderColor = "";
     };
-  }, [isFetch]);
+  }, [isFetch, isFetch2]);
 
   return (
     <div className={styles.listBigBox}>
@@ -400,7 +395,9 @@ export default function WeatherCreateMyList(props) {
           </label>
         </div>
       </div>
-      {liste[0] && <p style={{ margin: "1rem 0" }}>List of city to display:</p>}
+      {liste[0] && (
+        <p className={styles.listBigTitle}>List of city to display:</p>
+      )}
       <div
         style={{ display: liste[0] ? "grid" : "none" }}
         className={styles.listBox}
@@ -420,70 +417,70 @@ export default function WeatherCreateMyList(props) {
           </>
         ))}
       </div>
-      <button
-        className={styles.buttonResetRefresh}
-        onMouseEnter={mouseenter}
-        onMouseLeave={mouseleave}
-        onClick={handleWeatherListeFetch}
-      >
-        Fetch
-      </button>
-      <button
-        className={styles.buttonResetRefresh}
-        onMouseEnter={mouseenter}
-        onMouseLeave={mouseleave}
-        onClick={handleConfirmListe}
-        id="Confirmbutton"
-      >
-        Confirm
-      </button>
-      <button
-        className={styles.buttonResetRefresh}
-        onMouseEnter={mouseenter}
-        onMouseLeave={mouseleave}
-        onClick={handleDisplayWeatherSlide}
-      >
-        Display Weather
-      </button>
-      <button
-        className={styles.buttonResetRefresh}
-        onMouseEnter={mouseenter}
-        onMouseLeave={mouseleave}
-        onClick={handleCommand}
-      >
-        Command
-      </button>
+      <div className={styles.listButtonBox2}>
+        <button
+          style={toStyleDisplayButton}
+          className={styles.buttonResetRefresh}
+          onMouseEnter={isFetch && isFetch2 ? mouseenter : null}
+          onMouseLeave={
+            isFetch && isFetch2 ? mouseleave : handleDisplayMouseLeave
+          }
+          onMouseMove={handleDisplayDescription}
+          onClick={isFetch && isFetch2 ? handleDisplayWeatherSlide : null}
+          id="Displaybutton"
+        >
+          Display Weather
+        </button>
+        <p
+          style={toStyleDisplayDescription}
+          className={styles.displayButtonDescription}
+          id="displaydescription"
+        >
+          Need to fill the list before display
+        </p>
+        <button
+          className={styles.buttonResetRefresh}
+          onMouseEnter={mouseenter}
+          onMouseLeave={mouseleave}
+          onClick={handleCommand}
+        >
+          Command
+        </button>
+      </div>
       <div className={styles.weatherSlideShowBox}>
-        {displayWeatherList &&
-          liste.map((e, i) => (
-            <>
+        <ul className={styles.bulletSlideBox}>
+          {displayWeatherList &&
+            liste.map((e, i) => (
               <li
                 onClick={handleBullet}
                 className={`${styles.bulletSlideShow} ${
-                  countSlide === i ? styles.bulletSlideShowOn : ""
+                  countSlide === `${i}` ? styles.bulletSlideShowOn : ""
                 }`}
+                key={`bullet${i}`}
               >
                 {i}
               </li>
-              <WeatherDisplay
-                dataimport={dataimport}
-                srcimage={srcimage}
-                loadstate={isLoaded}
-                loadforecast={isLoadedForecast}
-                raincond={weatherInfoNow[e.Phase3][0]}
-                humidity={weatherInfoNow[e.Phase3][1]}
-                hourrain={weatherInfoNow[e.Phase3][2]}
-                temp={weatherInfoNow[e.Phase3][3]}
-                winddir={weatherInfoNow[e.Phase3][5]}
-                windspeed={weatherInfoNow[e.Phase3][7]}
-                tempforecast={tempForecast[e.Phase3]}
-                skyforecast={skyForecast[e.Phase3]}
-                rainforecast={weatherForecast[e.Phase3]}
-                showbutton={false}
-                titlename={true}
-              />
-            </>
-          ))}
+            ))}
+        </ul>
+        {isLoaded && isLoadedForecast && (
+          <WeatherDisplay
+            dataimport={dataimport}
+            srcimage={srcimage}
+            loadstate={isLoaded}
+            loadforecast={isLoadedForecast}
+            raincond={weatherInfoNow[liste[countSlide]["Phase3"]][0]}
+            humidity={weatherInfoNow[liste[countSlide]["Phase3"]][1]}
+            hourrain={weatherInfoNow[liste[countSlide]["Phase3"]][2]}
+            temp={weatherInfoNow[liste[countSlide]["Phase3"]][3]}
+            winddir={weatherInfoNow[liste[countSlide]["Phase3"]][5]}
+            windspeed={weatherInfoNow[liste[countSlide]["Phase3"]][7]}
+            tempforecast={tempForecast[liste[countSlide]["Phase3"]]}
+            skyforecast={skyForecast[liste[countSlide]["Phase3"]]}
+            rainforecast={weatherForecast[liste[countSlide]["Phase3"]]}
+            showbutton={false}
+            titlename={true}
+          />
+        )}
       </div>
     </div>
   );

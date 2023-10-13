@@ -269,7 +269,6 @@ export default function WeatherNow() {
         showbutton={true}
         titlename={false}
       />
-      {!isLoaded && <p>Fetching</p>}
       <WeatherCreateMyList
         dataimport={dataimport}
         mouseenter={handleButtonEnter}

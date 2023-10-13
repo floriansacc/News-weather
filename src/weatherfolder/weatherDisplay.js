@@ -32,13 +32,6 @@ export default function WeatherDisplay(props) {
     titlename,
   } = props;
 
-  /*const raincond=weatherInfoNow[0]
-  const humidity=weatherInfoNow[1]
-  const hourrain=weatherInfoNow[2]
-  const temp=weatherInfoNow[3]
-  const winddir=weatherInfoNow[5]
-  const windspeed=weatherInfoNow[7]*/
-
   return (
     <div className={styles.weatherBigBox}>
       <div

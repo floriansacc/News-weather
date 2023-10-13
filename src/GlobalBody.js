@@ -6,7 +6,6 @@ import WeatherNow from "./weatherfolder/WeatherNow";
 export default function GlobalBody() {
   return (
     <div className={styles.global}>
-      <NaverNews />
       <WeatherNow />
     </div>
   );
