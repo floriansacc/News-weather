@@ -20,6 +20,7 @@ export default function WeatherPrediction(props) {
                 ]
               }
               className={styles.predictionImage}
+              key={`image${x.value}${i}`}
             ></img>
             <li className={styles.smallText} key={`${x.value}no${i}`}>
               {x.value}°

@@ -46,7 +46,9 @@ export default function WeatherCreateMyList(props) {
       let [coord] = Array.from(
         new Set(
           dataimport
-            .filter((word) => word.Part3 === e.target.value)
+            .filter(
+              (word) => word.Part3 === e.target.value && word.Part2 === elem[1]
+            )
             .map((x) => [x.nx, x.ny])
         )
       );
@@ -55,7 +57,10 @@ export default function WeatherCreateMyList(props) {
   };
 
   const handleAddToList = () => {
-    if (liste.some((e) => e.Phase3 === elem[2]) || !elem[2]) {
+    if (
+      liste.some((e) => e.Phase3 === elem[2] && e.Phase2 === elem[1]) ||
+      !elem[2]
+    ) {
       window.console.log("nothing to add");
       return false;
     } else {
@@ -71,6 +76,7 @@ export default function WeatherCreateMyList(props) {
       ]);
       setElem(["선택"]);
       setListeCounter((prev) => prev + 1);
+      window.console.log(listeCounter);
       setDisplayWeatherList(false);
       setIsLoaded(false);
       setIsLoadedForecast(false);
@@ -134,18 +140,17 @@ export default function WeatherCreateMyList(props) {
     setMousePosition({ x: e.clientX, y: e.clientY });
   };
 
+  const handleDisplayMouseLeave = (e) => {
+    document.getElementById("displaydescription").style.display = "none";
+  };
+
   const toStyleDisplayButton = {
     filter: isFetch && isFetch2 ? "" : "brightness(0.8)",
   };
 
   const toStyleDisplayDescription = {
-    display: isFetch && isFetch2 ? "" : "block",
     left: mousePosition.x,
     top: mousePosition.y + 15,
-  };
-
-  const handleDisplayMouseLeave = (e) => {
-    document.getElementById("displaydescription").style.display = "none";
   };
 
   useEffect(() => {
@@ -174,8 +179,8 @@ export default function WeatherCreateMyList(props) {
               category: x.category,
               value: x.obsrValue,
               time: x.baseTime,
-              nx: x.nx,
-              ny: x.ny,
+              nx: nx,
+              ny: ny,
             };
           });
           return [temporary, setIsFetch(true)];
@@ -197,7 +202,9 @@ export default function WeatherCreateMyList(props) {
         try {
           setWeatherInfoNow((prev) => ({
             ...prev,
-            [liste[listeCounter - 1]["Phase3"]]: resultsFirstFetch[0],
+            [`${liste[listeCounter - 1]["Phase2"]} - ${
+              liste[listeCounter - 1]["Phase3"]
+            }`]: resultsFirstFetch[0],
           }));
         } catch (error) {
           window.console.log(error);
@@ -205,7 +212,9 @@ export default function WeatherCreateMyList(props) {
       };
       setWeatherInfoNow((prev) => ({
         ...prev,
-        [liste[listeCounter - 1]["Phase3"]]: [],
+        [`${liste[listeCounter - 1]["Phase2"]} - ${
+          liste[listeCounter - 1]["Phase3"]
+        }`]: [],
       }));
       saveData();
     }
@@ -272,21 +281,21 @@ export default function WeatherCreateMyList(props) {
         try {
           setWeatherForecast((prev) => ({
             ...prev,
-            [liste[listeCounter - 1]["Phase3"]]: resultsFirstFetch[0].filter(
-              (x) => x.category === "PTY"
-            ),
+            [`${liste[listeCounter - 1]["Phase2"]} - ${
+              liste[listeCounter - 1]["Phase3"]
+            }`]: resultsFirstFetch[0].filter((x) => x.category === "PTY"),
           }));
           setSkyForecast((prev) => ({
             ...prev,
-            [liste[listeCounter - 1]["Phase3"]]: resultsFirstFetch[0].filter(
-              (x) => x.category === "SKY"
-            ),
+            [`${liste[listeCounter - 1]["Phase2"]} - ${
+              liste[listeCounter - 1]["Phase3"]
+            }`]: resultsFirstFetch[0].filter((x) => x.category === "SKY"),
           }));
           setTempForecast((prev) => ({
             ...prev,
-            [liste[listeCounter - 1]["Phase3"]]: resultsFirstFetch[0].filter(
-              (x) => x.category === "T1H"
-            ),
+            [`${liste[listeCounter - 1]["Phase2"]} - ${
+              liste[listeCounter - 1]["Phase3"]
+            }`]: resultsFirstFetch[0].filter((x) => x.category === "T1H"),
           }));
         } catch (error) {
           window.console.log(error);
@@ -294,15 +303,21 @@ export default function WeatherCreateMyList(props) {
       };
       setWeatherForecast((prev) => ({
         ...prev,
-        [liste[listeCounter - 1]["Phase3"]]: [],
+        [`${liste[listeCounter - 1]["Phase2"]} - ${
+          liste[listeCounter - 1]["Phase3"]
+        }`]: [],
       }));
       setTempForecast((prev) => ({
         ...prev,
-        [liste[listeCounter - 1]["Phase3"]]: [],
+        [`${liste[listeCounter - 1]["Phase2"]} - ${
+          liste[listeCounter - 1]["Phase3"]
+        }`]: [],
       }));
       setSkyForecast((prev) => ({
         ...prev,
-        [liste[listeCounter - 1]["Phase3"]]: [],
+        [`${liste[listeCounter - 1]["Phase2"]} - ${
+          liste[listeCounter - 1]["Phase3"]
+        }`]: [],
       }));
       saveData();
     }
@@ -321,6 +336,13 @@ export default function WeatherCreateMyList(props) {
       document.getElementById("Displaybutton").style.borderColor = "";
     };
   }, [isFetch, isFetch2]);
+
+  useEffect(() => {
+    return () => {
+      //document.getElementById("displaydescription").style.display = "none";
+      document.getElementById("displaydescription").style.bakcground = "red";
+    };
+  }, []);
 
   return (
     <div className={styles.listBigBox}>
@@ -468,15 +490,51 @@ export default function WeatherCreateMyList(props) {
             srcimage={srcimage}
             loadstate={isLoaded}
             loadforecast={isLoadedForecast}
-            raincond={weatherInfoNow[liste[countSlide]["Phase3"]][0]}
-            humidity={weatherInfoNow[liste[countSlide]["Phase3"]][1]}
-            hourrain={weatherInfoNow[liste[countSlide]["Phase3"]][2]}
-            temp={weatherInfoNow[liste[countSlide]["Phase3"]][3]}
-            winddir={weatherInfoNow[liste[countSlide]["Phase3"]][5]}
-            windspeed={weatherInfoNow[liste[countSlide]["Phase3"]][7]}
-            tempforecast={tempForecast[liste[countSlide]["Phase3"]]}
-            skyforecast={skyForecast[liste[countSlide]["Phase3"]]}
-            rainforecast={weatherForecast[liste[countSlide]["Phase3"]]}
+            raincond={
+              weatherInfoNow[
+                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
+              ][0]
+            }
+            humidity={
+              weatherInfoNow[
+                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
+              ][1]
+            }
+            hourrain={
+              weatherInfoNow[
+                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
+              ][2]
+            }
+            temp={
+              weatherInfoNow[
+                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
+              ][3]
+            }
+            winddir={
+              weatherInfoNow[
+                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
+              ][5]
+            }
+            windspeed={
+              weatherInfoNow[
+                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
+              ][7]
+            }
+            tempforecast={
+              tempForecast[
+                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
+              ]
+            }
+            skyforecast={
+              skyForecast[
+                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
+              ]
+            }
+            rainforecast={
+              weatherForecast[
+                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
+              ]
+            }
             showbutton={false}
             titlename={true}
           />

@@ -91,10 +91,12 @@ export default function WeatherDisplay(props) {
               </p>
             </div>
             {titlename && (
-              <div>
-                <p>{rainforecast[0].phase1}</p>
-                <p>{rainforecast[0].phase2}</p>
-                <p>{rainforecast[0].phase3}</p>
+              <div className={styles.titleNameBox}>
+                <p className={styles.titleNameTextCity}>
+                  {rainforecast[0].phase1}
+                </p>
+                <p className={styles.titleNameText}>{rainforecast[0].phase2}</p>
+                <p className={styles.titleNameText}>{rainforecast[0].phase3}</p>
               </div>
             )}
             {showbutton && (

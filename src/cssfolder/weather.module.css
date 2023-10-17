@@ -43,6 +43,10 @@
 .displayButtonDescription {
   position: absolute;
   display: none;
+  padding: 2px 10px;
+  background: #fff;
+  border: 2px solid #000;
+  border-radius: 25px;
 }
 
 .weatherHeader {
@@ -81,6 +85,29 @@
   background-color: inherit;
   border: 2px solid #bebebe;
   border-radius: 10px;
+}
+
+.titleNameBox {
+  display: flex;
+  text-align: right;
+  width: 35%;
+  flex-flow: column nowrap;
+  align-items: flex-end;
+}
+
+.titleNameTextCity {
+  width: fit-content;
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding: 1px;
+  padding-bottom: 2px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid;
+  border-color: #fff;
+}
+
+.titleNameText {
+  padding: 1px;
 }
 
 .imageAndRain {

@@ -142,7 +142,7 @@ export default function WeatherNow() {
 
   const handleButtonEnter = (e) => {
     e.target.style.cursor = "pointer";
-    e.target.style.filter = "brightness(1.05)";
+    e.target.style.filter = "contrast(90%)";
   };
 
   const handleButtonLeave = (e) => {
