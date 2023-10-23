@@ -154,7 +154,11 @@ export default function WeatherHome() {
     updateDates();
     const getWeather = async () => {
       try {
-        const response = await fetch(getUrlWeatherNow, {});
+        const response = await fetch(getUrlWeatherNow, {
+          headers: {
+            Accept: "application / json",
+          },
+        });
         if (!response.ok) {
           throw new Error("Pas de météo pour toi");
         }
@@ -189,7 +193,11 @@ export default function WeatherHome() {
     updateDates();
     const getWeather2 = async () => {
       try {
-        const response = await fetch(getUrlWeatherForecast, {});
+        const response = await fetch(getUrlWeatherForecast, {
+          headers: {
+            Accept: "application / json",
+          },
+        });
         if (!response.ok) {
           throw new Error("Pas de météo pour toi");
         }

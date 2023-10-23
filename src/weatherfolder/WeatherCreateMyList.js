@@ -161,7 +161,11 @@ export default function WeatherCreateMyList(props) {
         let temporary = [];
         const urlWeatherList = `${weatherUrlNow}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetimeforecast}&nx=${nx}&ny=${ny}`;
         try {
-          const response = await fetch(urlWeatherList, {});
+          const response = await fetch(urlWeatherList, {
+            headers: {
+              Accept: "application / json",
+            },
+          });
           if (!response.ok) {
             throw new Error("Pas de météo pour toi");
           }
@@ -232,7 +236,11 @@ export default function WeatherCreateMyList(props) {
         let temporary = [];
         const urlWeatherForecast = `${weatherUrlForecast}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetime}&nx=${nx}&ny=${ny}`;
         try {
-          const response = await fetch(urlWeatherForecast, {});
+          const response = await fetch(urlWeatherForecast, {
+            headers: {
+              Accept: "application / json",
+            },
+          });
           if (!response.ok) {
             throw new Error("Pas de météo pour toi");
           }
