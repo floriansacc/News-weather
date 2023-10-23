@@ -5,8 +5,7 @@ import styles from "../cssfolder/weather.module.css";
 import WeatherPrediction from "./WeatherPrediction";
 import WeatherCitySelector from "./WeatherCitySelector";
 
-export default function WeatherDisplay(props) {
-  const [imgSrc, setImgSrc] = useState(0);
+export default function WeatherUID(props) {
   const {
     handlecityselector,
     cityselector,

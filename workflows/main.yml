@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Build
+        run: |
+          npm install
+          npm run-script build
+        env:
+          CI: ""
+          REACT_APP_WEATHER_KEY: ${{ secrets.REACT_APP_WEATHER_KEY }}
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          brnahc: gh-pages
+          folder: build

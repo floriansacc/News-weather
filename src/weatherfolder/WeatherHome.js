@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import WeatherDisplay from "./WeatherDisplay";
+import WeatherUID from "./WeatherUID";
 import { todayDate } from "../newsfolder/settings";
 import styles from "../cssfolder/weather.module.css";
 import citycoord from "./citycoord.json";
@@ -13,7 +13,7 @@ import WeatherCreateMyList from "./WeatherCreateMyList";
 
 const images = [sunny, "", pCloudy, cloudy, rainy];
 
-export default function WeatherNow() {
+export default function WeatherHome() {
   const [weatherInfoNow, setWeatherInfoNow] = useState([]);
   const [weatherForecast, setWeatherForecast] = useState([]);
   const [skyForecast, setSkyForecast] = useState([]);
@@ -245,7 +245,7 @@ export default function WeatherNow() {
 
   return (
     <div className={styles.container2}>
-      <WeatherDisplay
+      <WeatherUID
         handlecityselector={handleCitySelector}
         cityselector={citySelector}
         dataimport={dataimport}

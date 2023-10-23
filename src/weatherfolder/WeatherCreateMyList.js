@@ -1,6 +1,6 @@
 import styles from "../cssfolder/weather.module.css";
 import { useEffect, useState, useRef } from "react";
-import WeatherDisplay from "./WeatherDisplay";
+import WeatherUID from "./WeatherUID";
 
 export default function WeatherCreateMyList(props) {
   const {
@@ -485,7 +485,7 @@ export default function WeatherCreateMyList(props) {
             ))}
         </ul>
         {isLoaded && isLoadedForecast && (
-          <WeatherDisplay
+          <WeatherUID
             dataimport={dataimport}
             srcimage={srcimage}
             loadstate={isLoaded}
