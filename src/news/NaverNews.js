@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
 import NewsUnit from "./NewsUnit";
-import styles from "../cssfolder/news.module.css";
+import styles from "../css/news.module.css";
 
 const idClient = process.env.REACT_APP_NAVER_ID_CLIENT;
 const pwdClient = process.env.REACT_APP_NAVER_PASSWORD_CLIENT;
-
 
 export default function NaverNews(props) {
   const [newsInfo, setNewsInfo] = useState([]);
@@ -20,7 +19,7 @@ export default function NaverNews(props) {
         headers: {
           "Content-type": "application/json; charset=utf-8",
           "X-Naver-Client-Id": idClient,
-          "X-Naver-Client-Secret": pwdClient
+          "X-Naver-Client-Secret": pwdClient,
         },
       });
       if (!response.ok) {
@@ -42,7 +41,7 @@ export default function NaverNews(props) {
       console.log(error);
     }
   };
-  
+
   const handleSearch = (e) => {
     setSearch(e.target.value);
   };
@@ -50,7 +49,6 @@ export default function NaverNews(props) {
   const handleSubmit = (e) => {
     getNews(search);
     setNewsInfo([]);
-    
   };
 
   return (

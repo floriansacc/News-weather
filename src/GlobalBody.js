@@ -1,6 +1,6 @@
 import { useState } from "react";
-import styles from "./cssfolder/global.module.css";
-import WeatherHome from "./weatherfolder/WeatherHome";
+import styles from "./css/global.module.css";
+import WeatherHome from "./weather/WeatherHome";
 
 export default function GlobalBody() {
   return (

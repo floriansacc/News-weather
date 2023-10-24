@@ -26,5 +26,5 @@ jobs:
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          brnahc: gh-pages
+          branch: gh-pages
           folder: build

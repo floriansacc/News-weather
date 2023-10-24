@@ -1,4 +1,4 @@
-import styles from "../cssfolder/weather.module.css";
+import styles from "../css/weather.module.css";
 
 export default function WeatherCitySelector(props) {
   const { dataimport, cityselector, handlecityselector } = props;

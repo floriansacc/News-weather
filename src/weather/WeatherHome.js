@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import WeatherUID from "./WeatherUID";
-import { todayDate } from "../newsfolder/settings";
-import styles from "../cssfolder/weather.module.css";
+import { todayDate } from "../news/settings";
+import styles from "../css/weather.module.css";
 import citycoord from "./citycoord.json";
 import dataimport from "./dataimport.json";
 
-import sunny from "../cssfolder/sunny logo.png";
-import pCloudy from "../cssfolder/partial cloudy logo.png";
-import cloudy from "../cssfolder/cloudy logo.png";
-import rainy from "../cssfolder/rainy logo.png";
+import sunny from "../css/sunny logo.png";
+import pCloudy from "../css/partial cloudy logo.png";
+import cloudy from "../css/cloudy logo.png";
+import rainy from "../css/rainy logo.png";
 import WeatherCreateMyList from "./WeatherCreateMyList";
 
 const images = [sunny, "", pCloudy, cloudy, rainy];

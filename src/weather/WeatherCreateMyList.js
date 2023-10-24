@@ -1,4 +1,4 @@
-import styles from "../cssfolder/weather.module.css";
+import styles from "../css/weather.module.css";
 import { useEffect, useState, useRef } from "react";
 import WeatherUID from "./WeatherUID";
 
@@ -474,7 +474,7 @@ export default function WeatherCreateMyList(props) {
           onMouseLeave={mouseleave}
           onClick={handleCommand}
         >
-          Command
+          Console
         </button>
       </div>
       <div className={styles.weatherSlideShowBox}>

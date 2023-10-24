@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import styles from "../cssfolder/weather.module.css";
+import styles from "../css/weather.module.css";
 import WeatherPrediction from "./WeatherPrediction";
 import WeatherCitySelector from "./WeatherCitySelector";
 
@@ -59,7 +59,7 @@ export default function WeatherUID(props) {
           onMouseEnter={mouseenter}
           onMouseLeave={mouseleave}
         >
-          Command
+          Console
         </button>
       </div>
 

@@ -1,5 +1,5 @@
-import GlobalBody from './GlobalBody';
-import styles from './cssfolder/global.module.css'
+import GlobalBody from "./GlobalBody";
+import styles from "./css/global.module.css";
 
 function App() {
   return (
