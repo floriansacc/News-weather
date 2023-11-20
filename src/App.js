@@ -3,7 +3,8 @@ import styles from "./css/global.module.css";
 
 function App() {
   return (
-    <body className="App">
+    <body>
+      
       <GlobalBody />
     </body>
   );

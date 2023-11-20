@@ -252,7 +252,8 @@ export default function WeatherHome() {
   }, [refreshData]);
 
   return (
-    <div className={styles.container2}>
+    <div className="flex sm:flex-col flex-row flex-nowrap justify-around sm:items-center items-start sm:m-4 m-8 h-fit sm:w-full w-11/12 bg-slate-400">
+      <p className="text-3xl text-red-700">공사중</p>
       <WeatherUID
         handlecityselector={handleCitySelector}
         cityselector={citySelector}

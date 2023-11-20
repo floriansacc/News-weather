@@ -31,6 +31,8 @@
 }
 
 .buttonResetRefresh {
+  display: flex;
+  align-items: center;
   background: linear-gradient(-90deg, #d8d2cf, #d4e6ed);
   border: 2px solid #bebebe;
   width: fit-content;
@@ -201,13 +203,6 @@
   border-radius: 10px;
   width: fit-content;
   margin: 1rem;
-}
-
-.listButtonBox2 {
-  display: inline-flex;
-  flex-flow: row nowrap;
-  justify-items: flex-end;
-  width: 90%;
 }
 
 .listBigTitle {

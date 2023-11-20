@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import styles from "../css/weather.module.css";
 import WeatherPrediction from "./WeatherPrediction";
 import WeatherCitySelector from "./WeatherCitySelector";
 
@@ -32,13 +31,14 @@ export default function WeatherUID(props) {
   } = props;
 
   return (
-    <div className={styles.weatherBigBox}>
-      <div
-        style={{ display: showbutton ? "" : "none" }}
-        className={styles.buttonBox}
-      >
+    <div
+      className={`flex flex-col flex-nowrap h-fit sm:w-5/6 md:w-96 lg:w-96 sm:max-w-md ${
+        showbutton ? "" : "sm:max-w-none sm:w-full"
+      }`}
+    >
+      <div className={`flex m-1 ${showbutton ? "block" : "block"}`}>
         <button
-          className={styles.buttonResetRefresh}
+          className="flex items-center m-1.5 p-1.5 h-8 border-2 border-solid border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
           onClick={reset}
           onMouseEnter={mouseenter}
           onMouseLeave={mouseleave}
@@ -46,7 +46,7 @@ export default function WeatherUID(props) {
           Reset
         </button>
         <button
-          className={styles.buttonResetRefresh}
+          className="flex items-center m-1.5 p-1.5 h-8 border-2 border-solid border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
           onClick={refresh}
           onMouseEnter={mouseenter}
           onMouseLeave={mouseleave}
@@ -54,7 +54,7 @@ export default function WeatherUID(props) {
           Refresh
         </button>
         <button
-          className={styles.buttonResetRefresh}
+          className="flex items-center m-1.5 p-1.5 h-8 border-2 border-solid border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
           onClick={displayinfo}
           onMouseEnter={mouseenter}
           onMouseLeave={mouseleave}
@@ -63,7 +63,7 @@ export default function WeatherUID(props) {
         </button>
       </div>
 
-      {!loadstate && <Skeleton count={1} className={styles.skeleton} />}
+      {!loadstate && <Skeleton count={1} className="w-96 h-96" />}
       {loadstate && loadforecast && (
         <div
           style={{
@@ -80,22 +80,20 @@ export default function WeatherUID(props) {
                 ? "linear-gradient(225deg, #ffcc00, #e5d075 30%, #f5e0b0 70%)"
                 : "transparent",
           }}
-          className={styles.weatherBox}
+          className="flex justify-around content-start flex-wrap w-full h-fit rounded-2xl"
         >
-          <div className={styles.weatherHeader}>
-            <div className={styles.weatherHeaderSubdiv}>
-              <p className={styles.weatherHeadText}>Weather</p>
-              <p className={styles.smallText}>
-                (Base time: {temp.time.slice(0, 2)}:30)
-              </p>
+          <div className="flex justify-around items-center w-full h-24 border-b border-solid border-white rounded-2xl">
+            <div className="flex flex-col flex-nowrap justify-start">
+              <p className="block">Weather</p>
+              <p className="text-sm">(Base time: {temp.time.slice(0, 2)}:30)</p>
             </div>
             {titlename && (
-              <div className={styles.titleNameBox}>
-                <p className={styles.titleNameTextCity}>
+              <div className="flex flex-col flex-nowrap items-end text-right w-fit whitespace-nowrap ">
+                <p className="font-semibold w-fit text-xl p-px pb-1 mb-1 border-b border-solid border-b-white">
                   {rainforecast[0].phase1}
                 </p>
-                <p className={styles.titleNameText}>{rainforecast[0].phase2}</p>
-                <p className={styles.titleNameText}>{rainforecast[0].phase3}</p>
+                <p className="p-px">{rainforecast[0].phase2}</p>
+                <p className="p-px">{rainforecast[0].phase3}</p>
               </div>
             )}
             {showbutton && (
@@ -109,9 +107,9 @@ export default function WeatherUID(props) {
             )}
           </div>
 
-          <div className={styles.imageAndRain}>
+          <div className="flex flex-col items-center mt-2 w-5/12">
             <img
-              className={styles.image}
+              className="w-20 h-20"
               src={
                 srcimage[
                   raincond.value === "1" ? 4 : `${skyforecast[0].value - 1}`
@@ -131,13 +129,13 @@ export default function WeatherUID(props) {
                 ? "Sunny"
                 : "No information"}
             </p>
-            <p className={styles.smallText}>
+            <p className="text-sm">
               {raincond.value === "1" ? `Rain hour: ${hourrain.value} mm` : ""}
             </p>
           </div>
 
-          <div className={styles.actualWeatherBox}>
-            <p className={styles.actualTemp}>{temp.value} degres</p>
+          <div className="h-fit mt-2">
+            <p className="font-semibold text-2xl mx-4">{temp.value} degres</p>
             <p>
               {`${windspeed.value} m/s`}
               {windspeed.value < 9

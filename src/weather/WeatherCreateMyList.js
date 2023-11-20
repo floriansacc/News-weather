@@ -353,11 +353,11 @@ export default function WeatherCreateMyList(props) {
   }, []);
 
   return (
-    <div className={styles.listBigBox}>
+    <div className="flex items-center flex-col flex-nowrap h-fit sm:w-5/6 w-96">
       <div className={styles.listeSelectionBox}>
         <div className={styles.listButtonBox}>
           <button
-            className={styles.buttonResetRefresh}
+            className="flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
             onClick={handleResetListe}
             onMouseEnter={mouseenter}
             onMouseLeave={mouseleave}
@@ -365,7 +365,7 @@ export default function WeatherCreateMyList(props) {
             Reset
           </button>
           <button
-            className={styles.buttonResetRefresh}
+            className="flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
             onClick={handleAddToList}
             onMouseEnter={mouseenter}
             onMouseLeave={mouseleave}
@@ -447,10 +447,10 @@ export default function WeatherCreateMyList(props) {
           </>
         ))}
       </div>
-      <div className={styles.listButtonBox2}>
+      <div className="inline-flex flex-row flex-nowrap w-11/12">
         <button
-          style={toStyleDisplayButton}
-          className={styles.buttonResetRefresh}
+          className={`flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400
+            ${isFetch && isFetch2 ? "brightness-100" : "brightness-75"}`}
           onMouseEnter={isFetch && isFetch2 ? mouseenter : null}
           onMouseLeave={
             isFetch && isFetch2 ? mouseleave : handleDisplayMouseLeave
@@ -461,6 +461,9 @@ export default function WeatherCreateMyList(props) {
         >
           Display Weather
         </button>
+        <button className="flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400">
+          TailwindButton
+        </button>
         <p
           style={toStyleDisplayDescription}
           className={styles.displayButtonDescription}
@@ -469,7 +472,7 @@ export default function WeatherCreateMyList(props) {
           Need to fill the list before display
         </p>
         <button
-          className={styles.buttonResetRefresh}
+          className="flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
           onMouseEnter={mouseenter}
           onMouseLeave={mouseleave}
           onClick={handleCommand}
