@@ -36,7 +36,7 @@ export default function WeatherUID(props) {
         showbutton ? "" : "sm:max-w-none sm:w-full"
       }`}
     >
-      <div className={`flex m-1 ${showbutton ? "block" : "block"}`}>
+      <div className={`flex m-1 ${showbutton ? "block" : "hidden"}`}>
         <button
           className="flex items-center m-1.5 p-1.5 h-8 border-2 border-solid border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
           onClick={reset}
@@ -63,7 +63,7 @@ export default function WeatherUID(props) {
         </button>
       </div>
 
-      {!loadstate && <Skeleton count={1} className="w-96 h-96" />}
+      {!loadstate && showbutton && <Skeleton count={1} className="w-96 h-96" />}
       {loadstate && loadforecast && (
         <div
           style={{
@@ -134,8 +134,8 @@ export default function WeatherUID(props) {
             </p>
           </div>
 
-          <div className="h-fit mt-2">
-            <p className="font-semibold text-2xl mx-4">{temp.value} degres</p>
+          <div className="flex flex-col justify-end mb-2">
+            <p className="font-semibold text-2xl mx-4">{temp.value} °C</p>
             <p>
               {`${windspeed.value} m/s`}
               {windspeed.value < 9

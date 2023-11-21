@@ -1,14 +1,12 @@
-import styles from "../css/weather.module.css";
-
 export default function WeatherPrediction(props) {
   const { srcimage, raincond, skyforecast, tempforecast, rainforecast } = props;
 
   return (
-    <div className={styles.predictionBox1}>
+    <div className="w-11/12">
       {raincond.value === "1" ? "" : "Prediction:"}
-      <div className={styles.predictionBox2}>
+      <div className="flex flex-row flex-nowrap justify-between w-full">
         {tempforecast.slice(1, tempforecast.length).map((x, i) => (
-          <ul className={styles.predictonByHour}>
+          <ul className="flex flex-col flex-nowrap items-center w-3/12 m-3 rounded-xl list-none">
             <img
               src={
                 srcimage[
@@ -19,13 +17,13 @@ export default function WeatherPrediction(props) {
                     : `${skyforecast[i + 1].value - 1}`
                 ]
               }
-              className={styles.predictionImage}
+              className="h-7 w-auto mb-1"
               key={`image${x.value}${i}`}
             ></img>
-            <li className={styles.smallText} key={`${x.value}no${i}`}>
+            <li className="text-base" key={`${x.value}no${i}`}>
               {x.value}°
             </li>
-            <li className={styles.smallText} key={`2no${i}`}>
+            <li className="text-base" key={`2no${i}`}>
               {x.time.slice(0, 2)}h
             </li>
           </ul>

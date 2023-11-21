@@ -1,12 +1,10 @@
-import styles from "../css/weather.module.css";
-
 export default function WeatherCitySelector(props) {
   const { dataimport, cityselector, handlecityselector } = props;
 
   return (
-    <label className={styles.cityContainer}>
+    <label className="flex flex-col flex-nowrap">
       <select
-        className={styles.citySelector}
+        className="w-32 bg-inherit m-1 border-2 border-gray-300 rounded-xl"
         name="one"
         value={cityselector[0]}
         onChange={handlecityselector}
@@ -17,7 +15,7 @@ export default function WeatherCitySelector(props) {
         })}
       </select>
       <select
-        className={styles.citySelector}
+        className="w-32 bg-inherit mb-1 border-2 border-gray-300 rounded-xl"
         name="two"
         value={cityselector[1]}
         onChange={handlecityselector}
@@ -33,7 +31,7 @@ export default function WeatherCitySelector(props) {
         })}
       </select>
       <select
-        className={styles.citySelector}
+        className="w-32 bg-inherit mb-1 border-2 border-gray-300 rounded-xl"
         name="three"
         value={cityselector[2]}
         onChange={handlecityselector}

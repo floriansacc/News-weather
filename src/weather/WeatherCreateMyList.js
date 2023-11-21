@@ -1,4 +1,3 @@
-import styles from "../css/weather.module.css";
 import { useEffect, useState, useRef } from "react";
 import WeatherUID from "./WeatherUID";
 
@@ -353,9 +352,9 @@ export default function WeatherCreateMyList(props) {
   }, []);
 
   return (
-    <div className="flex items-center flex-col flex-nowrap h-fit sm:w-5/6 w-96">
-      <div className={styles.listeSelectionBox}>
-        <div className={styles.listButtonBox}>
+    <div className="flex items-center flex-col flex-nowrap h-fit sm:w-11/12 w-96">
+      <div className="flex flex-row flex-nowrap justify-start items-center w-11/12 mt-12 border border-black rounded-xl">
+        <div className="flex flex-col flex-nowrap items-center m-1">
           <button
             className="flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
             onClick={handleResetListe}
@@ -374,9 +373,9 @@ export default function WeatherCreateMyList(props) {
           </button>
         </div>
         <div>
-          <label className={styles.cityContainer}>
+          <label className="flex flex-col flex-nowrap">
             <select
-              className={styles.citySelector}
+              className="w-32 bg-inherit m-1 border-2 border-gray-300 rounded-xl"
               name="one"
               value={elem[0]}
               onChange={handleCitySelector}
@@ -389,7 +388,7 @@ export default function WeatherCreateMyList(props) {
               )}
             </select>
             <select
-              className={styles.citySelector}
+              className="w-32 bg-inherit m-1 border-2 border-gray-300 rounded-xl"
               name="two"
               value={elem[1]}
               onChange={handleCitySelector}
@@ -405,7 +404,7 @@ export default function WeatherCreateMyList(props) {
               })}
             </select>
             <select
-              className={styles.citySelector}
+              className="w-32 bg-inherit m-1 border-2 border-gray-300 rounded-xl"
               name="three"
               value={elem[2]}
               onChange={handleCitySelector}
@@ -425,31 +424,30 @@ export default function WeatherCreateMyList(props) {
           </label>
         </div>
       </div>
-      {liste[0] && (
-        <p className={styles.listBigTitle}>List of city to display:</p>
-      )}
+      {liste[0] && <p className="mt-6">List of city to display:</p>}
       <div
-        style={{ display: liste[0] ? "grid" : "none" }}
-        className={styles.listBox}
+        className={`${
+          liste[0] ? "grid" : "hidden"
+        }  grid-cols-3 auto-rows-t1 justify-items-center border border-solid border-black rounded-xl w-fit m-4`}
       >
         {liste[0] && (
           <>
-            <p className={styles.listGridTitle}>1단계</p>
-            <p className={styles.listGridTitle}>2단계</p>
-            <p className={styles.listGridTitle}>3단계</p>
+            <p className="font-semibold my-1">1단계</p>
+            <p className="font-semibold my-1">2단계</p>
+            <p className="font-semibold my-1">3단계</p>
           </>
         )}
         {liste.map((x, i) => (
           <>
-            <p className={styles.listStyle}>{x.Phase1}</p>
-            <p className={styles.listStyle}>{x.Phase2}</p>
-            <p className={styles.listStyleLast}>{x.Phase3}</p>
+            <p className="min-w-33 text-center">{x.Phase1}</p>
+            <p className="min-w-33 text-center">{x.Phase2}</p>
+            <p className="w-fit min-w-25 text-center">{x.Phase3}</p>
           </>
         ))}
       </div>
-      <div className="inline-flex flex-row flex-nowrap w-11/12">
+      <div className="inline-flex flex-row flex-wrap w-11/12">
         <button
-          className={`flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400
+          className={`flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full whitespace-nowrap bg-gradient-to-r from-gray-300 to-gray-400
             ${isFetch && isFetch2 ? "brightness-100" : "brightness-75"}`}
           onMouseEnter={isFetch && isFetch2 ? mouseenter : null}
           onMouseLeave={
@@ -461,12 +459,9 @@ export default function WeatherCreateMyList(props) {
         >
           Display Weather
         </button>
-        <button className="flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400">
-          TailwindButton
-        </button>
         <p
           style={toStyleDisplayDescription}
-          className={styles.displayButtonDescription}
+          className="absolute hidden px-1 py-1 bg-white w-fit h-fit border border-solid border-black rounded-3xl"
           id="displaydescription"
         >
           Need to fill the list before display
@@ -480,14 +475,16 @@ export default function WeatherCreateMyList(props) {
           Console
         </button>
       </div>
-      <div className={styles.weatherSlideShowBox}>
-        <ul className={styles.bulletSlideBox}>
+      <div className="flex flex-col flex-nowrap">
+        <ul className="flex justify-center items-center list-none mt-4">
           {displayWeatherList &&
             liste.map((e, i) => (
               <li
                 onClick={handleBullet}
-                className={`${styles.bulletSlideShow} ${
-                  countSlide === `${i}` ? styles.bulletSlideShowOn : ""
+                className={`inline-block relative m-1  indent-inf text-xs rounded-2xl  ${
+                  countSlide === `${i}`
+                    ? "w-6 h-6 bg-green-500"
+                    : "w-5 h-5 bg-black transition-colors duration-150 ease-in delay-0 hover:animate-pulse hover:bg-green-300 cursor-pointer"
                 }`}
                 key={`bullet${i}`}
               >
@@ -495,6 +492,9 @@ export default function WeatherCreateMyList(props) {
               </li>
             ))}
         </ul>
+        {!isLoaded && !isLoadedForecast && (
+          <div className="bg-slate-500 w-96 h-96"></div>
+        )}
         {isLoaded && isLoadedForecast && (
           <WeatherUID
             dataimport={dataimport}

@@ -15,6 +15,19 @@ module.exports = {
       borderWidth: {
         DEFAULT: "1px",
       },
+      minWidth: {
+        25: "100px",
+        33: "130px",
+      },
+      textIndent: {
+        inf: "-3000px",
+      },
+      gridTemplateColumns: {
+        t1: "1fr 1fr 1fr",
+      },
+      gridAutoRows: {
+        t1: "30px",
+      },
     },
   },
 };
