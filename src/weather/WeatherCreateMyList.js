@@ -12,6 +12,7 @@ export default function WeatherCreateMyList(props) {
     srcimage,
     updatedate,
     basedate,
+    activetab,
   } = props;
   const [liste, setListe] = useState([]);
   const [elem, setElem] = useState([]);
@@ -347,12 +348,92 @@ export default function WeatherCreateMyList(props) {
   useEffect(() => {
     return () => {
       //document.getElementById("displaydescription").style.display = "none";
+
       document.getElementById("displaydescription").style.bakcground = "red";
     };
   }, []);
 
   return (
-    <div className="flex items-center flex-col flex-nowrap h-fit sm:w-11/12 w-96">
+    <div
+      className={`${
+        activetab !== 0 ? "flex" : "hidden"
+      } items-center flex-col flex-nowrap h-fit sm:w-11/12 w-96`}
+    >
+      <div className="flex flex-col flex-nowrap justify-start  bg-slate-700 h-96 w-full rounded-3xl">
+        <ul className="flex justify-center items-center list-none mx-4 my-1">
+          {displayWeatherList &&
+            liste.map((e, i) => (
+              <li
+                onClick={handleBullet}
+                className={`inline-block relative m-1  indent-inf text-xs rounded-2xl  ${
+                  countSlide === `${i}`
+                    ? "w-6 h-6 bg-green-500"
+                    : "w-5 h-5 bg-black transition-colors duration-150 ease-in delay-0 hover:animate-pulse hover:bg-green-300 cursor-pointer"
+                }`}
+                key={`bullet${i}`}
+              >
+                {i}
+              </li>
+            ))}
+        </ul>
+
+        {isLoaded && isLoadedForecast && (
+          <WeatherUID
+            dataimport={dataimport}
+            srcimage={srcimage}
+            loadstate={isLoaded}
+            loadforecast={isLoadedForecast}
+            raincond={
+              weatherInfoNow[
+                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
+              ][0]
+            }
+            humidity={
+              weatherInfoNow[
+                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
+              ][1]
+            }
+            hourrain={
+              weatherInfoNow[
+                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
+              ][2]
+            }
+            temp={
+              weatherInfoNow[
+                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
+              ][3]
+            }
+            winddir={
+              weatherInfoNow[
+                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
+              ][5]
+            }
+            windspeed={
+              weatherInfoNow[
+                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
+              ][7]
+            }
+            tempforecast={
+              tempForecast[
+                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
+              ]
+            }
+            skyforecast={
+              skyForecast[
+                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
+              ]
+            }
+            rainforecast={
+              weatherForecast[
+                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
+              ]
+            }
+            showbutton={false}
+            titlename={true}
+          />
+        )}
+      </div>
+
       <div className="flex flex-row flex-nowrap justify-start items-center w-11/12 mt-12 border border-black rounded-xl">
         <div className="flex flex-col flex-nowrap items-center m-1">
           <button
@@ -474,82 +555,6 @@ export default function WeatherCreateMyList(props) {
         >
           Console
         </button>
-      </div>
-      <div className="flex flex-col flex-nowrap">
-        <ul className="flex justify-center items-center list-none mt-4">
-          {displayWeatherList &&
-            liste.map((e, i) => (
-              <li
-                onClick={handleBullet}
-                className={`inline-block relative m-1  indent-inf text-xs rounded-2xl  ${
-                  countSlide === `${i}`
-                    ? "w-6 h-6 bg-green-500"
-                    : "w-5 h-5 bg-black transition-colors duration-150 ease-in delay-0 hover:animate-pulse hover:bg-green-300 cursor-pointer"
-                }`}
-                key={`bullet${i}`}
-              >
-                {i}
-              </li>
-            ))}
-        </ul>
-        {!isLoaded && !isLoadedForecast && (
-          <div className="bg-slate-500 w-96 h-96"></div>
-        )}
-        {isLoaded && isLoadedForecast && (
-          <WeatherUID
-            dataimport={dataimport}
-            srcimage={srcimage}
-            loadstate={isLoaded}
-            loadforecast={isLoadedForecast}
-            raincond={
-              weatherInfoNow[
-                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
-              ][0]
-            }
-            humidity={
-              weatherInfoNow[
-                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
-              ][1]
-            }
-            hourrain={
-              weatherInfoNow[
-                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
-              ][2]
-            }
-            temp={
-              weatherInfoNow[
-                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
-              ][3]
-            }
-            winddir={
-              weatherInfoNow[
-                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
-              ][5]
-            }
-            windspeed={
-              weatherInfoNow[
-                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
-              ][7]
-            }
-            tempforecast={
-              tempForecast[
-                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
-              ]
-            }
-            skyforecast={
-              skyForecast[
-                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
-              ]
-            }
-            rainforecast={
-              weatherForecast[
-                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
-              ]
-            }
-            showbutton={false}
-            titlename={true}
-          />
-        )}
       </div>
     </div>
   );

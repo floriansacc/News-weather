@@ -8,6 +8,7 @@ import pCloudy from "../css/partial cloudy logo.png";
 import cloudy from "../css/cloudy logo.png";
 import rainy from "../css/rainy logo.png";
 import WeatherCreateMyList from "./WeatherCreateMyList";
+import WeatherHold from "./WeatherLocalisation";
 
 const images = [sunny, "", pCloudy, cloudy, rainy];
 
@@ -21,6 +22,7 @@ export default function WeatherHome() {
   const [refreshData, setRefreshData] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoadedForecast, setIsLoadedForecast] = useState(false);
+  const [activeTab, setActiveTab] = useState(2);
 
   const date = new Date();
 
@@ -250,44 +252,69 @@ export default function WeatherHome() {
   }, [refreshData]);
 
   return (
-    <div className="flex sm:flex-col flex-row flex-nowrap justify-around sm:items-center items-start sm:m-4 m-8 h-fit sm:w-full w-11/12 bg-slate-400">
-      <p className="text-3xl text-red-700">공사중</p>
-
-      <WeatherUID
-        handlecityselector={handleCitySelector}
-        cityselector={citySelector}
-        dataimport={dataimport}
-        displayinfo={handleDisplayInfo}
-        srcimage={images}
-        loadstate={isLoaded}
-        loadforecast={isLoadedForecast}
-        reset={handleReset}
-        refresh={handleRefresh}
-        raincond={weatherInfoNow[0]}
-        humidity={weatherInfoNow[1]}
-        hourrain={weatherInfoNow[2]}
-        temp={weatherInfoNow[3]}
-        winddir={weatherInfoNow[5]}
-        windspeed={weatherInfoNow[7]}
-        tempforecast={tempForecast}
-        skyforecast={skyForecast}
-        rainforecast={weatherForecast}
-        mouseenter={handleButtonEnter}
-        mouseleave={handleButtonLeave}
-        showbutton={true}
-        titlename={false}
-      />
-      <WeatherCreateMyList
-        dataimport={dataimport}
-        mouseenter={handleButtonEnter}
-        mouseleave={handleButtonLeave}
-        basetime={baseTime}
-        basetimeforecast={baseTimeForecast}
-        servicekey={serviceKey}
-        srcimage={images}
-        updatedate={updateDates}
-        basedate={baseDate}
-      />
+    <div className="flex flex-col justify-center items-center w-full h-full bg-slate-900">
+      <div className="flex flex-row justify-center w-full">
+        <p className="text-4xl text-red-700">공사중</p>
+        <button
+          className={`flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full  transition-all duration-150 ease-in delay-0  hover:bg-yellow-100  ${
+            activeTab === 0
+              ? "bg-gradient-to-r from-gray-300 to-yellow-200"
+              : "bg-gray-400"
+          }`}
+          onClick={() => (activeTab === 0 ? setActiveTab(2) : setActiveTab(0))}
+        >
+          Localisation
+        </button>
+        <button
+          className={`flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full  transition-all duration-150 ease-in delay-0  hover:bg-yellow-100  ${
+            activeTab === 1
+              ? "bg-gradient-to-r from-gray-300 to-yellow-200"
+              : "bg-gray-400"
+          }`}
+          onClick={() => (activeTab === 1 ? setActiveTab(2) : setActiveTab(1))}
+        >
+          My List
+        </button>
+      </div>
+      <div className="flex sm:flex-col flex-row flex-nowrap justify-around sm:items-center items-start sm:m-4 m-8 h-fit sm:w-full w-11/12 bg-slate-400">
+        <WeatherHold
+          handlecityselector={handleCitySelector}
+          cityselector={citySelector}
+          dataimport={dataimport}
+          displayinfo={handleDisplayInfo}
+          srcimage={images}
+          loadstate={isLoaded}
+          loadforecast={isLoadedForecast}
+          reset={handleReset}
+          refresh={handleRefresh}
+          raincond={weatherInfoNow[0]}
+          humidity={weatherInfoNow[1]}
+          hourrain={weatherInfoNow[2]}
+          temp={weatherInfoNow[3]}
+          winddir={weatherInfoNow[5]}
+          windspeed={weatherInfoNow[7]}
+          tempforecast={tempForecast}
+          skyforecast={skyForecast}
+          rainforecast={weatherForecast}
+          mouseenter={handleButtonEnter}
+          mouseleave={handleButtonLeave}
+          showbutton={true}
+          titlename={false}
+          activetab={activeTab}
+        />
+        <WeatherCreateMyList
+          dataimport={dataimport}
+          mouseenter={handleButtonEnter}
+          mouseleave={handleButtonLeave}
+          basetime={baseTime}
+          basetimeforecast={baseTimeForecast}
+          servicekey={serviceKey}
+          srcimage={images}
+          updatedate={updateDates}
+          basedate={baseDate}
+          activetab={activeTab}
+        />
+      </div>
     </div>
   );
 }

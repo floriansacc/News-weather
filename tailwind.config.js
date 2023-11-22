@@ -12,6 +12,9 @@ module.exports = {
       width: {
         128: "32rem",
       },
+      height: {
+        116: "25rem",
+      },
       borderWidth: {
         DEFAULT: "1px",
       },
