@@ -8,7 +8,7 @@ import pCloudy from "../css/partial cloudy logo.png";
 import cloudy from "../css/cloudy logo.png";
 import rainy from "../css/rainy logo.png";
 import WeatherCreateMyList from "./WeatherCreateMyList";
-import WeatherHold from "./WeatherLocalisation";
+import WeatherLocalisation from "./WeatherLocalisation";
 
 const images = [sunny, "", pCloudy, cloudy, rainy];
 
@@ -252,14 +252,14 @@ export default function WeatherHome() {
   }, [refreshData]);
 
   return (
-    <div className="flex flex-col justify-center items-center w-full h-full bg-slate-900">
+    <div className="flex flex-col justify-center items-center w-full h-full ">
       <div className="flex flex-row justify-center w-full">
         <p className="text-4xl text-red-700">공사중</p>
         <button
           className={`flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full  transition-all duration-150 ease-in delay-0  hover:bg-yellow-100  ${
             activeTab === 0
               ? "bg-gradient-to-r from-gray-300 to-yellow-200"
-              : "bg-gray-400"
+              : "bg-gray-400 hover:animate-pulse"
           }`}
           onClick={() => (activeTab === 0 ? setActiveTab(2) : setActiveTab(0))}
         >
@@ -269,15 +269,15 @@ export default function WeatherHome() {
           className={`flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full  transition-all duration-150 ease-in delay-0  hover:bg-yellow-100  ${
             activeTab === 1
               ? "bg-gradient-to-r from-gray-300 to-yellow-200"
-              : "bg-gray-400"
+              : "bg-gray-400 hover:animate-pulse"
           }`}
           onClick={() => (activeTab === 1 ? setActiveTab(2) : setActiveTab(1))}
         >
           My List
         </button>
       </div>
-      <div className="flex sm:flex-col flex-row flex-nowrap justify-around sm:items-center items-start sm:m-4 m-8 h-fit sm:w-full w-11/12 bg-slate-400">
-        <WeatherHold
+      <div className="flex sm:flex-col flex-row md:flex-wrap flex-nowrap justify-around sm:items-center items-start sm:m-4 md:m-4 m-8 h-fit sm:w-full w-11/12 bg-slate-100">
+        <WeatherLocalisation
           handlecityselector={handleCitySelector}
           cityselector={citySelector}
           dataimport={dataimport}

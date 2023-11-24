@@ -47,7 +47,10 @@ export default function WeatherCreateMyList(props) {
         new Set(
           dataimport
             .filter(
-              (word) => word.Part3 === e.target.value && word.Part2 === elem[1]
+              (word) =>
+                word.Part3 === e.target.value &&
+                word.Part2 === elem[1] &&
+                word.Part1 === elem[0]
             )
             .map((x) => [x.nx, x.ny])
         )
@@ -159,7 +162,7 @@ export default function WeatherCreateMyList(props) {
     } else {
       const getWeatherList = async (name, nx, ny) => {
         let temporary = [];
-        const urlWeatherList = `${weatherUrlNow}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetimeforecast}&nx=${nx}&ny=${ny}`;
+        const urlWeatherList = `${weatherUrlNow}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetime}&nx=${nx}&ny=${ny}`;
         try {
           const response = await fetch(urlWeatherList, {
             headers: {
@@ -234,7 +237,7 @@ export default function WeatherCreateMyList(props) {
     } else {
       const getWeatherList = async (name, nx, ny) => {
         let temporary = [];
-        const urlWeatherForecast = `${weatherUrlForecast}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetime}&nx=${nx}&ny=${ny}`;
+        const urlWeatherForecast = `${weatherUrlForecast}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetimeforecast}&nx=${nx}&ny=${ny}`;
         try {
           const response = await fetch(urlWeatherForecast, {
             headers: {
@@ -357,9 +360,13 @@ export default function WeatherCreateMyList(props) {
     <div
       className={`${
         activetab !== 0 ? "flex" : "hidden"
-      } items-center flex-col flex-nowrap h-fit sm:w-11/12 w-96`}
+      } items-center sm:flex-col md:flex-col flex-row-reverse flex-nowrap h-fit sm:w-full border border-solid border-red-600`}
     >
-      <div className="flex flex-col flex-nowrap justify-start  bg-slate-700 h-96 w-full rounded-3xl">
+      <div
+        className={`flex-shrink-0 flex-col flex-nowrap justify-start sm:w-11/12 w-96 sm:max-w-md sm:m-0 mx-6 bg-slate-700 h-96 rounded-3xl ${
+          isLoaded ? "" : "animate-pulse"
+        }`}
+      >
         <ul className="flex justify-center items-center list-none mx-4 my-1">
           {displayWeatherList &&
             liste.map((e, i) => (
@@ -433,128 +440,136 @@ export default function WeatherCreateMyList(props) {
           />
         )}
       </div>
-
-      <div className="flex flex-row flex-nowrap justify-start items-center w-11/12 mt-12 border border-black rounded-xl">
-        <div className="flex flex-col flex-nowrap items-center m-1">
-          <button
-            className="flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
-            onClick={handleResetListe}
-            onMouseEnter={mouseenter}
-            onMouseLeave={mouseleave}
-          >
-            Reset
-          </button>
-          <button
-            className="flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
-            onClick={handleAddToList}
-            onMouseEnter={mouseenter}
-            onMouseLeave={mouseleave}
-          >
-            Add to my list
-          </button>
+      <div className="flex flex-col justify-start items-start w-11/12 mt-12 border border-cyan-400 rounded-xl">
+        <div className="flex flex-row flex-nowrap justify-start items-center w-full mt-12 border border-black rounded-xl">
+          <div className="flex flex-col flex-nowrap items-center m-1">
+            <button
+              className="flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
+              onClick={handleResetListe}
+              onMouseEnter={mouseenter}
+              onMouseLeave={mouseleave}
+            >
+              Reset
+            </button>
+            <button
+              className="flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
+              onClick={handleAddToList}
+              onMouseEnter={mouseenter}
+              onMouseLeave={mouseleave}
+            >
+              Add to my list
+            </button>
+          </div>
+          <div>
+            <label className="flex flex-col flex-nowrap">
+              <select
+                className="w-32 bg-inherit m-1 border-2 border-gray-300 rounded-xl"
+                name="one"
+                value={elem[0]}
+                onChange={handleCitySelector}
+              >
+                <option name="one" value="선택" label="선택"></option>
+                {Array.from(new Set(dataimport.map((obj) => obj.Part1))).map(
+                  (x) => {
+                    return <option name="one" value={x} label={x}></option>;
+                  }
+                )}
+              </select>
+              <select
+                className="w-32 bg-inherit m-1 border-2 border-gray-300 rounded-xl"
+                name="two"
+                value={elem[1]}
+                onChange={handleCitySelector}
+              >
+                {Array.from(
+                  new Set(
+                    dataimport
+                      .filter((word) => word.Part1 === elem[0])
+                      .map((obj) => obj.Part2)
+                  )
+                ).map((x) => {
+                  return <option name="two" value={x} label={x}></option>;
+                })}
+              </select>
+              <select
+                className="w-32 bg-inherit m-1 border-2 border-gray-300 rounded-xl"
+                name="three"
+                value={elem[2]}
+                onChange={handleCitySelector}
+              >
+                {Array.from(
+                  new Set(
+                    dataimport
+                      .filter(
+                        (word) =>
+                          word.Part2 === elem[1] && word.Part1 === elem[0]
+                      )
+                      .map((obj) => obj)
+                  )
+                ).map((x) => {
+                  return (
+                    <option
+                      name="three"
+                      value={x.Part3}
+                      label={x.Part3}
+                    ></option>
+                  );
+                })}
+              </select>
+            </label>
+          </div>
         </div>
-        <div>
-          <label className="flex flex-col flex-nowrap">
-            <select
-              className="w-32 bg-inherit m-1 border-2 border-gray-300 rounded-xl"
-              name="one"
-              value={elem[0]}
-              onChange={handleCitySelector}
-            >
-              <option name="one" value="선택" label="선택"></option>
-              {Array.from(new Set(dataimport.map((obj) => obj.Part1))).map(
-                (x) => {
-                  return <option name="one" value={x} label={x}></option>;
-                }
-              )}
-            </select>
-            <select
-              className="w-32 bg-inherit m-1 border-2 border-gray-300 rounded-xl"
-              name="two"
-              value={elem[1]}
-              onChange={handleCitySelector}
-            >
-              {Array.from(
-                new Set(
-                  dataimport
-                    .filter((word) => word.Part1 === elem[0])
-                    .map((obj) => obj.Part2)
-                )
-              ).map((x) => {
-                return <option name="two" value={x} label={x}></option>;
-              })}
-            </select>
-            <select
-              className="w-32 bg-inherit m-1 border-2 border-gray-300 rounded-xl"
-              name="three"
-              value={elem[2]}
-              onChange={handleCitySelector}
-            >
-              {Array.from(
-                new Set(
-                  dataimport
-                    .filter((word) => word.Part2 === elem[1])
-                    .map((obj) => obj)
-                )
-              ).map((x) => {
-                return (
-                  <option name="three" value={x.Part3} label={x.Part3}></option>
-                );
-              })}
-            </select>
-          </label>
+        {liste[0] && <p className="mt-6">List of city to display:</p>}
+        <div
+          className={`${
+            liste[0] ? "grid" : "hidden"
+          }  grid-cols-3 auto-rows-t1 justify-items-center border border-solid border-black rounded-xl w-full my-4`}
+        >
+          {liste[0] && (
+            <>
+              <p className="font-semibold my-1">1단계</p>
+              <p className="font-semibold my-1">2단계</p>
+              <p className="font-semibold my-1">3단계</p>
+            </>
+          )}
+          {liste.map((x, i) => (
+            <>
+              <p className="min-w-33 text-center">{x.Phase1}</p>
+              <p className="min-w-33 text-center">{x.Phase2}</p>
+              <p className="w-fit min-w-25 text-center">{x.Phase3}</p>
+            </>
+          ))}
         </div>
-      </div>
-      {liste[0] && <p className="mt-6">List of city to display:</p>}
-      <div
-        className={`${
-          liste[0] ? "grid" : "hidden"
-        }  grid-cols-3 auto-rows-t1 justify-items-center border border-solid border-black rounded-xl w-fit m-4`}
-      >
-        {liste[0] && (
-          <>
-            <p className="font-semibold my-1">1단계</p>
-            <p className="font-semibold my-1">2단계</p>
-            <p className="font-semibold my-1">3단계</p>
-          </>
-        )}
-        {liste.map((x, i) => (
-          <>
-            <p className="min-w-33 text-center">{x.Phase1}</p>
-            <p className="min-w-33 text-center">{x.Phase2}</p>
-            <p className="w-fit min-w-25 text-center">{x.Phase3}</p>
-          </>
-        ))}
-      </div>
-      <div className="inline-flex flex-row flex-wrap w-11/12">
-        <button
-          className={`flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full whitespace-nowrap bg-gradient-to-r from-gray-300 to-gray-400
+        <div className="inline-flex flex-row flex-wrap w-full">
+          <button
+            className={`flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full whitespace-nowrap bg-gradient-to-r from-gray-300 to-gray-400
             ${isFetch && isFetch2 ? "brightness-100" : "brightness-75"}`}
-          onMouseEnter={isFetch && isFetch2 ? mouseenter : null}
-          onMouseLeave={
-            isFetch && isFetch2 ? mouseleave : handleDisplayMouseLeave
-          }
-          onMouseMove={handleDisplayDescription}
-          onClick={isFetch && isFetch2 ? handleDisplayWeatherSlide : null}
-          id="Displaybutton"
-        >
-          Display Weather
-        </button>
-        <p
-          style={toStyleDisplayDescription}
-          className="absolute hidden px-1 py-1 bg-white w-fit h-fit border border-solid border-black rounded-3xl"
-          id="displaydescription"
-        >
-          Need to fill the list before display
-        </p>
-        <button
-          className="flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
-          onMouseEnter={mouseenter}
-          onMouseLeave={mouseleave}
-          onClick={handleCommand}
-        >
-          Console
-        </button>
+            onMouseEnter={isFetch && isFetch2 ? mouseenter : null}
+            onMouseLeave={
+              isFetch && isFetch2 ? mouseleave : handleDisplayMouseLeave
+            }
+            onMouseMove={handleDisplayDescription}
+            onClick={isFetch && isFetch2 ? handleDisplayWeatherSlide : null}
+            id="Displaybutton"
+          >
+            Display Weather
+          </button>
+          <p
+            style={toStyleDisplayDescription}
+            className="absolute hidden px-1 py-1 bg-white w-fit h-fit border border-solid border-black rounded-3xl"
+            id="displaydescription"
+          >
+            Need to fill the list before display
+          </p>
+          <button
+            className="flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
+            onMouseEnter={mouseenter}
+            onMouseLeave={mouseleave}
+            onClick={handleCommand}
+          >
+            Console
+          </button>
+        </div>
       </div>
     </div>
   );

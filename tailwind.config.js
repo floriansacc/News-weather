@@ -29,7 +29,7 @@ module.exports = {
         t1: "1fr 1fr 1fr",
       },
       gridAutoRows: {
-        t1: "30px",
+        t1: "max-content",
       },
     },
   },

@@ -30,7 +30,7 @@ export default function WeatherLocalisation(props) {
     <div
       className={`${
         activetab !== 1 ? "flex" : "hidden"
-      } flex-row justify-center w-fit sm:w-full h-full sm:mb-20 m-0`}
+      } flex-row justify-center w-fit sm:w-full h-full sm:mb-20 md:mb-20 m-0`}
     >
       <WeatherUID
         handlecityselector={handlecityselector}
