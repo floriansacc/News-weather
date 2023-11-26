@@ -43,7 +43,7 @@ export default function WeatherUID(props) {
           onMouseEnter={mouseenter}
           onMouseLeave={mouseleave}
         >
-          Refresh
+          Refresh location
         </button>
         <button
           className="flex items-center m-1.5 p-1.5 h-8 border-2 border-solid border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"

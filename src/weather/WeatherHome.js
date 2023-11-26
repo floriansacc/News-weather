@@ -24,7 +24,7 @@ export default function WeatherHome() {
   let minutes = date.getMinutes();
 
   const serviceKey = process.env.REACT_APP_WEATHER_KEY;
-  const baseDate = todayDate();
+  const baseDate = hours === 0 && minutes < 30 ? todayDate() - 1 : todayDate();
   const baseTimeCalcNow = () => {
     if (hours < 10 && hours !== 0) {
       if (minutes < 30) {
@@ -51,7 +51,11 @@ export default function WeatherHome() {
   const updateDates = () => {
     hours = date.getHours();
     minutes = date.getMinutes();
-    day = date.getDate();
+    if (hours === 0 && minutes < 30) {
+      day = date.getDate() - 1;
+    } else {
+      day = date.getDate();
+    }
   };
 
   const baseTimeCalcForecast = () => {

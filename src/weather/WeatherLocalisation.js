@@ -23,7 +23,8 @@ export default function WeatherLocalisation(props) {
   const [isLoadedForecast, setIsLoadedForecast] = useState(false);
   const [isLocated, setIsLocated] = useState(false);
   const [citySelector, setCitySelector] = useState(["선택", "", "", 0, 0]);
-  const [refreshData, setRefreshData] = useState("");
+  const [refreshData, setRefreshData] = useState(0);
+  const [refreshData2, setRefreshData2] = useState(0);
 
   const weatherUrlNow =
     "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
@@ -136,7 +137,13 @@ export default function WeatherLocalisation(props) {
         coord[0],
         coord[1],
       ]);
-      handleRefresh();
+      setWeatherInfoNow([]);
+      setWeatherForecast([]);
+      setTempForecast([]);
+      setSkyForecast([]);
+      setIsLoaded(false);
+      setIsLoadedForecast(false);
+      setRefreshData2((prev) => prev + 1);
     }
   };
 
@@ -152,15 +159,29 @@ export default function WeatherLocalisation(props) {
   };
 
   useEffect(() => {
+    updatedate();
+  }, []);
+
+  useEffect(() => {
+    setCitySelector(["없음", "없음", "없음", 0, 0]);
     function success(position) {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
       let temporary = positionConversion(
         "toXY",
         position.coords.latitude,
         position.coords.longitude
       );
-      setCitySelector(["없음", "없음", "없음", temporary.x, temporary.y]);
+      let [cityName] = dataimport
+        .filter((word) => word.nx === temporary.x && word.ny === temporary.y)
+        .slice(0, 1)
+        .map((x) => [x.Part1, x.Part2]);
+
+      setCitySelector([
+        cityName[0],
+        cityName[1],
+        "없음",
+        temporary.x,
+        temporary.y,
+      ]);
       setIsLocated(true);
     }
     function error() {
@@ -173,7 +194,6 @@ export default function WeatherLocalisation(props) {
   }, [refreshData]);
 
   useEffect(() => {
-    updatedate();
     const getUrlWeatherNow = `${weatherUrlNow}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetime}&nx=${citySelector[3]}&ny=${citySelector[4]}`;
     const getWeather = async () => {
       try {
@@ -212,10 +232,9 @@ export default function WeatherLocalisation(props) {
     return () => {
       setIsLoaded(false);
     };
-  }, [isLocated]);
+  }, [isLocated, refreshData2]);
 
   useEffect(() => {
-    updatedate();
     const getUrlWeatherForecast = `${weatherUrlForecast}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetimeforecast}&nx=${citySelector[3]}&ny=${citySelector[4]}`;
     const getWeather2 = async () => {
       try {
@@ -277,7 +296,7 @@ export default function WeatherLocalisation(props) {
     return () => {
       setIsLoadedForecast(false);
     };
-  }, [isLocated]);
+  }, [isLocated, refreshData2]);
 
   return (
     <div
