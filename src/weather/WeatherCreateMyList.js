@@ -38,7 +38,6 @@ export default function WeatherCreateMyList(props) {
 
   const handleCitySelector = (e) => {
     if (e.target.name === "one") {
-      setElem(["선택"]);
       setElem([e.target.value]);
     } else if (e.target.name === "two") {
       setElem([elem[0], e.target.value]);
@@ -364,7 +363,7 @@ export default function WeatherCreateMyList(props) {
     >
       <div
         className={`flex-shrink-0 flex-col flex-nowrap justify-start sm:w-11/12 w-96 sm:max-w-md sm:m-0 mx-6 bg-slate-700 h-96 rounded-3xl ${
-          isLoaded ? "" : "animate-pulse"
+          isLoaded ? "" : "animate-pulse-slow"
         }`}
       >
         <ul className="flex justify-center items-center list-none mx-4 my-1">
@@ -470,8 +469,15 @@ export default function WeatherCreateMyList(props) {
               >
                 <option name="one" value="선택" label="선택"></option>
                 {Array.from(new Set(dataimport.map((obj) => obj.Part1))).map(
-                  (x) => {
-                    return <option name="one" value={x} label={x}></option>;
+                  (x, i) => {
+                    return (
+                      <option
+                        name="one"
+                        value={x}
+                        label={x}
+                        key={`optionlist1${i}`}
+                      ></option>
+                    );
                   }
                 )}
               </select>
@@ -487,8 +493,15 @@ export default function WeatherCreateMyList(props) {
                       .filter((word) => word.Part1 === elem[0])
                       .map((obj) => obj.Part2)
                   )
-                ).map((x) => {
-                  return <option name="two" value={x} label={x}></option>;
+                ).map((x, i) => {
+                  return (
+                    <option
+                      name="two"
+                      value={x}
+                      label={x}
+                      key={`optionlist2${i}`}
+                    ></option>
+                  );
                 })}
               </select>
               <select
@@ -506,12 +519,13 @@ export default function WeatherCreateMyList(props) {
                       )
                       .map((obj) => obj)
                   )
-                ).map((x) => {
+                ).map((x, i) => {
                   return (
                     <option
                       name="three"
                       value={x.Part3}
                       label={x.Part3}
+                      key={`optionlist3${i}`}
                     ></option>
                   );
                 })}
@@ -534,9 +548,15 @@ export default function WeatherCreateMyList(props) {
           )}
           {liste.map((x, i) => (
             <>
-              <p className="min-w-33 text-center">{x.Phase1}</p>
-              <p className="min-w-33 text-center">{x.Phase2}</p>
-              <p className="w-fit min-w-25 text-center">{x.Phase3}</p>
+              <p className="min-w-33 text-center" key={`p1${i}`}>
+                {x.Phase1}
+              </p>
+              <p className="min-w-33 text-center" key={`p2${i}`}>
+                {x.Phase2}
+              </p>
+              <p className="w-fit min-w-25 text-center" key={`p3${i}`}>
+                {x.Phase3}
+              </p>
             </>
           ))}
         </div>

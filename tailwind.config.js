@@ -31,6 +31,9 @@ module.exports = {
       gridAutoRows: {
         t1: "max-content",
       },
+      animation: {
+        "pulse-slow": "pulse 5s linear infinite",
+      },
     },
   },
 };

@@ -5,8 +5,11 @@ export default function WeatherPrediction(props) {
     <div className="w-11/12">
       {raincond.value === "1" ? "" : "Prediction:"}
       <div className="flex flex-row flex-nowrap justify-between w-full">
-        {tempforecast.slice(1, tempforecast.length).map((x, i) => (
-          <ul className="flex flex-col flex-nowrap items-center w-3/12 m-3 rounded-xl list-none">
+        {tempforecast.slice(1, 6).map((x, i) => (
+          <ul
+            className="flex flex-col flex-nowrap items-center w-3/12 m-3 rounded-xl list-none"
+            key={`ulNo${i}`}
+          >
             <img
               src={
                 srcimage[

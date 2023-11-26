@@ -1,42 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import WeatherUID from "./WeatherUID";
 
 export default function WeatherLocalisation(props) {
   const {
-    handlecityselector,
-    cityselector,
     dataimport,
-    displayinfo,
-    raincond,
-    humidity,
-    hourrain,
-    temp,
-    winddir,
-    windspeed,
-    reset,
-    refresh,
-    loadstate,
-    loadforecast,
-    srcimage,
-    tempforecast,
-    skyforecast,
-    rainforecast,
     mouseenter,
     mouseleave,
-    showbutton,
-    titlename,
+    basetime,
+    basetimeforecast,
+    servicekey,
+    srcimage,
+    updatedate,
+    basedate,
     activetab,
-    getlocation,
   } = props;
 
-  const [currentLocation, setCurrentLocation] = useState({ lat: 0, lng: 0 });
+  const [weatherInfoNow, setWeatherInfoNow] = useState([]);
+  const [weatherForecast, setWeatherForecast] = useState([]);
+  const [skyForecast, setSkyForecast] = useState([]);
+  const [tempForecast, setTempForecast] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoadedForecast, setIsLoadedForecast] = useState(false);
+  const [isLocated, setIsLocated] = useState(false);
+  const [citySelector, setCitySelector] = useState(["선택", "", "", 0, 0]);
+  const [refreshData, setRefreshData] = useState("");
 
-  navigator.geolocation.getCurrentPosition((position) => {
-    setCurrentLocation({
-      lat: position.coords.latitude,
-      lng: position.coords.longitude,
-    });
-  });
+  const weatherUrlNow =
+    "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
+  const weatherUrlForecast =
+    "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst";
 
   const RE = 6371.00877; // Earth radius (km)
   const GRID = 5.0; // Grid interval (km)
@@ -113,11 +105,179 @@ export default function WeatherLocalisation(props) {
     return rs;
   };
 
-  const testPos = positionConversion(
-    "toXY",
-    currentLocation.lat,
-    currentLocation.lng
-  );
+  const handleRefresh = (e) => {
+    setWeatherInfoNow([]);
+    setWeatherForecast([]);
+    setTempForecast([]);
+    setSkyForecast([]);
+    setIsLoaded(false);
+    setIsLoadedForecast(false);
+    setRefreshData((prev) => prev + 1);
+  };
+
+  const handleCitySelector = (e) => {
+    if (e.target.name === "one") {
+      setCitySelector(["선택"]);
+      setCitySelector([e.target.value]);
+    } else if (e.target.name === "two") {
+      setCitySelector([citySelector[0], e.target.value]);
+    } else if (e.target.name === "three") {
+      let [coord] = Array.from(
+        new Set(
+          dataimport
+            .filter((word) => word.Part3 === e.target.value)
+            .map((x) => [x.nx, x.ny])
+        )
+      );
+      setCitySelector([
+        citySelector[0],
+        citySelector[1],
+        e.target.value,
+        coord[0],
+        coord[1],
+      ]);
+      handleRefresh();
+    }
+  };
+
+  const handleDisplayInfo = () => {
+    window.console.log(weatherInfoNow);
+    window.console.log(weatherForecast);
+    window.console.log(tempForecast);
+    window.console.log(skyForecast);
+    window.console.log(citySelector);
+    window.console.log(basedate);
+    window.console.log(basetime);
+    window.console.log(basetimeforecast);
+  };
+
+  useEffect(() => {
+    function success(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+      let temporary = positionConversion(
+        "toXY",
+        position.coords.latitude,
+        position.coords.longitude
+      );
+      setCitySelector(["없음", "없음", "없음", temporary.x, temporary.y]);
+      setIsLocated(true);
+    }
+    function error() {
+      window.console.log("Unable to retrieve your location");
+    }
+    navigator.geolocation.getCurrentPosition(success, error);
+    return () => {
+      setIsLocated(false);
+    };
+  }, [refreshData]);
+
+  useEffect(() => {
+    updatedate();
+    const getUrlWeatherNow = `${weatherUrlNow}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetime}&nx=${citySelector[3]}&ny=${citySelector[4]}`;
+    const getWeather = async () => {
+      try {
+        const response = await fetch(getUrlWeatherNow, {
+          headers: {
+            Accept: "application / json",
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Pas de météo pour toi");
+        }
+        const jsonResponse = await response.json();
+        window.console.log(jsonResponse.response.header);
+        window.console.log(jsonResponse.response.body.items.item);
+        await jsonResponse.response.body.items.item.forEach((x) => {
+          setWeatherInfoNow((prev) => [
+            ...prev,
+            {
+              category: x.category,
+              value: x.obsrValue,
+              time: x.baseTime,
+              nx: x.nx,
+              ny: x.ny,
+            },
+          ]);
+        });
+        setIsLoaded(true);
+      } catch (error) {
+        console.log(error);
+        setIsLoaded(false);
+      }
+    };
+    if (isLocated) {
+      getWeather();
+    }
+    return () => {
+      setIsLoaded(false);
+    };
+  }, [isLocated]);
+
+  useEffect(() => {
+    updatedate();
+    const getUrlWeatherForecast = `${weatherUrlForecast}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetimeforecast}&nx=${citySelector[3]}&ny=${citySelector[4]}`;
+    const getWeather2 = async () => {
+      try {
+        const response = await fetch(getUrlWeatherForecast, {
+          headers: {
+            Accept: "application / json",
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Pas de météo pour toi");
+        }
+        const jsonResponse = await response.json();
+        window.console.log(jsonResponse.response.header);
+        window.console.log(jsonResponse.response.body.items.item);
+        const getData = await jsonResponse.response.body.items.item.forEach(
+          (x) => {
+            if (x.category === "PTY") {
+              setWeatherForecast((prev) => [
+                ...prev,
+                {
+                  category: x.category,
+                  time: x.fcstTime,
+                  value: x.fcstValue,
+                  basetime: x.baseTime,
+                },
+              ]);
+            } else if (x.category === "T1H") {
+              setTempForecast((prev) => [
+                ...prev,
+                {
+                  category: x.category,
+                  time: x.fcstTime,
+                  value: x.fcstValue,
+                  basetime: x.baseTime,
+                },
+              ]);
+            } else if (x.category === "SKY") {
+              setSkyForecast((prev) => [
+                ...prev,
+                {
+                  category: x.category,
+                  time: x.fcstTime,
+                  value: x.fcstValue,
+                  basetime: x.baseTime,
+                },
+              ]);
+            }
+          }
+        );
+        setIsLoadedForecast(true);
+      } catch (error) {
+        console.log(error);
+        setIsLoadedForecast(false);
+      }
+    };
+    if (isLocated) {
+      getWeather2();
+    }
+    return () => {
+      setIsLoadedForecast(false);
+    };
+  }, [isLocated]);
 
   return (
     <div
@@ -125,37 +285,33 @@ export default function WeatherLocalisation(props) {
         activetab !== 1 ? "flex" : "hidden"
       } flex-row justify-center w-fit sm:w-full h-full sm:mb-20 md:mb-20 m-0`}
     >
-      <div>
+      <div className="absolute top-1 right-0">
         <h1>
-          from lat/long: {currentLocation.lat}, {currentLocation.lng}
-        </h1>
-        <h1>
-          to X Y: {testPos.x}, {testPos.y}
+          X {citySelector[3]}, Y {citySelector[4]}
         </h1>
       </div>
       <WeatherUID
-        handlecityselector={handlecityselector}
-        cityselector={cityselector}
+        handlecityselector={handleCitySelector}
+        cityselector={citySelector}
         dataimport={dataimport}
-        displayinfo={displayinfo}
+        displayinfo={handleDisplayInfo}
         srcimage={srcimage}
-        loadstate={loadstate}
-        loadforecast={loadforecast}
-        reset={reset}
-        refresh={refresh}
-        raincond={raincond}
-        humidity={humidity}
-        hourrain={hourrain}
-        temp={temp}
-        winddir={winddir}
-        windspeed={windspeed}
-        tempforecast={tempforecast}
-        skyforecast={skyforecast}
-        rainforecast={rainforecast}
+        loadstate={isLoaded}
+        loadforecast={isLoadedForecast}
+        refresh={handleRefresh}
+        raincond={weatherInfoNow[0]}
+        humidity={weatherInfoNow[1]}
+        hourrain={weatherInfoNow[2]}
+        temp={weatherInfoNow[3]}
+        winddir={weatherInfoNow[5]}
+        windspeed={weatherInfoNow[7]}
+        tempforecast={tempForecast}
+        skyforecast={skyForecast}
+        rainforecast={weatherForecast}
         mouseenter={mouseenter}
         mouseleave={mouseleave}
-        showbutton={showbutton}
-        titlename={titlename}
+        showbutton={true}
+        titlename={false}
         activetab={activetab}
       />
     </div>

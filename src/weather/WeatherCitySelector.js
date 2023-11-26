@@ -10,8 +10,10 @@ export default function WeatherCitySelector(props) {
         onChange={handlecityselector}
       >
         <option name="one" value="선택" label="선택"></option>
-        {Array.from(new Set(dataimport.map((obj) => obj.Part1))).map((x) => {
-          return <option name="one" value={x} label={x}></option>;
+        {Array.from(new Set(dataimport.map((obj) => obj.Part1))).map((x, i) => {
+          return (
+            <option name="one" value={x} label={x} key={`option1${i}`}></option>
+          );
         })}
       </select>
       <select
@@ -26,8 +28,10 @@ export default function WeatherCitySelector(props) {
               .filter((word) => word.Part1 === cityselector[0])
               .map((obj) => obj.Part2)
           )
-        ).map((x) => {
-          return <option name="two" value={x} label={x}></option>;
+        ).map((x, i) => {
+          return (
+            <option name="two" value={x} label={x} key={`option2${i}`}></option>
+          );
         })}
       </select>
       <select
@@ -39,11 +43,22 @@ export default function WeatherCitySelector(props) {
         {Array.from(
           new Set(
             dataimport
-              .filter((word) => word.Part2 === cityselector[1])
+              .filter(
+                (word) =>
+                  word.Part2 === cityselector[1] &&
+                  word.Part1 === cityselector[0]
+              )
               .map((obj) => obj)
           )
-        ).map((x) => {
-          return <option name="three" value={x.Part3} label={x.Part3}></option>;
+        ).map((x, i) => {
+          return (
+            <option
+              name="three"
+              value={x.Part3}
+              label={x.Part3}
+              key={`option3${i}`}
+            ></option>
+          );
         })}
       </select>
     </label>

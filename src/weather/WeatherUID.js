@@ -16,7 +16,6 @@ export default function WeatherUID(props) {
     temp,
     winddir,
     windspeed,
-    reset,
     refresh,
     loadstate,
     loadforecast,
@@ -38,14 +37,6 @@ export default function WeatherUID(props) {
       }`}
     >
       <div className={`flex m-1 ${showbutton ? "block" : "hidden"}`}>
-        <button
-          className="flex items-center m-1.5 p-1.5 h-8 border-2 border-solid border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
-          onClick={reset}
-          onMouseEnter={mouseenter}
-          onMouseLeave={mouseleave}
-        >
-          Reset
-        </button>
         <button
           className="flex items-center m-1.5 p-1.5 h-8 border-2 border-solid border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
           onClick={refresh}
