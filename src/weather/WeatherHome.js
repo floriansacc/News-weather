@@ -41,7 +41,7 @@ export default function WeatherHome() {
   const pageNo = 1;
   const baseDate = todayDate();
   const baseTimeCalcNow = () => {
-    if (hours < 10) {
+    if (hours < 10 && hours !== 0) {
       if (minutes < 30) {
         return `0${hours - 1}00`;
       } else {
@@ -53,6 +53,8 @@ export default function WeatherHome() {
       } else {
         return `${hours}00`;
       }
+    } else if (hours === 0 && minutes < 30) {
+      return `2300`;
     } else {
       if (minutes < 30) {
         return `${hours - 1}00`;
@@ -68,10 +70,26 @@ export default function WeatherHome() {
   };
 
   const baseTimeCalcForecast = () => {
-    if (hours <= 10) {
-      return `0${hours - 1}00`;
+    if (hours < 10 && hours !== 0) {
+      if (minutes < 30) {
+        return `0${hours - 1}30`;
+      } else {
+        return `0${hours}30`;
+      }
+    } else if (hours === 10) {
+      if (minutes < 30) {
+        return `0${hours - 1}30`;
+      } else {
+        return `${hours}30`;
+      }
+    } else if (hours === 0 && minutes < 30) {
+      return `2330`;
     } else {
-      return `${hours - 1}00`;
+      if (minutes < 30) {
+        return `${hours - 1}30`;
+      } else {
+        return `${hours}30`;
+      }
     }
   };
 
@@ -138,6 +156,8 @@ export default function WeatherHome() {
     window.console.log(baseDate);
     window.console.log(baseTime);
     window.console.log(minutes);
+    window.console.log(baseTime);
+    window.console.log(baseTimeForecast);
   };
 
   const handleButtonEnter = (e) => {
@@ -256,20 +276,20 @@ export default function WeatherHome() {
       <div className="flex flex-row justify-center w-full">
         <p className="text-4xl text-red-700">공사중</p>
         <button
-          className={`flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full  transition-all duration-150 ease-in delay-0  hover:bg-yellow-100  ${
+          className={`flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full  transition-all duration-150 ease-in delay-0 md:hover:bg-yellow-100 lg:hover:bg-yellow-100 ${
             activeTab === 0
               ? "bg-gradient-to-r from-gray-300 to-yellow-200"
-              : "bg-gray-400 hover:animate-pulse"
+              : "bg-gray-400 sm:animate-none  md:hover:animate-pulse lg:hover:animate-pulse"
           }`}
           onClick={() => (activeTab === 0 ? setActiveTab(2) : setActiveTab(0))}
         >
           Localisation
         </button>
         <button
-          className={`flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full  transition-all duration-150 ease-in delay-0  hover:bg-yellow-100  ${
+          className={`flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full  transition-all duration-150 ease-in delay-0 md:hover:bg-yellow-100 lg:hover:bg-yellow-100 ${
             activeTab === 1
               ? "bg-gradient-to-r from-gray-300 to-yellow-200"
-              : "bg-gray-400 hover:animate-pulse"
+              : "bg-gray-400 sm:animate-none  md:hover:animate-pulse lg:hover:animate-pulse"
           }`}
           onClick={() => (activeTab === 1 ? setActiveTab(2) : setActiveTab(1))}
         >
