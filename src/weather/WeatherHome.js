@@ -48,15 +48,6 @@ export default function WeatherHome() {
       }
     }
   };
-  const updateDates = () => {
-    hours = date.getHours();
-    minutes = date.getMinutes();
-    if (hours === 0 && minutes < 30) {
-      day = date.getDate() - 1;
-    } else {
-      day = date.getDate();
-    }
-  };
 
   const baseTimeCalcForecast = () => {
     if (hours < 10 && hours !== 0) {
@@ -79,6 +70,16 @@ export default function WeatherHome() {
       } else {
         return `${hours}30`;
       }
+    }
+  };
+
+  const updateDates = () => {
+    hours = date.getHours();
+    minutes = date.getMinutes();
+    if (hours === 0 && minutes < 30) {
+      day = date.getDate() - 1;
+    } else {
+      day = date.getDate();
     }
   };
 

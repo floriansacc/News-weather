@@ -4,7 +4,7 @@ export default function WeatherCitySelector(props) {
   return (
     <label className="flex flex-col flex-nowrap">
       <select
-        className="w-32 bg-inherit m-1 border-2 border-gray-300 rounded-xl"
+        className="w-32 bg-inherit mb-1 border-2 border-gray-300 rounded-xl"
         name="one"
         value={cityselector[0]}
         onChange={handlecityselector}

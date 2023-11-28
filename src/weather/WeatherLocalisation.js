@@ -163,6 +163,22 @@ export default function WeatherLocalisation(props) {
   }, []);
 
   useEffect(() => {
+    const findclosest = (xValue, data, parameter) => {
+      let closestObject = null;
+      let minDistance = 0.001;
+
+      data.forEach((entry) => {
+        const param = entry[parameter];
+        const distance = Math.abs(xValue - param);
+
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestObject = entry;
+        }
+      });
+
+      return closestObject;
+    };
     setCitySelector(["없음", "없음", "없음", 0, 0]);
     function success(position) {
       let temporary = positionConversion(
@@ -170,15 +186,19 @@ export default function WeatherLocalisation(props) {
         position.coords.latitude,
         position.coords.longitude
       );
-      let [cityName] = dataimport
-        .filter((word) => word.nx === temporary.x && word.ny === temporary.y)
-        .slice(0, 1)
-        .map((x) => [x.Part1, x.Part2]);
-
+      window.console.log(position.coords.latitude);
+      window.console.log(position.coords.longitude);
+      let cityName = findclosest(
+        temporary.lat,
+        dataimport.filter(
+          (word) => word.nx === temporary.x && word.ny === temporary.y
+        ),
+        "latitude"
+      );
       setCitySelector([
-        cityName[0],
-        cityName[1],
-        "없음",
+        cityName.Part1,
+        cityName.Part2,
+        cityName.Part3,
         temporary.x,
         temporary.y,
       ]);

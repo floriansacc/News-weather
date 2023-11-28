@@ -78,7 +78,6 @@ export default function WeatherCreateMyList(props) {
       ]);
       setElem(["선택"]);
       setListeCounter((prev) => prev + 1);
-      window.console.log(listeCounter);
       setDisplayWeatherList(false);
       setIsLoaded(false);
       setIsLoadedForecast(false);
@@ -191,7 +190,7 @@ export default function WeatherCreateMyList(props) {
           });
           return [temporary, setIsFetch(true)];
         } catch (error) {
-          console.log(error);
+          console.log(`Premier fetch error: ${error}`);
           setIsLoaded(false);
         }
       };
