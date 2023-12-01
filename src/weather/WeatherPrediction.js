@@ -23,10 +23,10 @@ export default function WeatherPrediction(props) {
               className="h-7 w-auto mb-1"
               key={`image${x.value}${i}`}
             ></img>
-            <li className="text-base" key={`${x.value}no${i}`}>
+            <li className="text-base" key={`li1no${i}`}>
               {x.value}°
             </li>
-            <li className="text-base" key={`2no${i}`}>
+            <li className="text-base" key={`li2no${i}`}>
               {x.time.slice(0, 2)}h
             </li>
           </ul>

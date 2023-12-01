@@ -32,7 +32,7 @@ export default function WeatherUID(props) {
 
   return (
     <div
-      className={`flex flex-col flex-nowrap h-fit sm:w-11/12 md:w-96 lg:w-96 sm:max-w-md ${
+      className={`flex flex-col flex-nowrap z-10 h-fit sm:w-11/12 md:w-96 lg:w-96 sm:max-w-md ${
         showbutton ? "" : "sm:max-w-none sm:w-full"
       }`}
     >

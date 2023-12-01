@@ -213,6 +213,7 @@ export default function WeatherCreateMyList(props) {
           }));
         } catch (error) {
           window.console.log(error);
+          setIsFetch(false);
         }
       };
       setWeatherInfoNow((prev) => ({
@@ -274,7 +275,7 @@ export default function WeatherCreateMyList(props) {
           return [temporary, setIsFetch2(true)];
         } catch (error) {
           console.log(error);
-          setIsLoadedForecast(false);
+          setIsFetch2(false);
         }
       };
       let saveData = async () => {
@@ -287,18 +288,19 @@ export default function WeatherCreateMyList(props) {
           liste[listeCounter - 1]["nx"],
           liste[listeCounter - 1]["ny"]
         );
+        window.console.log("Fetch2 ok");
         try {
-          setWeatherForecast((prev) => ({
-            ...prev,
-            [`${liste[listeCounter - 1]["Phase2"]} - ${
-              liste[listeCounter - 1]["Phase3"]
-            }`]: resultsFirstFetch[0].filter((x) => x.category === "PTY"),
-          }));
           setSkyForecast((prev) => ({
             ...prev,
             [`${liste[listeCounter - 1]["Phase2"]} - ${
               liste[listeCounter - 1]["Phase3"]
             }`]: resultsFirstFetch[0].filter((x) => x.category === "SKY"),
+          }));
+          setWeatherForecast((prev) => ({
+            ...prev,
+            [`${liste[listeCounter - 1]["Phase2"]} - ${
+              liste[listeCounter - 1]["Phase3"]
+            }`]: resultsFirstFetch[0].filter((x) => x.category === "PTY"),
           }));
           setTempForecast((prev) => ({
             ...prev,
@@ -332,7 +334,7 @@ export default function WeatherCreateMyList(props) {
     }
 
     return () => {
-      setIsLoaded(false);
+      //setIsLoaded(false);
       setIsFetch2(false);
     };
   }, [listeCounter]);
@@ -354,6 +356,8 @@ export default function WeatherCreateMyList(props) {
     };
   }, []);
 
+  //<li className="bg-black transition-colors duration-150 ease-in delay-0 hover:animate-pulse hover:bg-green-300 cursor-pointer"></li>
+
   return (
     <div
       className={`${
@@ -361,26 +365,27 @@ export default function WeatherCreateMyList(props) {
       } items-center sm:flex-col md:flex-col flex-row-reverse flex-nowrap h-fit sm:w-full border border-solid border-red-600`}
     >
       <div
-        className={`flex-shrink-0 flex-col flex-nowrap justify-start sm:w-11/12 w-96 sm:max-w-md sm:m-0 mx-6 bg-slate-700 h-96 rounded-3xl ${
+        className={`flex-shrink-0 flex-col flex-nowrap justify-start overflow-hidden sm:w-11/12 w-96 sm:max-w-md sm:m-0 mx-6 bg-slate-700 h-96 rounded-3xl ${
           isLoaded ? "" : "animate-pulse-slow"
         }`}
       >
-        <ul className="flex justify-center items-center list-none mx-4 my-1">
-          {displayWeatherList &&
-            liste.map((e, i) => (
+        {displayWeatherList && (
+          <ul className="flex justify-center z-0 items-center p-5 h-8 w-full list-none rounded-2xl ">
+            {liste.map((e, i) => (
               <li
                 onClick={handleBullet}
-                className={`inline-block relative m-1  indent-inf text-xs rounded-2xl  ${
+                className={`inline-block relative indent-inf text-xs h-6 w-full mx-1 rounded-2xl border border-solid border-green-100 ${
                   countSlide === `${i}`
-                    ? "w-6 h-6 bg-green-500"
-                    : "w-5 h-5 bg-black transition-colors duration-150 ease-in delay-0 hover:animate-pulse hover:bg-green-300 cursor-pointer"
+                    ? "bg-purpleflo"
+                    : " bg-black transition-all duration-200 ease-in delay-0 hover:scale-105 hover:animate-pulse hover:bg-purpleflo cursor-pointer"
                 }`}
                 key={`bullet${i}`}
               >
                 {i}
               </li>
             ))}
-        </ul>
+          </ul>
+        )}
 
         {isLoaded && isLoadedForecast && (
           <WeatherUID
@@ -438,24 +443,29 @@ export default function WeatherCreateMyList(props) {
           />
         )}
       </div>
-      <div className="flex flex-col justify-start items-start w-11/12 mt-12 border border-cyan-400 rounded-xl">
-        <div className="flex flex-row flex-nowrap justify-start items-center w-full mt-12 border border-black rounded-xl">
+      <div className="flex flex-col justify-start items-start h-full w-11/12 mt-12 p-1 rounded-xl">
+        <div className="flex flex-row flex-nowrap justify-center items-center w-full border border-black rounded-xl">
           <div className="flex flex-col flex-nowrap items-center m-1">
             <button
-              className="flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
-              onClick={handleResetListe}
-              onMouseEnter={mouseenter}
-              onMouseLeave={mouseleave}
-            >
-              Reset
-            </button>
-            <button
-              className="flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
+              className="flex items-center m-1.5 p-1.5 h-fit border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
               onClick={handleAddToList}
               onMouseEnter={mouseenter}
               onMouseLeave={mouseleave}
             >
               Add to my list
+            </button>
+            <button
+              className={`flex items-center m-1.5 p-1.5 h-fit border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400
+            ${isFetch && isFetch2 ? "brightness-100" : "brightness-75"}`}
+              onMouseEnter={isFetch && isFetch2 ? mouseenter : null}
+              onMouseLeave={
+                isFetch && isFetch2 ? mouseleave : handleDisplayMouseLeave
+              }
+              onMouseMove={handleDisplayDescription}
+              onClick={isFetch && isFetch2 ? handleDisplayWeatherSlide : null}
+              id="Displaybutton"
+            >
+              Display Weather
             </button>
           </div>
           <div>
@@ -531,6 +541,31 @@ export default function WeatherCreateMyList(props) {
               </select>
             </label>
           </div>
+          <div className="flex flex-col flex-nowrap items-center w-fit">
+            <p
+              style={toStyleDisplayDescription}
+              className="absolute hidden px-1 py-1 bg-white w-fit h-fit border border-solid border-black rounded-3xl"
+              id="displaydescription"
+            >
+              Need to fill the list before display
+            </p>
+            <button
+              className="flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
+              onClick={handleResetListe}
+              onMouseEnter={mouseenter}
+              onMouseLeave={mouseleave}
+            >
+              Reset
+            </button>
+            <button
+              className="flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
+              onMouseEnter={mouseenter}
+              onMouseLeave={mouseleave}
+              onClick={handleCommand}
+            >
+              Console
+            </button>
+          </div>
         </div>
         {liste[0] && <p className="mt-6">List of city to display:</p>}
         <div
@@ -558,36 +593,6 @@ export default function WeatherCreateMyList(props) {
               </p>
             </>
           ))}
-        </div>
-        <div className="inline-flex flex-row flex-wrap w-full">
-          <button
-            className={`flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full whitespace-nowrap bg-gradient-to-r from-gray-300 to-gray-400
-            ${isFetch && isFetch2 ? "brightness-100" : "brightness-75"}`}
-            onMouseEnter={isFetch && isFetch2 ? mouseenter : null}
-            onMouseLeave={
-              isFetch && isFetch2 ? mouseleave : handleDisplayMouseLeave
-            }
-            onMouseMove={handleDisplayDescription}
-            onClick={isFetch && isFetch2 ? handleDisplayWeatherSlide : null}
-            id="Displaybutton"
-          >
-            Display Weather
-          </button>
-          <p
-            style={toStyleDisplayDescription}
-            className="absolute hidden px-1 py-1 bg-white w-fit h-fit border border-solid border-black rounded-3xl"
-            id="displaydescription"
-          >
-            Need to fill the list before display
-          </p>
-          <button
-            className="flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
-            onMouseEnter={mouseenter}
-            onMouseLeave={mouseleave}
-            onClick={handleCommand}
-          >
-            Console
-          </button>
         </div>
       </div>
     </div>

@@ -9,8 +9,12 @@ module.exports = {
       lg: { min: "1100px", max: "1600px" },
     },
     extend: {
+      margin: {
+        "1px": "1px",
+      },
       width: {
         128: "32rem",
+        full5: "105%",
       },
       height: {
         116: "25rem",
@@ -33,6 +37,10 @@ module.exports = {
       },
       animation: {
         "pulse-slow": "pulse 5s linear infinite",
+      },
+      colors: {
+        purpleflo: "#974ee7",
+        blueflo: "#218fff",
       },
     },
   },
