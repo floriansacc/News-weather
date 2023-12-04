@@ -15,6 +15,7 @@ export default function WeatherLocalisation(props) {
     activetab,
   } = props;
 
+  const [gps, setGps] = useState({ lat: 0, long: 0 });
   const [weatherInfoNow, setWeatherInfoNow] = useState([]);
   const [weatherForecast, setWeatherForecast] = useState([]);
   const [skyForecast, setSkyForecast] = useState([]);
@@ -186,6 +187,7 @@ export default function WeatherLocalisation(props) {
         position.coords.latitude,
         position.coords.longitude
       );
+      setGps({ lat: temporary.lat, long: temporary.lng });
       window.console.log(position.coords.latitude);
       window.console.log(position.coords.longitude);
       let cityName = findclosest(
@@ -328,6 +330,8 @@ export default function WeatherLocalisation(props) {
         <h1>
           X {citySelector[3]}, Y {citySelector[4]}
         </h1>
+        <h1>lat {gps.lat}</h1>
+        <h1>long {gps.long}</h1>
       </div>
       <WeatherUID
         handlecityselector={handleCitySelector}
