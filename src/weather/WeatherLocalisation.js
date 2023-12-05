@@ -198,10 +198,10 @@ export default function WeatherLocalisation(props) {
         temporary.x,
         temporary.y,
       ]);
+      setIsLocated(true);
     } catch (e) {
       window.console.log(e);
     }
-    setIsLocated(true);
   }
   function errorLocation() {
     window.console.log("Unable to retrieve your location");
@@ -334,6 +334,7 @@ export default function WeatherLocalisation(props) {
         </h1>
         <h1>lat {gps.lat}</h1>
         <h1>long {gps.long}</h1>
+        <h1>isLocated: {isLocated ? "true" : "false"}</h1>
       </div>
       <WeatherUID
         handlecityselector={handleCitySelector}
