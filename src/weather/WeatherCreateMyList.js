@@ -279,17 +279,17 @@ export default function WeatherCreateMyList(props) {
         }
       };
       let saveData = async () => {
-        let resultsFirstFetch = await getWeatherList(
-          [
-            liste[listeCounter - 1]["Phase1"],
-            liste[listeCounter - 1]["Phase2"],
-            liste[listeCounter - 1]["Phase3"],
-          ],
-          liste[listeCounter - 1]["nx"],
-          liste[listeCounter - 1]["ny"]
-        );
-        window.console.log("Fetch2 ok");
         try {
+          let resultsFirstFetch = await getWeatherList(
+            [
+              liste[listeCounter - 1]["Phase1"],
+              liste[listeCounter - 1]["Phase2"],
+              liste[listeCounter - 1]["Phase3"],
+            ],
+            liste[listeCounter - 1]["nx"],
+            liste[listeCounter - 1]["ny"]
+          );
+          window.console.log("Fetch2 ok");
           setSkyForecast((prev) => ({
             ...prev,
             [`${liste[listeCounter - 1]["Phase2"]} - ${

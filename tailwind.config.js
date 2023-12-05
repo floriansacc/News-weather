@@ -42,6 +42,12 @@ module.exports = {
         purpleflo: "#974ee7",
         blueflo: "#218fff",
       },
+      boxShadow: {
+        dim: " 0 0 0 100vmax rgba(0, 0, 0, .3)",
+      },
+      transitionProperty: {
+        shadowbox: "box-shadow 0 ",
+      },
     },
   },
 };

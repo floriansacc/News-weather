@@ -170,11 +170,10 @@ export default function WeatherLocalisation(props) {
         closestObject = entry;
       }
     });
-
     return closestObject;
   };
 
-  function successlocations(position) {
+  function succesLocation(position) {
     try {
       let temporary = positionConversion(
         "toXY",
@@ -212,7 +211,7 @@ export default function WeatherLocalisation(props) {
   }, []);
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(successlocations, errorLocation);
+    navigator.geolocation.getCurrentPosition(succesLocation, errorLocation);
     return () => {
       setIsLocated(false);
       setCitySelector(["없음", "없음", "없음", 0, 0]);
@@ -324,6 +323,7 @@ export default function WeatherLocalisation(props) {
 
   return (
     <div
+      href="#location"
       className={`${
         activetab !== 1 ? "flex" : "hidden"
       } flex-row justify-center w-fit sm:w-full h-full sm:mb-20 md:mb-20 m-0`}
