@@ -159,37 +159,31 @@ export default function WeatherLocalisation(props) {
     window.console.log(basetimeforecast);
   };
 
-  useEffect(() => {
-    updatedate();
-  }, []);
+  const findclosest = (xValue, data, parameter) => {
+    let closestObject = null;
+    let minDistance = 0.001;
+    data.forEach((entry) => {
+      const param = entry[parameter];
+      const distance = Math.abs(xValue - param);
+      if (distance < minDistance) {
+        minDistance = distance;
+        closestObject = entry;
+      }
+    });
 
-  useEffect(() => {
-    const findclosest = (xValue, data, parameter) => {
-      let closestObject = null;
-      let minDistance = 0.001;
+    return closestObject;
+  };
 
-      data.forEach((entry) => {
-        const param = entry[parameter];
-        const distance = Math.abs(xValue - param);
-
-        if (distance < minDistance) {
-          minDistance = distance;
-          closestObject = entry;
-        }
-      });
-
-      return closestObject;
-    };
-    setCitySelector(["없음", "없음", "없음", 0, 0]);
-    function success(position) {
+  function successlocations(position) {
+    try {
       let temporary = positionConversion(
         "toXY",
         position.coords.latitude,
         position.coords.longitude
       );
       setGps({ lat: temporary.lat, long: temporary.lng });
-      window.console.log(position.coords.latitude);
-      window.console.log(position.coords.longitude);
+      //window.console.log(position.coords.latitude);
+      //window.console.log(position.coords.longitude);
       let cityName = findclosest(
         temporary.lat,
         dataimport.filter(
@@ -204,14 +198,24 @@ export default function WeatherLocalisation(props) {
         temporary.x,
         temporary.y,
       ]);
-      setIsLocated(true);
+    } catch (e) {
+      window.console.log(e);
     }
-    function error() {
-      window.console.log("Unable to retrieve your location");
-    }
-    navigator.geolocation.getCurrentPosition(success, error);
+    setIsLocated(true);
+  }
+  function errorLocation() {
+    window.console.log("Unable to retrieve your location");
+  }
+
+  useEffect(() => {
+    updatedate();
+  }, []);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(successlocations, errorLocation);
     return () => {
       setIsLocated(false);
+      setCitySelector(["없음", "없음", "없음", 0, 0]);
     };
   }, [refreshData]);
 
@@ -271,41 +275,39 @@ export default function WeatherLocalisation(props) {
         const jsonResponse = await response.json();
         window.console.log(jsonResponse.response.header);
         window.console.log(jsonResponse.response.body.items.item);
-        const getData = await jsonResponse.response.body.items.item.forEach(
-          (x) => {
-            if (x.category === "PTY") {
-              setWeatherForecast((prev) => [
-                ...prev,
-                {
-                  category: x.category,
-                  time: x.fcstTime,
-                  value: x.fcstValue,
-                  basetime: x.baseTime,
-                },
-              ]);
-            } else if (x.category === "T1H") {
-              setTempForecast((prev) => [
-                ...prev,
-                {
-                  category: x.category,
-                  time: x.fcstTime,
-                  value: x.fcstValue,
-                  basetime: x.baseTime,
-                },
-              ]);
-            } else if (x.category === "SKY") {
-              setSkyForecast((prev) => [
-                ...prev,
-                {
-                  category: x.category,
-                  time: x.fcstTime,
-                  value: x.fcstValue,
-                  basetime: x.baseTime,
-                },
-              ]);
-            }
+        await jsonResponse.response.body.items.item.forEach((x) => {
+          if (x.category === "PTY") {
+            setWeatherForecast((prev) => [
+              ...prev,
+              {
+                category: x.category,
+                time: x.fcstTime,
+                value: x.fcstValue,
+                basetime: x.baseTime,
+              },
+            ]);
+          } else if (x.category === "T1H") {
+            setTempForecast((prev) => [
+              ...prev,
+              {
+                category: x.category,
+                time: x.fcstTime,
+                value: x.fcstValue,
+                basetime: x.baseTime,
+              },
+            ]);
+          } else if (x.category === "SKY") {
+            setSkyForecast((prev) => [
+              ...prev,
+              {
+                category: x.category,
+                time: x.fcstTime,
+                value: x.fcstValue,
+                basetime: x.baseTime,
+              },
+            ]);
           }
-        );
+        });
         setIsLoadedForecast(true);
       } catch (error) {
         console.log(error);
