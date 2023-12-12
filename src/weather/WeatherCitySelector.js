@@ -4,7 +4,7 @@ export default function WeatherCitySelector(props) {
   return (
     <label className="flex flex-col flex-nowrap">
       <select
-        className="w-32 bg-inherit mb-1 border-2 border-gray-300 rounded-xl"
+        className="m-1 w-32 rounded-2xl border-2 border-gray-200/75 bg-inherit p-1"
         name="one"
         value={cityselector[0]}
         onChange={handlecityselector}
@@ -17,7 +17,7 @@ export default function WeatherCitySelector(props) {
         })}
       </select>
       <select
-        className="w-32 bg-inherit mb-1 border-2 border-gray-300 rounded-xl"
+        className="m-1 w-32 rounded-2xl border-2 border-gray-200/75 bg-inherit p-1"
         name="two"
         value={cityselector[1]}
         onChange={handlecityselector}
@@ -26,8 +26,8 @@ export default function WeatherCitySelector(props) {
           new Set(
             dataimport
               .filter((word) => word.Part1 === cityselector[0])
-              .map((obj) => obj.Part2)
-          )
+              .map((obj) => obj.Part2),
+          ),
         ).map((x, i) => {
           return (
             <option name="two" value={x} label={x} key={`option2${i}`}></option>
@@ -35,7 +35,7 @@ export default function WeatherCitySelector(props) {
         })}
       </select>
       <select
-        className="w-32 bg-inherit mb-1 border-2 border-gray-300 rounded-xl"
+        className="m-1 w-32 rounded-2xl border-2 border-gray-200/75 bg-inherit p-1"
         name="three"
         value={cityselector[2]}
         onChange={handlecityselector}
@@ -46,10 +46,10 @@ export default function WeatherCitySelector(props) {
               .filter(
                 (word) =>
                   word.Part2 === cityselector[1] &&
-                  word.Part1 === cityselector[0]
+                  word.Part1 === cityselector[0],
               )
-              .map((obj) => obj)
-          )
+              .map((obj) => obj),
+          ),
         ).map((x, i) => {
           return (
             <option

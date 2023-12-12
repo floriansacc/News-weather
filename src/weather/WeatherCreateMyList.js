@@ -13,6 +13,7 @@ export default function WeatherCreateMyList(props) {
     updatedate,
     basedate,
     activetab,
+    resizew,
   } = props;
   const [liste, setListe] = useState([]);
   const [elem, setElem] = useState([]);
@@ -29,6 +30,7 @@ export default function WeatherCreateMyList(props) {
   const [isLoadedForecast, setIsLoadedForecast] = useState(false);
 
   const [countSlide, setCountSlide] = useState(0);
+  const [toTranslate, setToTranslate] = useState(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const weatherUrlNow =
@@ -49,10 +51,10 @@ export default function WeatherCreateMyList(props) {
               (word) =>
                 word.Part3 === e.target.value &&
                 word.Part2 === elem[1] &&
-                word.Part1 === elem[0]
+                word.Part1 === elem[0],
             )
-            .map((x) => [x.nx, x.ny])
-        )
+            .map((x) => [x.nx, x.ny]),
+        ),
       );
       setElem([elem[0], elem[1], e.target.value, coord[0], coord[1]]);
     }
@@ -129,10 +131,12 @@ export default function WeatherCreateMyList(props) {
     window.console.log(weatherForecast);
     window.console.log(skyForecast);
     window.console.log(tempForecast);
+    window.console.log(liste.length);
   };
 
   const handleBullet = (e) => {
     setCountSlide(e.target.innerHTML);
+    setToTranslate(resizew * countSlide);
   };
 
   const handleDisplayDescription = (e) => {
@@ -202,7 +206,7 @@ export default function WeatherCreateMyList(props) {
             liste[listeCounter - 1]["Phase3"],
           ],
           liste[listeCounter - 1]["nx"],
-          liste[listeCounter - 1]["ny"]
+          liste[listeCounter - 1]["ny"],
         );
         try {
           setWeatherInfoNow((prev) => ({
@@ -274,7 +278,7 @@ export default function WeatherCreateMyList(props) {
           });
           return [temporary, setIsFetch2(true)];
         } catch (error) {
-          console.log(error);
+          window.console.log(error);
           setIsFetch2(false);
         }
       };
@@ -287,7 +291,7 @@ export default function WeatherCreateMyList(props) {
               liste[listeCounter - 1]["Phase3"],
             ],
             liste[listeCounter - 1]["nx"],
-            liste[listeCounter - 1]["ny"]
+            liste[listeCounter - 1]["ny"],
           );
           window.console.log("Fetch2 ok");
           setSkyForecast((prev) => ({
@@ -361,93 +365,101 @@ export default function WeatherCreateMyList(props) {
   return (
     <div
       className={`${
-        activetab !== 0 ? "flex" : "hidden"
-      } items-center sm:flex-col md:flex-col flex-row-reverse flex-nowrap h-fit sm:w-full border border-solid border-red-600`}
+        activetab === 1 ? "hidden" : "flex"
+      } h-fit w-screen flex-row-reverse flex-wrap items-center border border-solid border-red-600 sm:w-full sm:flex-col sm:flex-nowrap md:flex-col md:flex-nowrap`}
     >
       <div
-        className={`flex-shrink-0 flex-col flex-nowrap justify-start overflow-hidden sm:w-11/12 w-96 sm:max-w-md sm:m-0 mx-6 bg-slate-700 h-96 rounded-3xl ${
-          isLoaded ? "" : "animate-pulse-slow"
+        className={`min-h-96 scrollbar-hide relative mx-6 box-content h-full w-full flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-x-auto rounded-3xl bg-slate-700 sm:m-0 sm:w-full ${
+          isLoaded ? "h-fit" : "h-128 animate-pulse-slow"
         }`}
       >
-        {displayWeatherList && (
-          <ul className="flex justify-center z-0 items-center p-5 h-8 w-full list-none rounded-2xl ">
-            {liste.map((e, i) => (
-              <li
-                onClick={handleBullet}
-                className={`inline-block relative indent-inf text-xs h-6 w-full mx-1 rounded-2xl border border-solid border-green-100 ${
-                  countSlide === `${i}`
-                    ? "bg-purpleflo"
-                    : " bg-black transition-all duration-200 ease-in delay-0 hover:scale-105 hover:animate-pulse hover:bg-purpleflo cursor-pointer"
-                }`}
-                key={`bullet${i}`}
-              >
-                {i}
+        {isLoaded && isLoadedForecast && (
+          <ul
+            className={`z-30 flex h-full w-full justify-start -translate-x-[${toTranslate}rem]`}
+          >
+            {liste.map((x, i) => (
+              <li key={i}>
+                <WeatherUID
+                  dataimport={dataimport}
+                  srcimage={srcimage}
+                  loadstate={isLoaded}
+                  loadforecast={isLoadedForecast}
+                  raincond={
+                    weatherInfoNow[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ][0]
+                  }
+                  humidity={
+                    weatherInfoNow[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ][1]
+                  }
+                  hourrain={
+                    weatherInfoNow[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ][2]
+                  }
+                  temp={
+                    weatherInfoNow[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ][3]
+                  }
+                  winddir={
+                    weatherInfoNow[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ][5]
+                  }
+                  windspeed={
+                    weatherInfoNow[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ][7]
+                  }
+                  tempforecast={
+                    tempForecast[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ]
+                  }
+                  skyforecast={
+                    skyForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
+                  }
+                  rainforecast={
+                    weatherForecast[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ]
+                  }
+                  showbutton={false}
+                  titlename={true}
+                  forlist={true}
+                  resizew={resizew}
+                />
               </li>
             ))}
           </ul>
         )}
-
-        {isLoaded && isLoadedForecast && (
-          <WeatherUID
-            dataimport={dataimport}
-            srcimage={srcimage}
-            loadstate={isLoaded}
-            loadforecast={isLoadedForecast}
-            raincond={
-              weatherInfoNow[
-                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
-              ][0]
-            }
-            humidity={
-              weatherInfoNow[
-                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
-              ][1]
-            }
-            hourrain={
-              weatherInfoNow[
-                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
-              ][2]
-            }
-            temp={
-              weatherInfoNow[
-                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
-              ][3]
-            }
-            winddir={
-              weatherInfoNow[
-                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
-              ][5]
-            }
-            windspeed={
-              weatherInfoNow[
-                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
-              ][7]
-            }
-            tempforecast={
-              tempForecast[
-                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
-              ]
-            }
-            skyforecast={
-              skyForecast[
-                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
-              ]
-            }
-            rainforecast={
-              weatherForecast[
-                `${liste[countSlide]["Phase2"]} - ${liste[countSlide]["Phase3"]}`
-              ]
-            }
-            showbutton={false}
-            titlename={true}
-          />
-        )}
       </div>
-      <div className="flex flex-col justify-start items-start h-full w-11/12 mt-12 p-1 rounded-xl">
-        <div className="flex flex-row flex-nowrap justify-center items-center w-full border border-black rounded-xl">
-          <div className="flex flex-col flex-nowrap items-center m-1">
+      {!displayWeatherList && <div className="h-8 w-full p-5"></div>}
+      {displayWeatherList && (
+        <ul className="z-0 flex h-8 w-full list-none items-center justify-center rounded-2xl p-5">
+          {liste.map((e, i) => (
+            <li
+              onClick={handleBullet}
+              className={`relative mx-1 inline-block h-6 w-full rounded-2xl border border-solid border-green-100 indent-inf text-xs ${
+                countSlide === `${i}`
+                  ? "bg-purpleflo"
+                  : " cursor-pointer bg-black transition-all delay-0 duration-200 ease-in hover:scale-105 hover:animate-pulse hover:bg-purpleflo"
+              }`}
+              key={`bullet${i}`}
+            >
+              {i}
+            </li>
+          ))}
+        </ul>
+      )}
+      <div className="mt-2 flex h-full w-11/12 flex-col items-start justify-start rounded-xl p-1">
+        <div className="flex w-full flex-row flex-nowrap items-center justify-center rounded-xl border border-black">
+          <div className="m-1 flex flex-col flex-nowrap items-center">
             <button
-              className="flex items-center m-1.5 p-1.5 h-fit border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
+              className="m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
               onClick={handleAddToList}
               onMouseEnter={mouseenter}
               onMouseLeave={mouseleave}
@@ -455,7 +467,7 @@ export default function WeatherCreateMyList(props) {
               Add to my list
             </button>
             <button
-              className={`flex items-center m-1.5 p-1.5 h-fit border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400
+              className={`m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5
             ${isFetch && isFetch2 ? "brightness-100" : "brightness-75"}`}
               onMouseEnter={isFetch && isFetch2 ? mouseenter : null}
               onMouseLeave={
@@ -471,7 +483,7 @@ export default function WeatherCreateMyList(props) {
           <div>
             <label className="flex flex-col flex-nowrap">
               <select
-                className="w-32 bg-inherit m-1 border-2 border-gray-300 rounded-xl"
+                className="m-1 w-36 rounded-xl border-2 border-gray-300 bg-inherit"
                 name="one"
                 value={elem[0]}
                 onChange={handleCitySelector}
@@ -487,11 +499,11 @@ export default function WeatherCreateMyList(props) {
                         key={`optionlist1${i}`}
                       ></option>
                     );
-                  }
+                  },
                 )}
               </select>
               <select
-                className="w-32 bg-inherit m-1 border-2 border-gray-300 rounded-xl"
+                className="m-1 w-36 rounded-xl border-2 border-gray-300 bg-inherit"
                 name="two"
                 value={elem[1]}
                 onChange={handleCitySelector}
@@ -500,8 +512,8 @@ export default function WeatherCreateMyList(props) {
                   new Set(
                     dataimport
                       .filter((word) => word.Part1 === elem[0])
-                      .map((obj) => obj.Part2)
-                  )
+                      .map((obj) => obj.Part2),
+                  ),
                 ).map((x, i) => {
                   return (
                     <option
@@ -514,7 +526,7 @@ export default function WeatherCreateMyList(props) {
                 })}
               </select>
               <select
-                className="w-32 bg-inherit m-1 border-2 border-gray-300 rounded-xl"
+                className="m-1 w-36 rounded-xl border-2 border-gray-300 bg-inherit"
                 name="three"
                 value={elem[2]}
                 onChange={handleCitySelector}
@@ -524,10 +536,10 @@ export default function WeatherCreateMyList(props) {
                     dataimport
                       .filter(
                         (word) =>
-                          word.Part2 === elem[1] && word.Part1 === elem[0]
+                          word.Part2 === elem[1] && word.Part1 === elem[0],
                       )
-                      .map((obj) => obj)
-                  )
+                      .map((obj) => obj),
+                  ),
                 ).map((x, i) => {
                   return (
                     <option
@@ -541,16 +553,16 @@ export default function WeatherCreateMyList(props) {
               </select>
             </label>
           </div>
-          <div className="flex flex-col flex-nowrap items-center w-fit">
+          <div className="flex w-fit flex-col flex-nowrap items-center">
             <p
               style={toStyleDisplayDescription}
-              className="absolute hidden px-1 py-1 bg-white w-fit h-fit border border-solid border-black rounded-3xl"
+              className="absolute hidden h-fit w-fit rounded-3xl border border-solid border-black bg-white px-1 py-1"
               id="displaydescription"
             >
               Need to fill the list before display
             </p>
             <button
-              className="flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
+              className="m-1.5 flex h-8 items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
               onClick={handleResetListe}
               onMouseEnter={mouseenter}
               onMouseLeave={mouseleave}
@@ -558,7 +570,7 @@ export default function WeatherCreateMyList(props) {
               Reset
             </button>
             <button
-              className="flex items-center m-1.5 p-1.5 h-8 border-2 border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
+              className="m-1.5 hidden h-8 items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
               onMouseEnter={mouseenter}
               onMouseLeave={mouseleave}
               onClick={handleCommand}
@@ -571,13 +583,13 @@ export default function WeatherCreateMyList(props) {
         <div
           className={`${
             liste[0] ? "grid" : "hidden"
-          }  grid-cols-3 auto-rows-t1 justify-items-center border border-solid border-black rounded-xl w-full my-4`}
+          }  my-4 w-full auto-rows-t1 grid-cols-3 justify-items-center rounded-xl border border-solid border-black`}
         >
           {liste[0] && (
             <>
-              <p className="font-semibold my-1">1단계</p>
-              <p className="font-semibold my-1">2단계</p>
-              <p className="font-semibold my-1">3단계</p>
+              <p className="my-1 font-semibold">1단계</p>
+              <p className="my-1 font-semibold">2단계</p>
+              <p className="my-1 font-semibold">3단계</p>
             </>
           )}
           {liste.map((x, i) => (

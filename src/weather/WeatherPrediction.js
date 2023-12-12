@@ -1,26 +1,26 @@
 export default function WeatherPrediction(props) {
-  const { srcimage, raincond, skyforecast, tempforecast, rainforecast } = props;
+  const { srcimage, raincond, skyforecast, tempforecast, rainforecast } = props
 
   return (
-    <div className="w-11/12">
-      {raincond.value === "1" ? "" : "Prediction:"}
-      <div className="flex flex-row flex-nowrap justify-between w-full">
+    <div className="m-2 mt-10 w-full rounded-2xl border border-solid border-black p-2">
+      {raincond.value === '1' ? '' : 'Prediction:'}
+      <div className="flex w-full flex-row flex-nowrap justify-between">
         {tempforecast.slice(1, 6).map((x, i) => (
           <ul
-            className="flex flex-col flex-nowrap items-center w-3/12 m-3 rounded-xl list-none"
+            className="m-3 flex w-3/12 list-none flex-col flex-nowrap items-center rounded-xl"
             key={`ulNo${i}`}
           >
             <img
               src={
                 srcimage[
-                  rainforecast[i + 1].value === "1"
+                  rainforecast[i + 1].value === '1'
                     ? 4
-                    : rainforecast[i + 1].value === "5"
-                    ? 4
-                    : `${skyforecast[i + 1].value - 1}`
+                    : rainforecast[i + 1].value === '5'
+                      ? 4
+                      : `${skyforecast[i + 1].value - 1}`
                 ]
               }
-              className="h-7 w-auto mb-1"
+              className="mb-1 h-7 w-auto"
               key={`image${x.value}${i}`}
             ></img>
             <li className="text-base" key={`li1no${i}`}>
@@ -33,5 +33,5 @@ export default function WeatherPrediction(props) {
         ))}
       </div>
     </div>
-  );
+  )
 }

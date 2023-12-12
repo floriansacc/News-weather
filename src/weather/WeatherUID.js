@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import WeatherPrediction from "./WeatherPrediction";
@@ -28,25 +28,67 @@ export default function WeatherUID(props) {
     showbutton,
     titlename,
     activetab,
+    islocated,
+    forlist,
+    resizew,
   } = props;
+
+  const [previousBg, setPreviousBg] = useState(null);
+  let bgSet;
+
+  const bgFunction = () => {
+    if (!raincond || !skyforecast || !loadstate || !loadforecast) {
+      if (previousBg) {
+        bgSet = previousBg;
+        return bgSet;
+      }
+      bgSet = "bg-yellow-100";
+      return bgSet;
+    } else {
+      bgSet =
+        raincond.value === "1"
+          ? "bg-perso1"
+          : raincond.value === "3"
+            ? "bg-perso2"
+            : skyforecast[0].value === "4"
+              ? "bg-perso3"
+              : skyforecast[0].value === "3"
+                ? "bg-perso4"
+                : skyforecast[0].value === "1"
+                  ? "bg-perso5"
+                  : "bg-red-100";
+      return bgSet;
+    }
+  };
+
+  const backgroundColoring = bgFunction();
+
+  useEffect(() => {
+    setPreviousBg(bgSet);
+  }, [refresh]);
 
   return (
     <div
-      className={`flex flex-col flex-nowrap z-10 h-fit sm:w-11/12 md:w-96 lg:w-96 sm:max-w-md ${
-        showbutton ? "" : "sm:max-w-none sm:w-full"
+      className={` z-30 flex h-full flex-col ${backgroundColoring} flex-nowrap duration-500 md:w-full lg:w-96 ${
+        showbutton ? "sm:w-full" : "sm:w-full sm:max-w-none"
       }`}
     >
-      <div className={`flex m-1 ${showbutton ? "block" : "hidden"}`}>
+      <div
+        className={`m-1 mb-4 flex flex-col items-end justify-end ${
+          showbutton ? "block" : "hidden"
+        }`}
+      >
         <button
-          className="flex items-center m-1.5 p-1.5 h-8 border-2 border-solid border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
+          className="m-1.5 flex h-8 w-fit items-center rounded-full border-2 border-solid border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
           onClick={refresh}
           onMouseEnter={mouseenter}
           onMouseLeave={mouseleave}
         >
           Refresh location
         </button>
+        <p>located: {islocated ? "yes" : "no"}</p>
         <button
-          className="flex items-center m-1.5 p-1.5 h-8 border-2 border-solid border-gray-400 rounded-full bg-gradient-to-r from-gray-300 to-gray-400"
+          className="m-1.5 hidden h-8 w-fit items-center rounded-full border-2 border-solid border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
           onClick={displayinfo}
           onMouseEnter={mouseenter}
           onMouseLeave={mouseleave}
@@ -56,34 +98,21 @@ export default function WeatherUID(props) {
       </div>
 
       {!loadstate && showbutton && (
-        <Skeleton borderRadius="16px" count={1} className="w-full h-96" />
+        <Skeleton borderRadius="16px" count={1} className="h-96 w-full" />
       )}
       {loadstate && loadforecast && (
         <div
-          style={{
-            background:
-              raincond.value === "1"
-                ? "linear-gradient(300deg,#c5e2f7 2%,#92bad2 20%,#53789E 70%)"
-                : raincond.value === "3"
-                ? "linear-gradient(105deg, #cce5ec, #fffafa 50%, #93e7fb 100%)"
-                : skyforecast[0].value === "4"
-                ? "linear-gradient(45deg, #d8d2cf, #d4e6ed 80%)"
-                : skyforecast[0].value === "3"
-                ? "linear-gradient(45deg, #d8d2cf, #d4e6ed 60%, #ffcc00 110%)"
-                : skyforecast[0].value === "1"
-                ? "linear-gradient(225deg, #ffcc00, #e5d075 30%, #f5e0b0 70%)"
-                : "transparent",
-          }}
-          className="flex justify-around content-start flex-wrap w-full h-fit rounded-2xl"
+          style={{ width: resizew ? `${resizew - 2}px` : "100%" }}
+          className="flex h-full w-full flex-wrap content-start justify-around rounded-2xl bg-transparent"
         >
-          <div className="flex justify-around items-center w-full h-24 border-b border-solid border-white rounded-2xl">
+          <div className="my-2 flex h-fit w-full items-center justify-around rounded-2xl border-y border-solid border-white">
             <div className="flex flex-col flex-nowrap justify-start">
-              <p className="block">Weather</p>
+              <p className="block text-xl font-bold">Weather</p>
               <p className="text-sm">(Base time: {temp.time.slice(0, 2)}:30)</p>
             </div>
             {titlename && (
-              <div className="flex flex-col flex-nowrap items-end text-right w-fit whitespace-nowrap ">
-                <p className="font-semibold w-fit text-xl p-px pb-1 mb-1 border-b border-solid border-b-white">
+              <div className="flex w-fit flex-col flex-nowrap items-end whitespace-nowrap text-right ">
+                <p className="mb-1 w-fit border-b border-solid border-b-white p-px pb-1 text-xl font-semibold">
                   {rainforecast[0].phase1}
                 </p>
                 <p className="p-px">{rainforecast[0].phase2}</p>
@@ -100,10 +129,18 @@ export default function WeatherUID(props) {
               />
             )}
           </div>
-
-          <div className="flex flex-col items-center mt-2 w-5/12">
+          {cityselector && (
+            <div className="flex w-full flex-nowrap items-center justify-center whitespace-nowrap py-4 text-right ">
+              <p className="w-fit p-px pb-1 text-xl font-semibold">
+                {raincond.Phase1}
+              </p>
+              <p className="p-px">{` - ${raincond.Phase2} -`}</p>
+              <p className="p-px">{raincond.Phase3}</p>
+            </div>
+          )}
+          <div className="mt-2 flex w-5/12 flex-col items-center">
             <img
-              className="w-20 h-20"
+              className="h-28 w-28"
               src={
                 srcimage[
                   raincond.value === "1" ? 4 : `${skyforecast[0].value - 1}`
@@ -114,29 +151,29 @@ export default function WeatherUID(props) {
               {raincond.value === "1"
                 ? "Rain"
                 : raincond.value === "3"
-                ? "Snow"
-                : skyforecast[0].value === "4"
-                ? "Cloudy"
-                : skyforecast[0].value === "3"
-                ? "Partly cloudy"
-                : skyforecast[0].value === "1"
-                ? "Sunny"
-                : "No information"}
+                  ? "Snow"
+                  : skyforecast[0].value === "4"
+                    ? "Cloudy"
+                    : skyforecast[0].value === "3"
+                      ? "Partly cloudy"
+                      : skyforecast[0].value === "1"
+                        ? "Sunny"
+                        : "No information"}
             </p>
             <p className="text-sm">
               {raincond.value === "1" ? `Rain hour: ${hourrain.value} mm` : ""}
             </p>
           </div>
 
-          <div className="flex flex-col justify-end mb-2">
-            <p className="font-semibold text-2xl mx-4">{temp.value} °C</p>
+          <div className="mb-2 flex flex-col justify-center">
+            <p className="mx-4 text-2xl font-semibold">{temp.value} °C</p>
             <p>
               {`${windspeed.value} m/s`}
               {windspeed.value < 9
                 ? " (Weak)"
                 : windspeed.value < 14
-                ? " (Strong)"
-                : " (Very strong)"}
+                  ? " (Strong)"
+                  : " (Very strong)"}
             </p>
             <p>Humidity: {humidity.value}%</p>
           </div>

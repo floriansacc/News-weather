@@ -23,7 +23,13 @@ export default function WeatherLocalisation(props) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoadedForecast, setIsLoadedForecast] = useState(false);
   const [isLocated, setIsLocated] = useState(false);
-  const [citySelector, setCitySelector] = useState(["선택", "", "", 0, 0]);
+  const [citySelector, setCitySelector] = useState([
+    "선택",
+    "",
+    "",
+    null,
+    null,
+  ]);
   const [refreshData, setRefreshData] = useState(0);
   const [refreshData2, setRefreshData2] = useState(0);
 
@@ -128,8 +134,8 @@ export default function WeatherLocalisation(props) {
         new Set(
           dataimport
             .filter((word) => word.Part3 === e.target.value)
-            .map((x) => [x.nx, x.ny])
-        )
+            .map((x) => [x.nx, x.ny]),
+        ),
       );
       setCitySelector([
         citySelector[0],
@@ -161,7 +167,7 @@ export default function WeatherLocalisation(props) {
 
   const findclosest = (xValue, data, parameter) => {
     let closestObject = null;
-    let minDistance = 0.001;
+    let minDistance = 0.1;
     data.forEach((entry) => {
       const param = entry[parameter];
       const distance = Math.abs(xValue - param);
@@ -173,22 +179,25 @@ export default function WeatherLocalisation(props) {
     return closestObject;
   };
 
-  function succesLocation(position) {
+  const succesLocation = (position) => {
     try {
       let temporary = positionConversion(
         "toXY",
         position.coords.latitude,
-        position.coords.longitude
+        position.coords.longitude,
       );
-      setGps({ lat: temporary.lat, long: temporary.lng });
-      //window.console.log(position.coords.latitude);
-      //window.console.log(position.coords.longitude);
+      setGps({
+        lat: temporary.lat,
+        long: temporary.lng,
+        x: temporary.x,
+        y: temporary.y,
+      });
       let cityName = findclosest(
         temporary.lat,
         dataimport.filter(
-          (word) => word.nx === temporary.x && word.ny === temporary.y
+          (word) => word.nx === temporary.x && word.ny === temporary.y,
         ),
-        "latitude"
+        "latitude",
       );
       setCitySelector([
         cityName.Part1,
@@ -201,10 +210,11 @@ export default function WeatherLocalisation(props) {
     } catch (e) {
       window.console.log(e);
     }
-  }
-  function errorLocation() {
+  };
+
+  const errorLocation = () => {
     window.console.log("Unable to retrieve your location");
-  }
+  };
 
   useEffect(() => {
     updatedate();
@@ -214,7 +224,7 @@ export default function WeatherLocalisation(props) {
     navigator.geolocation.getCurrentPosition(succesLocation, errorLocation);
     return () => {
       setIsLocated(false);
-      setCitySelector(["없음", "없음", "없음", 0, 0]);
+      setCitySelector(["없음", "없음", "없음", null, null]);
     };
   }, [refreshData]);
 
@@ -242,12 +252,15 @@ export default function WeatherLocalisation(props) {
               time: x.baseTime,
               nx: x.nx,
               ny: x.ny,
+              Phase1: citySelector[0],
+              Phase2: citySelector[1],
+              Phase3: citySelector[2],
             },
           ]);
         });
         setIsLoaded(true);
       } catch (error) {
-        console.log(error);
+        window.console.log(error);
         setIsLoaded(false);
       }
     };
@@ -309,7 +322,7 @@ export default function WeatherLocalisation(props) {
         });
         setIsLoadedForecast(true);
       } catch (error) {
-        console.log(error);
+        window.console.log(error);
         setIsLoadedForecast(false);
       }
     };
@@ -325,10 +338,14 @@ export default function WeatherLocalisation(props) {
     <div
       href="#location"
       className={`${
-        activetab !== 1 ? "flex" : "hidden"
-      } flex-row justify-center w-fit sm:w-full h-full sm:mb-20 md:mb-20 m-0`}
+        activetab === 2
+          ? "hidden sm:mb-20"
+          : activetab === 1
+            ? "flex"
+            : "flex sm:mb-20"
+      } m-0 h-full w-fit flex-row justify-center sm:w-full md:mb-20 md:w-full`}
     >
-      <div className="absolute top-1 right-0">
+      <div className="right-0 top-1 hidden">
         <h1>
           X {citySelector[3]}, Y {citySelector[4]}
         </h1>
@@ -359,6 +376,7 @@ export default function WeatherLocalisation(props) {
         showbutton={true}
         titlename={false}
         activetab={activetab}
+        islocated={isLocated}
       />
     </div>
   );

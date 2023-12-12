@@ -1,42 +1,42 @@
-import { useState } from "react";
+import { useState } from 'react'
+import { AiOutlineMenu } from 'react-icons/ai'
 
 export default function Navigator(props) {
-  const { activetab, setactivetab } = props;
-  const [menuOn, setMenuOn] = useState(false);
+  const { activetab, setactivetab, menuon, setmenuon } = props
 
-  const menu = ["Location", "My list"];
+  const menu = ['Home', 'Location', 'My list']
 
   const tabSelection = (e) => {
-    if (e.target.innerHTML === menu[0]) {
-      activetab === 0 ? setactivetab(2) : setactivetab(0);
-      setMenuOn(false);
-    } else if (e.target.innerHTML === menu[1]) {
-      activetab === 1 ? setactivetab(2) : setactivetab(1);
-      setMenuOn(false);
-    }
-  };
+    menu.forEach((x, i) => {
+      if (e.target.innerHTML === menu[i]) {
+        if (activetab !== i) {
+          setactivetab(i)
+          setmenuon(false)
+        }
+      }
+    })
+  }
 
   return (
-    <div>
-      <button
-        className="absolute z-40 top-5 left-10 bg-blue-400 p-2 rounded-md"
-        onClick={() => setMenuOn(!menuOn)}
-      >
-        Menu
-      </button>
+    <div className="fixed left-0 top-0 z-50 h-screen lg:relative">
+      <AiOutlineMenu
+        className={`absolute left-12 top-5 z-40 h-10 w-10 rounded-xl border border-solid  bg-slate-200 p-2 transition-all duration-300 hover:animate-pulse  hover:bg-slate-300 lg:hidden ${
+          menuon ? '-rotate-180' : ''
+        } `}
+        onClick={() => setmenuon(!menuon)}
+      />
+
       <div
-        className={`absolute top-0 left-0 flex flex-col items-center z-30 overflow-hidden bg-red-300 h-screen transition-all duratio-300 ease-out ${
-          menuOn ? `w-2/12 shadow-dim` : `w-0`
+        className={`fixed left-0 top-0 z-30 flex h-full w-40 flex-col items-center overflow-hidden bg-orange-100 transition-transform duration-300 ease-out lg:relative  ${
+          menuon ? `shadow-dim` : `sm:-translate-x-48 md:-translate-x-48`
         }`}
       >
         <div className="mt-20 flex flex-col items-start">
           {menu.map((item, i) => (
             <a href={`#${item}`}>
               <p
-                className={`relative my-5 p-3 w-full border border-solid border-cyan-500 rounded-xl ${
-                  activetab === i
-                    ? "bg-gradient-to-r from-gray-300 to-yellow-200"
-                    : ""
+                className={`relative my-5 w-full rounded-sm p-3  ${
+                  activetab === i ? 'bg-yellow-200' : 'hover:bg-[#fff4a3]'
                 }`}
                 onClick={tabSelection}
               >
@@ -47,5 +47,5 @@ export default function Navigator(props) {
         </div>
       </div>
     </div>
-  );
+  )
 }
