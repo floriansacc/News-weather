@@ -128,7 +128,7 @@ export default function WeatherHome() {
         setactivetab={setActiveTab}
       />
       <div
-        className={`flex w-full flex-col items-center justify-center bg-red-400 ${
+        className={`flex w-full flex-col items-center justify-center ${
           activeTab === 1 ? "h-screen" : "h-fit"
         }`}
         onClick={() => (menuOn ? setMenuOn(false) : null)}

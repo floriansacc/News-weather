@@ -369,7 +369,7 @@ export default function WeatherCreateMyList(props) {
     <div
       className={`${
         activetab === 1 ? "hidden" : "flex"
-      } h-fit w-fit flex-row-reverse flex-wrap items-center border border-solid border-red-600 sm:w-full sm:flex-col sm:flex-nowrap md:w-full md:flex-col md:flex-nowrap`}
+      } h-fit w-fit flex-row-reverse flex-wrap items-center sm:w-full sm:flex-col sm:flex-nowrap md:w-full md:flex-col md:flex-nowrap`}
     >
       <div
         className={`relative mx-6 box-content h-full min-h-96 w-full flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden rounded-3xl bg-slate-700 scrollbar-hide sm:m-0 sm:w-full ${
