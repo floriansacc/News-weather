@@ -69,7 +69,7 @@ export default function WeatherUID(props) {
 
   return (
     <div
-      className={` z-30 flex h-full flex-col ${backgroundColoring} flex-nowrap duration-500 md:w-full lg:w-96 ${
+      className={` z-30 flex h-full flex-col ${backgroundColoring} flex-nowrap duration-500 md:w-full lg:w-128 ${
         showbutton ? "sm:w-full" : "sm:w-full sm:max-w-none"
       }`}
     >
@@ -102,7 +102,7 @@ export default function WeatherUID(props) {
       )}
       {loadstate && loadforecast && (
         <div
-          style={{ width: resizew ? `${resizew - 2}px` : "100%" }}
+          style={{ width: resizew ? `${resizew}px` : "100%" }}
           className="flex h-full w-full flex-wrap content-start justify-around rounded-2xl bg-transparent"
         >
           <div className="my-2 flex h-fit w-full items-center justify-around rounded-2xl border-y border-solid border-white">

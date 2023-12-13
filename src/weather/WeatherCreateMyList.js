@@ -30,7 +30,7 @@ export default function WeatherCreateMyList(props) {
   const [isLoadedForecast, setIsLoadedForecast] = useState(false);
 
   const [countSlide, setCountSlide] = useState(0);
-  const [toTranslate, setToTranslate] = useState(null);
+  const [toTranslate, setToTranslate] = useState(resizew);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const weatherUrlNow =
@@ -136,7 +136,7 @@ export default function WeatherCreateMyList(props) {
 
   const handleBullet = (e) => {
     setCountSlide(e.target.innerHTML);
-    setToTranslate(resizew * countSlide);
+    //setToTranslate(resizew * e.tatget.innerHTML);
   };
 
   const handleDisplayDescription = (e) => {
@@ -156,6 +156,11 @@ export default function WeatherCreateMyList(props) {
   const toStyleDisplayDescription = {
     left: mousePosition.x,
     top: mousePosition.y + 15,
+  };
+
+  const handleSwipe = (e) => {
+    setMousePosition({ x: e.clientX, y: e.clientY });
+    window.console.log(mousePosition.x);
   };
 
   useEffect(() => {
@@ -360,22 +365,24 @@ export default function WeatherCreateMyList(props) {
     };
   }, []);
 
-  //<li className="bg-black transition-colors duration-150 ease-in delay-0 hover:animate-pulse hover:bg-green-300 cursor-pointer"></li>
-
   return (
     <div
       className={`${
         activetab === 1 ? "hidden" : "flex"
-      } h-fit w-screen flex-row-reverse flex-wrap items-center border border-solid border-red-600 sm:w-full sm:flex-col sm:flex-nowrap md:flex-col md:flex-nowrap`}
+      } h-fit w-fit flex-row-reverse flex-wrap items-center border border-solid border-red-600 sm:w-full sm:flex-col sm:flex-nowrap md:w-full md:flex-col md:flex-nowrap`}
     >
       <div
-        className={`min-h-96 scrollbar-hide relative mx-6 box-content h-full w-full flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-x-auto rounded-3xl bg-slate-700 sm:m-0 sm:w-full ${
+        className={`relative mx-6 box-content h-full min-h-96 w-full flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden rounded-3xl bg-slate-700 scrollbar-hide sm:m-0 sm:w-full ${
           isLoaded ? "h-fit" : "h-128 animate-pulse-slow"
         }`}
       >
         {isLoaded && isLoadedForecast && (
           <ul
-            className={`z-30 flex h-full w-full justify-start -translate-x-[${toTranslate}rem]`}
+            style={{
+              transform: `translate3d(${-countSlide * resizew}px, 0, 0)`,
+            }}
+            className={`relative z-30 flex h-full w-full justify-start `}
+            onPointerDown={handleSwipe}
           >
             {liste.map((x, i) => (
               <li key={i}>

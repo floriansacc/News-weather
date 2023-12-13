@@ -133,7 +133,7 @@ export default function WeatherHome() {
         }`}
         onClick={() => (menuOn ? setMenuOn(false) : null)}
       >
-        <div className="flex h-full w-11/12 flex-row flex-nowrap items-start justify-around bg-slate-100 sm:w-full sm:flex-col sm:items-center md:w-full md:flex-wrap lg:m-2">
+        <div className="flex h-full w-11/12 flex-row flex-wrap items-start justify-around bg-slate-100 sm:w-full sm:flex-col sm:items-center md:w-full md:flex-wrap lg:m-2">
           <WeatherLocalisation
             dataimport={dataimport}
             mouseenter={handleButtonEnter}
