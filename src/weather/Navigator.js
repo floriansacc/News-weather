@@ -20,7 +20,7 @@ export default function Navigator(props) {
   return (
     <div className="fixed left-0 top-0 z-50 h-screen lg:relative">
       <AiOutlineMenu
-        className={`absolute left-12 top-5 z-40 h-10 w-10 rounded-xl border border-solid  bg-slate-200 p-2 transition-all duration-300 hover:animate-pulse  hover:bg-slate-300 lg:hidden ${
+        className={`absolute left-7 top-5 z-40 h-10 w-10 rounded-xl border border-solid  bg-slate-200 p-2 transition-all duration-300 hover:animate-pulse  hover:bg-slate-300 lg:hidden ${
           menuon ? "-rotate-180" : ""
         } `}
         onClick={() => setmenuon(!menuon)}

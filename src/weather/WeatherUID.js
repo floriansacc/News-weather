@@ -69,7 +69,7 @@ export default function WeatherUID(props) {
 
   return (
     <div
-      className={`z-30 flex h-full select-none flex-col ${backgroundColoring} flex-nowrap duration-500 md:w-full lg:w-128 ${
+      className={`z-30 flex h-full select-none flex-col ${backgroundColoring} flex-nowrap duration-500 md:w-full lg:w-full ${
         showbutton ? "sm:w-full" : "sm:w-full sm:max-w-none"
       }`}
     >
@@ -101,10 +101,7 @@ export default function WeatherUID(props) {
         <Skeleton borderRadius="16px" count={1} className="h-96 w-full" />
       )}
       {loadstate && loadforecast && (
-        <div
-          style={{ width: resizew ? `${resizew}px` : "100%" }}
-          className="flex h-full w-full flex-wrap content-start justify-around rounded-2xl bg-transparent"
-        >
+        <div className="flex h-full flex-wrap content-start justify-around rounded-2xl bg-transparent sm:w-screen md:w-screen lg:w-full">
           <div className="my-2 flex h-fit w-full items-center justify-around rounded-2xl border-y border-solid border-white">
             <div className="flex flex-col flex-nowrap justify-start">
               <p className="block text-xl font-bold">Weather</p>
@@ -143,7 +140,11 @@ export default function WeatherUID(props) {
               className="h-28 w-28"
               src={
                 srcimage[
-                  raincond.value === "1" ? 4 : `${skyforecast[0].value - 1}`
+                  raincond.value === "1"
+                    ? 4
+                    : raincond.value === "3"
+                      ? 5
+                      : `${skyforecast[0].value - 1}`
                 ]
               }
             />

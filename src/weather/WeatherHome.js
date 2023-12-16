@@ -7,11 +7,12 @@ import sunny from "../css/sunny logo.png";
 import pCloudy from "../css/partial cloudy logo.png";
 import cloudy from "../css/cloudy logo.png";
 import rainy from "../css/rainy logo.png";
+import snowy from "../css/snow logo.png";
 import WeatherCreateMyList from "./WeatherCreateMyList";
 import WeatherLocalisation from "./WeatherLocalisation";
 import Navigator from "./Navigator";
 
-const images = [sunny, "", pCloudy, cloudy, rainy];
+const images = [sunny, "", pCloudy, cloudy, rainy, snowy];
 
 export default function WeatherHome() {
   const [activeTab, setActiveTab] = useState(0);
@@ -116,11 +117,10 @@ export default function WeatherHome() {
 
   useEffect(() => {
     setResizeWidth(window.innerWidth);
-    window.console.log(window.innerWidth);
   }, []);
 
   return (
-    <div className="flex h-full w-full flex-row items-center justify-center ">
+    <div className="flex h-full w-full flex-row items-center justify-center overflow-x-hidden">
       <Navigator
         menuon={menuOn}
         setmenuon={setMenuOn}

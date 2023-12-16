@@ -20,6 +20,7 @@ export default function WeatherCreateMyList(props) {
   const [listeCounter, setListeCounter] = useState(0);
   const [isFetch, setIsFetch] = useState(false);
   const [isFetch2, setIsFetch2] = useState(false);
+  const [fetchFail, setFetchFail] = useState(false);
   const [displayWeatherList, setDisplayWeatherList] = useState(false);
 
   const [weatherInfoNow, setWeatherInfoNow] = useState({});
@@ -31,9 +32,11 @@ export default function WeatherCreateMyList(props) {
 
   const [countSlide, setCountSlide] = useState(0);
   const [toTranslate, setToTranslate] = useState(0);
-  const [totalTrans, setTotalTrans] = useState(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [pointerDownOn, setPointerDownOn] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+
+  const slider = document.getElementById("slider");
 
   const weatherUrlNow =
     "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
@@ -87,9 +90,10 @@ export default function WeatherCreateMyList(props) {
       setIsLoadedForecast(false);
       setIsFetch(false);
       setIsFetch2(false);
-      setCountSlide("0");
+      setCountSlide(0);
       document.getElementById("Displaybutton").style.background = "";
       document.getElementById("Displaybutton").style.color = "";
+      document.getElementById("Displaybutton").style.innerHTML = "";
     }
   };
 
@@ -105,15 +109,15 @@ export default function WeatherCreateMyList(props) {
     setTempForecast({});
     setSkyForecast({});
     setListeCounter(0);
-    setCountSlide("0");
+    setCountSlide(0);
     document.getElementById("Displaybutton").style.background = "";
     document.getElementById("Displaybutton").style.color = "";
+    document.getElementById("Displaybutton").style.innerHTML = "";
   };
 
   const handleDisplayWeatherSlide = (e) => {
     if (isFetch && isFetch2 && displayWeatherList === false) {
       setToTranslate(0);
-      setTotalTrans(null);
       setDisplayWeatherList(true);
       setIsLoaded(true);
       setIsLoadedForecast(true);
@@ -124,7 +128,7 @@ export default function WeatherCreateMyList(props) {
       setIsLoaded(false);
       setIsLoadedForecast(false);
       e.target.style.color = "";
-      setCountSlide("0");
+      setCountSlide(0);
     }
   };
 
@@ -139,7 +143,7 @@ export default function WeatherCreateMyList(props) {
   };
 
   const handleBullet = (e) => {
-    setCountSlide(e.target.innerHTML);
+    setCountSlide(parseInt(e.target.innerHTML));
   };
 
   const handleDisplayDescription = (e) => {
@@ -152,69 +156,97 @@ export default function WeatherCreateMyList(props) {
     document.getElementById("displaydescription").style.display = "none";
   };
 
-  const toStyleDisplayButton = {
-    filter: isFetch && isFetch2 ? "" : "brightness(0.8)",
-  };
-
   const toStyleDisplayDescription = {
     left: mousePosition.x,
     top: mousePosition.y + 15,
   };
 
-  const toStyleSlider = {};
+  const handlePointerDown = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+    setStartX(e.clientX - toTranslate);
+  };
 
-  const handleMovePointer = (e) => {
-    if (pointerDownOn) {
-      let start = mousePosition.x;
-      if (totalTrans !== 0) {
-        setToTranslate(totalTrans + e.clientX - start);
-        window.console.log(toTranslate);
-      } else {
-        setToTranslate(e.clientX - start);
-        window.console.log(toTranslate);
-      }
+  const handlePointerMove = (e) => {
+    if (isDragging && slider.offsetWidth - 100 < resizew) {
+      const newTranslate = e.clientX - startX;
+      setToTranslate(newTranslate);
     }
   };
 
-  const handlePointerUpPointer = (e) => {
-    if (e.button === 0) {
-      setPointerDownOn(false);
-      setTotalTrans(toTranslate);
+  const handlePointerUp = (e) => {
+    setIsDragging(false);
+  };
+
+  const handlePointerUpDocument = (e) => {
+    if (isDragging) {
+      setIsDragging(false);
     }
   };
 
-  const handleMoveTouch = (e) => {
-    if (pointerDownOn) {
-      let start = mousePosition.x;
-      if (totalTrans !== 0) {
-        setToTranslate(totalTrans + Touch.clientX - start);
-        window.console.log(toTranslate);
-      } else {
-        setToTranslate(Touch.clientX - start);
-        window.console.log(toTranslate);
-      }
+  const handleTouchStart = (e) => {
+    setIsDragging(true);
+    setStartX(e.touches[0].clientX - toTranslate);
+  };
+
+  const handleTouchMove = (e) => {
+    if (isDragging) {
+      const newTranslate = e.touches[0].clientX - startX;
+      setToTranslate(newTranslate);
     }
   };
 
-  const handlePointerUpTouch = (e) => {
-    setPointerDownOn(false);
-    setTotalTrans(toTranslate);
+  const handleTouchEnd = (e) => {
+    setIsDragging(false);
   };
 
   useEffect(() => {
-    const handleSwipePointer = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    const handleSwipeTouch = (e) => {
-      setMousePosition({ x: Touch.clientX, y: Touch.clientY });
-    };
-    window.addEventListener("pointerdown", handleSwipePointer);
-    window.addEventListener("touchend", handleSwipeTouch);
+    document.addEventListener("pointerup", handlePointerUpDocument);
+    document.addEventListener("pointermove", handlePointerMove);
     return () => {
-      window.removeEventListener("pointerdown", handleSwipePointer);
-      window.removeEventListener("touchend", handleSwipeTouch);
+      document.removeEventListener("pointerup", handlePointerUpDocument);
+      document.removeEventListener("pointermove", handlePointerMove);
     };
-  }, [pointerDownOn]);
+  }, [isDragging]);
+
+  useEffect(() => {
+    if (isDragging) return;
+    if (
+      countSlide >= 0 &&
+      countSlide < liste.length - 1 &&
+      -toTranslate > resizew * (countSlide + 1) - resizew * 0.6
+    ) {
+      setCountSlide((prev) => prev + 1);
+    } else if (
+      countSlide > 0 &&
+      countSlide < liste.length &&
+      -toTranslate < resizew * countSlide - resizew * 0.4
+    ) {
+      setCountSlide((prev) => prev - 1);
+    } else if (
+      -toTranslate < resizew * (countSlide + 1) - resizew * 0.6 &&
+      -toTranslate > resizew * countSlide - resizew * 0.4
+    ) {
+      setCountSlide((prev) => prev);
+      setToTranslate(-resizew * countSlide);
+    } else if (
+      countSlide === 0 &&
+      -toTranslate < resizew * countSlide - resizew * 0.4
+    ) {
+      setCountSlide(0);
+      setToTranslate(0);
+    } else if (
+      countSlide === liste.length - 1 &&
+      -toTranslate > resizew * (countSlide + 1) - resizew * 0.6
+    ) {
+      setCountSlide(liste.length - 1);
+      setToTranslate(-resizew * countSlide);
+    }
+  }, [isDragging]);
+
+  useEffect(() => {
+    setToTranslate(-resizew * countSlide);
+  }, [countSlide]);
 
   useEffect(() => {
     if (!liste[0]) {
@@ -222,7 +254,7 @@ export default function WeatherCreateMyList(props) {
     } else {
       const getWeatherList = async (name, nx, ny) => {
         let temporary = [];
-        const urlWeatherList = `${weatherUrlNow}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetime}&nx=${nx}&ny=${ny}`;
+        let urlWeatherList = `${weatherUrlNow}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetime}&nx=${nx}&ny=${ny}`;
         try {
           const response = await fetch(urlWeatherList, {
             headers: {
@@ -250,9 +282,11 @@ export default function WeatherCreateMyList(props) {
               ny: ny,
             };
           });
-          return [temporary, setIsFetch(true)];
+          setIsFetch(true);
+          return temporary;
         } catch (error) {
           console.log(`Premier fetch error: ${error}`);
+          setFetchFail(true);
           setIsLoaded(false);
         }
       };
@@ -271,7 +305,7 @@ export default function WeatherCreateMyList(props) {
             ...prev,
             [`${liste[listeCounter - 1]["Phase2"]} - ${
               liste[listeCounter - 1]["Phase3"]
-            }`]: resultsFirstFetch[0],
+            }`]: resultsFirstFetch ? resultsFirstFetch : [],
           }));
         } catch (error) {
           window.console.log(error);
@@ -298,7 +332,7 @@ export default function WeatherCreateMyList(props) {
     } else {
       const getWeatherList = async (name, nx, ny) => {
         let temporary = [];
-        const urlWeatherForecast = `${weatherUrlForecast}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetimeforecast}&nx=${nx}&ny=${ny}`;
+        let urlWeatherForecast = `${weatherUrlForecast}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetimeforecast}&nx=${nx}&ny=${ny}`;
         try {
           const response = await fetch(urlWeatherForecast, {
             headers: {
@@ -334,10 +368,12 @@ export default function WeatherCreateMyList(props) {
               temporary[i] = newData;
             }
           });
-          return [temporary, setIsFetch2(true)];
+          setIsFetch2(true);
+          return temporary;
         } catch (error) {
-          window.console.log(error);
+          console.log(`Second fetch error: ${error}`);
           setIsFetch2(false);
+          setFetchFail(true);
         }
       };
       let saveData = async () => {
@@ -351,27 +387,33 @@ export default function WeatherCreateMyList(props) {
             liste[listeCounter - 1]["nx"],
             liste[listeCounter - 1]["ny"],
           );
-          window.console.log("Fetch2 ok");
           setSkyForecast((prev) => ({
             ...prev,
             [`${liste[listeCounter - 1]["Phase2"]} - ${
               liste[listeCounter - 1]["Phase3"]
-            }`]: resultsFirstFetch[0].filter((x) => x.category === "SKY"),
+            }`]: resultsFirstFetch
+              ? resultsFirstFetch.filter((x) => x.category === "SKY")
+              : [],
           }));
           setWeatherForecast((prev) => ({
             ...prev,
             [`${liste[listeCounter - 1]["Phase2"]} - ${
               liste[listeCounter - 1]["Phase3"]
-            }`]: resultsFirstFetch[0].filter((x) => x.category === "PTY"),
+            }`]: resultsFirstFetch
+              ? resultsFirstFetch.filter((x) => x.category === "PTY")
+              : [],
           }));
           setTempForecast((prev) => ({
             ...prev,
             [`${liste[listeCounter - 1]["Phase2"]} - ${
               liste[listeCounter - 1]["Phase3"]
-            }`]: resultsFirstFetch[0].filter((x) => x.category === "T1H"),
+            }`]: resultsFirstFetch
+              ? resultsFirstFetch.filter((x) => x.category === "T1H")
+              : [],
           }));
         } catch (error) {
           window.console.log(error);
+          setIsFetch2(false);
         }
       };
       setWeatherForecast((prev) => ({
@@ -404,45 +446,48 @@ export default function WeatherCreateMyList(props) {
   useEffect(() => {
     if (isFetch && isFetch2) {
       document.getElementById("Displaybutton").style.borderColor = "red";
+    } else if (fetchFail) {
+      document.getElementById("Displaybutton").style.background = "red";
+      document.getElementById("Displaybutton").style.innerHTML =
+        "need to reset";
     }
     return () => {
       document.getElementById("Displaybutton").style.borderColor = "";
+      document.getElementById("Displaybutton").style.background = "";
+      document.getElementById("Displaybutton").style.innerHTML = "";
     };
   }, [isFetch, isFetch2]);
 
   useEffect(() => {
-    return () => {
-      //document.getElementById("displaydescription").style.display = "none";
-
-      document.getElementById("displaydescription").style.bakcground = "red";
-    };
+    document.getElementById("displaydescription").style.backgroundColor =
+      "#d45950";
   }, []);
 
   return (
     <div
       className={`${
         activetab === 1 ? "hidden" : "flex"
-      } h-fit w-fit flex-row-reverse flex-wrap items-center sm:w-full sm:flex-col sm:flex-nowrap md:w-full md:flex-col md:flex-nowrap`}
+      } h-fit flex-row-reverse flex-wrap items-center sm:w-full sm:flex-col sm:flex-nowrap md:w-full md:flex-col md:flex-nowrap lg:w-3/6`}
     >
       <div
-        className={`relative mx-6 box-content h-full min-h-96 w-full flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden rounded-3xl bg-slate-700 scrollbar-hide sm:m-0 sm:w-full ${
+        className={`relative mx-6 box-content h-full min-h-96 flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden rounded-3xl bg-slate-700 scrollbar-hide sm:m-0 sm:w-full md:w-full lg:w-full ${
           isLoaded ? "h-fit" : "h-128 animate-pulse-slow"
         }`}
       >
         {isLoaded && isLoadedForecast && (
           <ul
+            id="slider"
             style={{
               transform: `translate3d(${toTranslate}px, 0, 0)`,
             }}
-            className={`relative z-30 flex h-full w-full justify-start `}
-            onPointerDown={(e) =>
-              e.button === 0 ? setPointerDownOn(true) : null
-            }
-            onPointerUp={handlePointerUpPointer}
-            onPointerMove={handleMovePointer}
-            onTouchStart={() => setPointerDownOn(true)}
-            onTouchMove={handleMoveTouch}
-            onTouchEnd={handlePointerUpTouch}
+            className={`relative z-30 flex h-full w-full justify-start ${
+              !isDragging ? "transition-all" : ""
+            } `}
+            onPointerDown={handlePointerDown}
+            onPointerUp={handlePointerUp}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           >
             {liste.map((x, i) => (
               <li key={i}>
@@ -511,7 +556,7 @@ export default function WeatherCreateMyList(props) {
             <li
               onClick={handleBullet}
               className={`relative mx-1 inline-block h-6 w-full rounded-2xl border border-solid border-green-100 indent-inf text-xs ${
-                countSlide === `${i}`
+                countSlide === i
                   ? "bg-purpleflo"
                   : " cursor-pointer bg-black transition-all delay-0 duration-200 ease-in hover:scale-105 hover:animate-pulse hover:bg-purpleflo"
               }`}
@@ -520,16 +565,19 @@ export default function WeatherCreateMyList(props) {
               {i}
             </li>
           ))}
-          <li
-            className={`${
-              pointerDownOn === true ? "bg-green-500" : "bg-red-500"
-            }`}
-          >
-            {pointerDownOn ? "OUI" : "NON"}
-          </li>
+          <div className="flex flex-col">
+            <li
+              className={`${
+                isDragging === true ? "bg-green-500" : "bg-red-500"
+              }`}
+            >
+              {isDragging ? "OUI" : "NON"}
+            </li>
+            <li>{countSlide}</li>
+          </div>
           <div className="flex flex-col">
             <li>{toTranslate.toFixed(2)}</li>
-            <li>{totalTrans ? totalTrans.toFixed(2) : "0"}</li>
+            <li>{resizew.toFixed(2)}</li>
           </div>
         </ul>
       )}
@@ -552,7 +600,13 @@ export default function WeatherCreateMyList(props) {
                 isFetch && isFetch2 ? mouseleave : handleDisplayMouseLeave
               }
               onMouseMove={handleDisplayDescription}
-              onClick={isFetch && isFetch2 ? handleDisplayWeatherSlide : null}
+              onClick={
+                fetchFail
+                  ? handleResetListe
+                  : isFetch && isFetch2
+                    ? handleDisplayWeatherSlide
+                    : null
+              }
               id="Displaybutton"
             >
               Display Weather
@@ -634,7 +688,7 @@ export default function WeatherCreateMyList(props) {
           <div className="flex w-fit flex-col flex-nowrap items-center">
             <p
               style={toStyleDisplayDescription}
-              className="absolute hidden h-fit w-fit rounded-3xl border border-solid border-black bg-white px-1 py-1"
+              className="absolute hidden h-fit w-fit rounded-3xl border border-solid border-black bg-white px-2 py-1 text-white"
               id="displaydescription"
             >
               Need to fill the list before display

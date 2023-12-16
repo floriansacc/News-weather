@@ -230,7 +230,7 @@ export default function WeatherLocalisation(props) {
 
   useEffect(() => {
     const getUrlWeatherNow = `${weatherUrlNow}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetime}&nx=${citySelector[3]}&ny=${citySelector[4]}`;
-    const getWeather = async () => {
+    let getWeather = async () => {
       try {
         const response = await fetch(getUrlWeatherNow, {
           headers: {
@@ -243,7 +243,7 @@ export default function WeatherLocalisation(props) {
         const jsonResponse = await response.json();
         window.console.log(jsonResponse.response.header);
         window.console.log(jsonResponse.response.body.items.item);
-        await jsonResponse.response.body.items.item.forEach((x) => {
+        await jsonResponse.response.body.items.item.map((x) => {
           setWeatherInfoNow((prev) => [
             ...prev,
             {
