@@ -1,19 +1,20 @@
 {
   "files": {
-    "main.css": "/News-weather/static/css/main.2df03f5c.css",
-    "main.js": "/News-weather/static/js/main.48129046.js",
+    "main.css": "/News-weather/static/css/main.757b3acd.css",
+    "main.js": "/News-weather/static/js/main.2a091591.js",
     "static/js/787.0128a965.chunk.js": "/News-weather/static/js/787.0128a965.chunk.js",
+    "static/media/snow logo.png": "/News-weather/static/media/snow logo.98c3f533f6a1ad2cc67c.png",
     "static/media/sunny logo.png": "/News-weather/static/media/sunny logo.f54a191781e7c5113a9b.png",
     "static/media/rainy logo.png": "/News-weather/static/media/rainy logo.88ccad0b0f66d2aa734c.png",
     "static/media/cloudy logo.png": "/News-weather/static/media/cloudy logo.57f2fa5f32d873cc9e8b.png",
     "static/media/partial cloudy logo.png": "/News-weather/static/media/partial cloudy logo.b6bc684b26e42fa4e63c.png",
     "index.html": "/News-weather/index.html",
-    "main.2df03f5c.css.map": "/News-weather/static/css/main.2df03f5c.css.map",
-    "main.48129046.js.map": "/News-weather/static/js/main.48129046.js.map",
+    "main.757b3acd.css.map": "/News-weather/static/css/main.757b3acd.css.map",
+    "main.2a091591.js.map": "/News-weather/static/js/main.2a091591.js.map",
     "787.0128a965.chunk.js.map": "/News-weather/static/js/787.0128a965.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.2df03f5c.css",
-    "static/js/main.48129046.js"
+    "static/css/main.757b3acd.css",
+    "static/js/main.2a091591.js"
   ]
 }
