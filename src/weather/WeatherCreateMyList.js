@@ -30,8 +30,10 @@ export default function WeatherCreateMyList(props) {
   const [isLoadedForecast, setIsLoadedForecast] = useState(false);
 
   const [countSlide, setCountSlide] = useState(0);
-  const [toTranslate, setToTranslate] = useState(resizew);
+  const [toTranslate, setToTranslate] = useState(0);
+  const [totalTrans, setTotalTrans] = useState(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [pointerDownOn, setPointerDownOn] = useState(false);
 
   const weatherUrlNow =
     "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
@@ -110,6 +112,8 @@ export default function WeatherCreateMyList(props) {
 
   const handleDisplayWeatherSlide = (e) => {
     if (isFetch && isFetch2 && displayWeatherList === false) {
+      setToTranslate(0);
+      setTotalTrans(null);
       setDisplayWeatherList(true);
       setIsLoaded(true);
       setIsLoadedForecast(true);
@@ -136,7 +140,6 @@ export default function WeatherCreateMyList(props) {
 
   const handleBullet = (e) => {
     setCountSlide(e.target.innerHTML);
-    //setToTranslate(resizew * e.tatget.innerHTML);
   };
 
   const handleDisplayDescription = (e) => {
@@ -158,10 +161,60 @@ export default function WeatherCreateMyList(props) {
     top: mousePosition.y + 15,
   };
 
-  const handleSwipe = (e) => {
-    setMousePosition({ x: e.clientX, y: e.clientY });
-    window.console.log(mousePosition.x);
+  const toStyleSlider = {};
+
+  const handleMovePointer = (e) => {
+    if (pointerDownOn) {
+      let start = mousePosition.x;
+      if (totalTrans !== 0) {
+        setToTranslate(totalTrans + e.clientX - start);
+        window.console.log(toTranslate);
+      } else {
+        setToTranslate(e.clientX - start);
+        window.console.log(toTranslate);
+      }
+    }
   };
+
+  const handlePointerUpPointer = (e) => {
+    if (e.button === 0) {
+      setPointerDownOn(false);
+      setTotalTrans(toTranslate);
+    }
+  };
+
+  const handleMoveTouch = (e) => {
+    if (pointerDownOn) {
+      let start = mousePosition.x;
+      if (totalTrans !== 0) {
+        setToTranslate(totalTrans + Touch.clientX - start);
+        window.console.log(toTranslate);
+      } else {
+        setToTranslate(Touch.clientX - start);
+        window.console.log(toTranslate);
+      }
+    }
+  };
+
+  const handlePointerUpTouch = (e) => {
+    setPointerDownOn(false);
+    setTotalTrans(toTranslate);
+  };
+
+  useEffect(() => {
+    const handleSwipePointer = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    const handleSwipeTouch = (e) => {
+      setMousePosition({ x: Touch.clientX, y: Touch.clientY });
+    };
+    window.addEventListener("pointerdown", handleSwipePointer);
+    window.addEventListener("touchend", handleSwipeTouch);
+    return () => {
+      window.removeEventListener("pointerdown", handleSwipePointer);
+      window.removeEventListener("touchend", handleSwipeTouch);
+    };
+  }, [pointerDownOn]);
 
   useEffect(() => {
     if (!liste[0]) {
@@ -379,10 +432,17 @@ export default function WeatherCreateMyList(props) {
         {isLoaded && isLoadedForecast && (
           <ul
             style={{
-              transform: `translate3d(${-countSlide * resizew}px, 0, 0)`,
+              transform: `translate3d(${toTranslate}px, 0, 0)`,
             }}
             className={`relative z-30 flex h-full w-full justify-start `}
-            onPointerDown={handleSwipe}
+            onPointerDown={(e) =>
+              e.button === 0 ? setPointerDownOn(true) : null
+            }
+            onPointerUp={handlePointerUpPointer}
+            onPointerMove={handleMovePointer}
+            onTouchStart={() => setPointerDownOn(true)}
+            onTouchMove={handleMoveTouch}
+            onTouchEnd={handlePointerUpTouch}
           >
             {liste.map((x, i) => (
               <li key={i}>
@@ -460,6 +520,17 @@ export default function WeatherCreateMyList(props) {
               {i}
             </li>
           ))}
+          <li
+            className={`${
+              pointerDownOn === true ? "bg-green-500" : "bg-red-500"
+            }`}
+          >
+            {pointerDownOn ? "OUI" : "NON"}
+          </li>
+          <div className="flex flex-col">
+            <li>{toTranslate.toFixed(2)}</li>
+            <li>{totalTrans ? totalTrans.toFixed(2) : "0"}</li>
+          </div>
         </ul>
       )}
       <div className="mt-2 flex h-full w-11/12 flex-col items-start justify-start rounded-xl p-1">

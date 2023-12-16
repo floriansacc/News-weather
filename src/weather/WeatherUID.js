@@ -69,7 +69,7 @@ export default function WeatherUID(props) {
 
   return (
     <div
-      className={` z-30 flex h-full flex-col ${backgroundColoring} flex-nowrap duration-500 md:w-full lg:w-128 ${
+      className={`z-30 flex h-full select-none flex-col ${backgroundColoring} flex-nowrap duration-500 md:w-full lg:w-128 ${
         showbutton ? "sm:w-full" : "sm:w-full sm:max-w-none"
       }`}
     >
