@@ -130,7 +130,7 @@ export default function GlobalBody() {
       <Routes>
         <Route
           exact
-          path="/News-Weather"
+          path="/"
           element={
             <WeatherHome
               dataimport={dataimport}
@@ -151,7 +151,7 @@ export default function GlobalBody() {
           }
         ></Route>
         <Route
-          path="/News-weather/Location"
+          path="/Location"
           element={
             <WeatherLocalisation
               dataimport={dataimport}
@@ -171,7 +171,7 @@ export default function GlobalBody() {
           }
         ></Route>
         <Route
-          path="/News-weather/My-list"
+          path="/My-list"
           element={
             <WeatherCreateMyList
               dataimport={dataimport}

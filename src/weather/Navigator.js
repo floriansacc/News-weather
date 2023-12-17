@@ -42,7 +42,7 @@ export default function Navigator(props) {
         <div className="mt-20 flex flex-col items-start">
           {menu.map((item, i) => (
             <Link
-              to={`News-weather/${i === 0 ? "" : item}`}
+              to={`${i === 0 ? "/" : item}`}
               onClick={tabSelection}
               className={`relative my-5 w-full rounded-sm p-3  ${
                 activetab === i ? "bg-green-200" : "hover:bg-[#a3ffb1]"
