@@ -22,7 +22,7 @@ export default function Navigator(props) {
   };
 
   useEffect(() => {
-    setactivetab(!lastSession ? "0" : parseInt(lastSession));
+    setactivetab(!lastSession ? 0 : parseInt(lastSession));
   }, []);
 
   return (
