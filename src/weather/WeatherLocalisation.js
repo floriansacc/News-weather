@@ -13,6 +13,9 @@ export default function WeatherLocalisation(props) {
     updatedate,
     basedate,
     activetab,
+    size,
+    menuon,
+    setmenuon,
   } = props;
 
   const [gps, setGps] = useState({ lat: 0, long: 0 });
@@ -336,14 +339,10 @@ export default function WeatherLocalisation(props) {
 
   return (
     <div
-      href="#location"
       className={`${
-        activetab === 2
-          ? "hidden sm:mb-20"
-          : activetab === 1
-            ? "flex"
-            : "flex sm:mb-20"
-      } m-0 h-full w-fit flex-row justify-center sm:w-full md:mb-20 md:w-full`}
+        activetab === 1 ? "" : "mb-20"
+      } m-0 h-${size} w-fit flex-row items-start justify-around bg-slate-100 sm:w-full md:w-full md:flex-wrap lg:w-[45%] `}
+      onClick={() => (menuon ? setmenuon(false) : null)}
     >
       <div className="right-0 top-1 hidden">
         <h1>

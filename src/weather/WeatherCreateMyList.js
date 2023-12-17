@@ -12,8 +12,9 @@ export default function WeatherCreateMyList(props) {
     srcimage,
     updatedate,
     basedate,
-    activetab,
     resizew,
+    menuon,
+    setmenuon,
   } = props;
   const [liste, setListe] = useState([]);
   const [elem, setElem] = useState([]);
@@ -169,12 +170,14 @@ export default function WeatherCreateMyList(props) {
 
   const handlePointerMove = (e) => {
     if (isDragging && slider.offsetWidth - 100 < resizew) {
+      e.preventDefault();
       const newTranslate = e.clientX - startX;
       setToTranslate(newTranslate);
     }
   };
 
   const handlePointerUp = (e) => {
+    e.preventDefault();
     setIsDragging(false);
   };
 
@@ -185,18 +188,21 @@ export default function WeatherCreateMyList(props) {
   };
 
   const handleTouchStart = (e) => {
+    e.preventDefault();
     setIsDragging(true);
     setStartX(e.touches[0].clientX - toTranslate);
   };
 
   const handleTouchMove = (e) => {
     if (isDragging) {
+      e.preventDefault();
       const newTranslate = e.touches[0].clientX - startX;
       setToTranslate(newTranslate);
     }
   };
 
   const handleTouchEnd = (e) => {
+    e.preventDefault();
     setIsDragging(false);
   };
 
@@ -451,11 +457,11 @@ export default function WeatherCreateMyList(props) {
       document.getElementById("Displaybutton").style.innerHTML =
         "need to reset";
     }
-    return () => {
+    /*return () => {
       document.getElementById("Displaybutton").style.borderColor = "";
       document.getElementById("Displaybutton").style.background = "";
       document.getElementById("Displaybutton").style.innerHTML = "";
-    };
+    };*/
   }, [isFetch, isFetch2]);
 
   useEffect(() => {
@@ -465,9 +471,8 @@ export default function WeatherCreateMyList(props) {
 
   return (
     <div
-      className={`${
-        activetab === 1 ? "hidden" : "flex"
-      } h-fit flex-row-reverse flex-wrap items-center sm:w-full sm:flex-col sm:flex-nowrap md:w-full md:flex-col md:flex-nowrap lg:w-3/6`}
+      className={`flex h-full flex-row-reverse flex-wrap items-center justify-around bg-slate-100 sm:w-full sm:flex-col sm:flex-nowrap md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-3/6`}
+      onClick={() => (menuon ? setmenuon(false) : null)}
     >
       <div
         className={`relative mx-6 box-content h-full min-h-96 flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden rounded-3xl bg-slate-700 scrollbar-hide sm:m-0 sm:w-full md:w-full lg:w-full ${

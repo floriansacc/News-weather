@@ -69,7 +69,7 @@ export default function WeatherUID(props) {
 
   return (
     <div
-      className={`z-30 flex h-full select-none flex-col ${backgroundColoring} flex-nowrap duration-500 md:w-full lg:w-full ${
+      className={`z-30 flex h-full select-none flex-col ${backgroundColoring} flex-nowrap duration-500 md:w-full lg:w-full lg:rounded-2xl ${
         showbutton ? "sm:w-full" : "sm:w-full sm:max-w-none"
       }`}
     >
@@ -79,7 +79,7 @@ export default function WeatherUID(props) {
         }`}
       >
         <button
-          className="m-1.5 flex h-8 w-fit items-center rounded-full border-2 border-solid border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
+          className="m-1.5 flex h-8 w-fit items-center rounded-full border-2 border-solid border-gray-400 bg-gradient-to-r from-gray-300/25 to-gray-700/25 p-1.5"
           onClick={refresh}
           onMouseEnter={mouseenter}
           onMouseLeave={mouseleave}
