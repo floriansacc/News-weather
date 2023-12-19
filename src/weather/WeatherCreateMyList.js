@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import WeatherUID from "./WeatherUID";
+import { AiOutlineInsertRowLeft } from "react-icons/ai";
 
 export default function WeatherCreateMyList(props) {
   const {
@@ -111,9 +112,9 @@ export default function WeatherCreateMyList(props) {
     setSkyForecast({});
     setListeCounter(0);
     setCountSlide(0);
+    document.getElementById("Displaybutton").style.borderColor = "";
     document.getElementById("Displaybutton").style.background = "";
     document.getElementById("Displaybutton").style.color = "";
-    document.getElementById("Displaybutton").style.innerHTML = "";
   };
 
   const handleDisplayWeatherSlide = (e) => {
@@ -163,21 +164,18 @@ export default function WeatherCreateMyList(props) {
   };
 
   const handlePointerDown = (e) => {
-    e.preventDefault();
     setIsDragging(true);
     setStartX(e.clientX - toTranslate);
   };
 
   const handlePointerMove = (e) => {
     if (isDragging && slider.offsetWidth - 100 < resizew) {
-      e.preventDefault();
       const newTranslate = e.clientX - startX;
       setToTranslate(newTranslate);
     }
   };
 
   const handlePointerUp = (e) => {
-    e.preventDefault();
     setIsDragging(false);
   };
 
@@ -188,30 +186,31 @@ export default function WeatherCreateMyList(props) {
   };
 
   const handleTouchStart = (e) => {
-    e.preventDefault();
     setIsDragging(true);
     setStartX(e.touches[0].clientX - toTranslate);
   };
 
   const handleTouchMove = (e) => {
     if (isDragging) {
-      e.preventDefault();
       const newTranslate = e.touches[0].clientX - startX;
       setToTranslate(newTranslate);
     }
   };
 
   const handleTouchEnd = (e) => {
-    e.preventDefault();
     setIsDragging(false);
   };
 
   useEffect(() => {
     document.addEventListener("pointerup", handlePointerUpDocument);
     document.addEventListener("pointermove", handlePointerMove);
+    if (isDragging) {
+      document.body.style.overflow = "hidden";
+    }
     return () => {
       document.removeEventListener("pointerup", handlePointerUpDocument);
       document.removeEventListener("pointermove", handlePointerMove);
+      document.body.style.overflow = "";
     };
   }, [isDragging]);
 
@@ -444,38 +443,54 @@ export default function WeatherCreateMyList(props) {
     }
 
     return () => {
-      //setIsLoaded(false);
       setIsFetch2(false);
     };
   }, [listeCounter]);
 
   useEffect(() => {
-    if (isFetch && isFetch2) {
-      document.getElementById("Displaybutton").style.borderColor = "red";
-    } else if (fetchFail) {
-      document.getElementById("Displaybutton").style.background = "red";
-      document.getElementById("Displaybutton").style.innerHTML =
-        "need to reset";
-    }
-    /*return () => {
-      document.getElementById("Displaybutton").style.borderColor = "";
-      document.getElementById("Displaybutton").style.background = "";
-      document.getElementById("Displaybutton").style.innerHTML = "";
-    };*/
-  }, [isFetch, isFetch2]);
+    document.getElementById("Displaybutton").style.borderColor = "";
+    document.getElementById("Displaybutton").style.background = "";
+    document.getElementById("Displaybutton").innerHTML = "Display Weather";
+  }, [listeCounter]);
 
   useEffect(() => {
     document.getElementById("displaydescription").style.backgroundColor =
       "#d45950";
   }, []);
 
+  useEffect(() => {
+    if (fetchFail) {
+      document.getElementById("Displaybutton").style.background = "d45950";
+      document.getElementById("Displaybutton").style.color = "white";
+      document.getElementById("Displaybutton").innerHTML = "Fail, reset";
+    }
+    if (isFetch && isFetch2 && displayWeatherList === false) {
+      setToTranslate(0);
+      setDisplayWeatherList(true);
+      setIsLoaded(true);
+      setIsLoadedForecast(true);
+      document.getElementById("Displaybutton").style.borderColor = "#d45950";
+      document.getElementById("Displaybutton").style.color = "white";
+      document.getElementById("Displaybutton").innerHTML = "Display Weather";
+    }
+    if (displayWeatherList === true) {
+      setDisplayWeatherList(false);
+      setIsLoaded(false);
+      setIsLoadedForecast(false);
+      setCountSlide(0);
+      document.getElementById("Displaybutton").style.borderColor = "";
+      document.getElementById("Displaybutton").style.color = "";
+      document.getElementById("Displaybutton").innerHTML = "Display Weather";
+    }
+  }, [isFetch, isFetch2]);
+
   return (
     <div
-      className={`flex h-full flex-row-reverse flex-wrap items-center justify-around bg-slate-100 sm:w-full sm:flex-col sm:flex-nowrap md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-3/6`}
+      className={`flex h-full items-center justify-around bg-slate-100 sm:w-full sm:flex-col sm:flex-nowrap md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-3/6 lg:flex-row-reverse lg:flex-wrap`}
       onClick={() => (menuon ? setmenuon(false) : null)}
     >
       <div
-        className={`relative mx-6 box-content h-full min-h-96 flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden rounded-3xl bg-slate-700 scrollbar-hide sm:m-0 sm:w-full md:w-full lg:w-full ${
+        className={`relative mx-6 box-content min-h-96 flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden rounded-3xl bg-slate-700 scrollbar-hide sm:m-0 sm:w-full md:w-full lg:w-full ${
           isLoaded ? "h-fit" : "h-128 animate-pulse-slow"
         }`}
       >
@@ -570,7 +585,7 @@ export default function WeatherCreateMyList(props) {
               {i}
             </li>
           ))}
-          <div className="flex flex-col">
+          <div className="hidden flex-col">
             <li
               className={`${
                 isDragging === true ? "bg-green-500" : "bg-red-500"
@@ -580,7 +595,7 @@ export default function WeatherCreateMyList(props) {
             </li>
             <li>{countSlide}</li>
           </div>
-          <div className="flex flex-col">
+          <div className="hidden flex-col">
             <li>{toTranslate.toFixed(2)}</li>
             <li>{resizew.toFixed(2)}</li>
           </div>
@@ -599,7 +614,11 @@ export default function WeatherCreateMyList(props) {
             </button>
             <button
               className={`m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5
-            ${isFetch && isFetch2 ? "brightness-100" : "brightness-75"}`}
+            ${
+              (isFetch && isFetch2) || fetchFail
+                ? "brightness-100"
+                : "brightness-75"
+            }`}
               onMouseEnter={isFetch && isFetch2 ? mouseenter : null}
               onMouseLeave={
                 isFetch && isFetch2 ? mouseleave : handleDisplayMouseLeave
@@ -620,7 +639,7 @@ export default function WeatherCreateMyList(props) {
           <div>
             <label className="flex flex-col flex-nowrap">
               <select
-                className="m-1 w-36 rounded-xl border-2 border-gray-300 bg-inherit"
+                className="m-1 w-36 rounded-xl border-2 border-gray-300 bg-inherit px-1"
                 name="one"
                 value={elem[0]}
                 onChange={handleCitySelector}
@@ -640,7 +659,7 @@ export default function WeatherCreateMyList(props) {
                 )}
               </select>
               <select
-                className="m-1 w-36 rounded-xl border-2 border-gray-300 bg-inherit"
+                className="m-1 w-36 rounded-xl border-2 border-gray-300 bg-inherit px-1"
                 name="two"
                 value={elem[1]}
                 onChange={handleCitySelector}
@@ -663,7 +682,7 @@ export default function WeatherCreateMyList(props) {
                 })}
               </select>
               <select
-                className="m-1 w-36 rounded-xl border-2 border-gray-300 bg-inherit"
+                className="m-1 w-36 rounded-xl border-2 border-gray-300 bg-inherit px-1"
                 name="three"
                 value={elem[2]}
                 onChange={handleCitySelector}

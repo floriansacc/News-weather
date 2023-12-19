@@ -118,7 +118,7 @@ export default function GlobalBody() {
   useEffect(() => {
     setResizeWidth(window.innerWidth);
   }, []);
-  //overflow-x-hidden
+
   return (
     <div className="flex h-full w-full flex-row items-start justify-start overflow-x-hidden lg:h-screen">
       <Navigator
