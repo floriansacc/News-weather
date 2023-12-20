@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import WeatherUID from "./WeatherUID";
-import { AiOutlineInsertRowLeft } from "react-icons/ai";
+import { IoIosAddCircleOutline } from "react-icons/io";
+import MenuListe from "./MenuListe";
 
 export default function WeatherCreateMyList(props) {
   const {
@@ -34,9 +35,11 @@ export default function WeatherCreateMyList(props) {
 
   const [countSlide, setCountSlide] = useState(0);
   const [toTranslate, setToTranslate] = useState(0);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
+
+  const [menuListOn, setMenuListOn] = useState(false);
 
   const slider = document.getElementById("slider");
 
@@ -136,33 +139,8 @@ export default function WeatherCreateMyList(props) {
     }
   };
 
-  const handleCommand = () => {
-    window.console.log("MAP");
-    window.console.log(weatherInfoNow);
-    window.console.log("MAP2");
-    window.console.log(weatherForecast);
-    window.console.log(skyForecast);
-    window.console.log(tempForecast);
-    window.console.log(liste.length);
-  };
-
   const handleBullet = (e) => {
     setCountSlide(parseInt(e.target.innerHTML));
-  };
-
-  const handleDisplayDescription = (e) => {
-    document.getElementById("displaydescription").style.display =
-      isFetch && isFetch2 ? "none" : "block";
-    setMousePosition({ x: e.clientX, y: e.clientY });
-  };
-
-  const handleDisplayMouseLeave = (e) => {
-    document.getElementById("displaydescription").style.display = "none";
-  };
-
-  const toStyleDisplayDescription = {
-    left: mousePosition.x,
-    top: mousePosition.y + 15,
   };
 
   const handlePointerDown = (e) => {
@@ -607,169 +585,34 @@ export default function WeatherCreateMyList(props) {
           </div>
         </ul>
       )}
-      <div className="mt-2 flex h-full w-11/12 flex-col items-start justify-start rounded-xl p-1">
-        <div className="flex w-full flex-row flex-nowrap items-center justify-center rounded-xl border border-black">
-          <div className="m-1 flex flex-col flex-nowrap items-center">
-            <button
-              className="m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
-              onClick={handleAddToList}
-              onMouseEnter={mouseenter}
-              onMouseLeave={mouseleave}
-            >
-              Add to my list
-            </button>
-            <button
-              className={`m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5
-            ${
-              isFetch && isFetch2
-                ? "brightness-100"
-                : fetchFail
-                  ? "brightness-100"
-                  : "brightness-75"
-            }`}
-              onMouseEnter={isFetch && isFetch2 ? mouseenter : null}
-              onMouseLeave={
-                isFetch && isFetch2 ? mouseleave : handleDisplayMouseLeave
-              }
-              onMouseMove={handleDisplayDescription}
-              onClick={
-                fetchFail
-                  ? handleResetListe
-                  : isFetch && isFetch2
-                    ? handleDisplayWeatherSlide
-                    : null
-              }
-              id="Displaybutton"
-            >
-              Display Weather
-            </button>
-          </div>
-          <div>
-            <label className="flex flex-col flex-nowrap">
-              <select
-                className="m-1 w-36 rounded-xl border-2 border-gray-300 bg-inherit px-1"
-                name="one"
-                value={elem[0]}
-                onChange={handleCitySelector}
-              >
-                <option name="one" value="선택" label="선택"></option>
-                {Array.from(new Set(dataimport.map((obj) => obj.Part1))).map(
-                  (x, i) => {
-                    return (
-                      <option
-                        name="one"
-                        value={x}
-                        label={x}
-                        key={`optionlist1${i}`}
-                      ></option>
-                    );
-                  },
-                )}
-              </select>
-              <select
-                className="m-1 w-36 rounded-xl border-2 border-gray-300 bg-inherit px-1"
-                name="two"
-                value={elem[1]}
-                onChange={handleCitySelector}
-              >
-                {Array.from(
-                  new Set(
-                    dataimport
-                      .filter((word) => word.Part1 === elem[0])
-                      .map((obj) => obj.Part2),
-                  ),
-                ).map((x, i) => {
-                  return (
-                    <option
-                      name="two"
-                      value={x}
-                      label={x}
-                      key={`optionlist2${i}`}
-                    ></option>
-                  );
-                })}
-              </select>
-              <select
-                className="m-1 w-36 rounded-xl border-2 border-gray-300 bg-inherit px-1"
-                name="three"
-                value={elem[2]}
-                onChange={handleCitySelector}
-              >
-                {Array.from(
-                  new Set(
-                    dataimport
-                      .filter(
-                        (word) =>
-                          word.Part2 === elem[1] && word.Part1 === elem[0],
-                      )
-                      .map((obj) => obj),
-                  ),
-                ).map((x, i) => {
-                  return (
-                    <option
-                      name="three"
-                      value={x.Part3}
-                      label={x.Part3}
-                      key={`optionlist3${i}`}
-                    ></option>
-                  );
-                })}
-              </select>
-            </label>
-          </div>
-          <div className="flex w-fit flex-col flex-nowrap items-center">
-            <p
-              style={toStyleDisplayDescription}
-              className="absolute hidden h-fit w-fit rounded-3xl border border-solid border-black bg-white px-2 py-1 text-white"
-              id="displaydescription"
-            >
-              Need to fill the list before display
-            </p>
-            <button
-              className="m-1.5 flex h-8 items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
-              onClick={handleResetListe}
-              onMouseEnter={mouseenter}
-              onMouseLeave={mouseleave}
-            >
-              Reset
-            </button>
-            <button
-              className="m-1.5 hidden h-8 items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
-              onMouseEnter={mouseenter}
-              onMouseLeave={mouseleave}
-              onClick={handleCommand}
-            >
-              Console
-            </button>
-          </div>
-        </div>
-        {liste[0] && <p className="mt-6">List of city to display:</p>}
-        <div
-          className={`${
-            liste[0] ? "grid" : "hidden"
-          }  my-4 w-full auto-rows-t1 grid-cols-3 justify-items-center rounded-xl border border-solid border-black`}
-        >
-          {liste[0] && (
-            <>
-              <p className="my-1 font-semibold">1단계</p>
-              <p className="my-1 font-semibold">2단계</p>
-              <p className="my-1 font-semibold">3단계</p>
-            </>
-          )}
-          {liste.map((x, i) => (
-            <>
-              <p className="min-w-33 text-center" key={`p1${i}`}>
-                {x.Phase1}
-              </p>
-              <p className="min-w-33 text-center" key={`p2${i}`}>
-                {x.Phase2}
-              </p>
-              <p className="w-fit min-w-25 text-center" key={`p3${i}`}>
-                {x.Phase3}
-              </p>
-            </>
-          ))}
-        </div>
+      <MenuListe
+        addtolist={handleAddToList}
+        mouseenter={mouseenter}
+        mouseleave={mouseleave}
+        fetchcheck={[isFetch, isFetch2, fetchFail]}
+        elem={elem}
+        liste={liste}
+        dataimport={dataimport}
+        cityselector={handleCitySelector}
+        resetlist={handleResetListe}
+        weatherslide={handleDisplayWeatherSlide}
+        menuliston={menuListOn}
+        setmenuliston={setMenuListOn}
+      />
+      <div
+        className={`fixed bottom-5 right-5 inline-flex h-fit w-fit select-none items-center justify-center rounded-xl ${
+          menuListOn
+            ? "bg-green-600 bg-opacity-25"
+            : "bg-green-600 bg-opacity-80"
+        }  p-1`}
+        onClick={() => setMenuListOn(!menuListOn)}
+      >
+        <p className="px-2">{`${menuListOn ? "Close" : "Open"}`} list</p>
+        <IoIosAddCircleOutline
+          className={`h-10 w-10 transition-all duration-300 ${
+            menuListOn ? "rotate-[135deg]" : ""
+          }`}
+        />
       </div>
     </div>
   );
