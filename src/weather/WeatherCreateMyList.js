@@ -106,6 +106,7 @@ export default function WeatherCreateMyList(props) {
     setIsLoadedForecast(false);
     setIsFetch(false);
     setIsFetch2(false);
+    setFetchFail(false);
     setWeatherInfoNow({});
     setWeatherForecast({});
     setTempForecast({});
@@ -115,6 +116,7 @@ export default function WeatherCreateMyList(props) {
     document.getElementById("Displaybutton").style.borderColor = "";
     document.getElementById("Displaybutton").style.background = "";
     document.getElementById("Displaybutton").style.color = "";
+    document.getElementById("Displaybutton").innerHTML = "Display Weather";
   };
 
   const handleDisplayWeatherSlide = (e) => {
@@ -292,6 +294,7 @@ export default function WeatherCreateMyList(props) {
         } catch (error) {
           console.log(`Premier fetch error: ${error}`);
           setFetchFail(true);
+          setIsFetch(false);
           setIsLoaded(false);
         }
       };
@@ -379,6 +382,7 @@ export default function WeatherCreateMyList(props) {
           console.log(`Second fetch error: ${error}`);
           setIsFetch2(false);
           setFetchFail(true);
+          setIsLoaded(false);
         }
       };
       let saveData = async () => {
@@ -454,17 +458,19 @@ export default function WeatherCreateMyList(props) {
   }, [listeCounter]);
 
   useEffect(() => {
-    document.getElementById("displaydescription").style.backgroundColor =
-      "#d45950";
+    document.getElementById("displaydescription").style.background = "#d45950";
   }, []);
 
   useEffect(() => {
     if (fetchFail) {
-      document.getElementById("Displaybutton").style.background = "d45950";
+      document.getElementById("Displaybutton").style.background = "#d45950";
       document.getElementById("Displaybutton").style.color = "white";
-      document.getElementById("Displaybutton").innerHTML = "Fail, reset";
+      document.getElementById("Displaybutton").innerHTML =
+        "Fail, click to reset";
+      window.console.log("a");
     }
     if (isFetch && isFetch2 && displayWeatherList === false) {
+      window.console.log("b");
       setToTranslate(0);
       setDisplayWeatherList(true);
       setIsLoaded(true);
@@ -482,7 +488,7 @@ export default function WeatherCreateMyList(props) {
       document.getElementById("Displaybutton").style.color = "";
       document.getElementById("Displaybutton").innerHTML = "Display Weather";
     }
-  }, [isFetch, isFetch2]);
+  }, [isFetch, isFetch2, fetchFail]);
 
   return (
     <div
@@ -615,9 +621,11 @@ export default function WeatherCreateMyList(props) {
             <button
               className={`m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5
             ${
-              (isFetch && isFetch2) || fetchFail
+              isFetch && isFetch2
                 ? "brightness-100"
-                : "brightness-75"
+                : fetchFail
+                  ? "brightness-100"
+                  : "brightness-75"
             }`}
               onMouseEnter={isFetch && isFetch2 ? mouseenter : null}
               onMouseLeave={
