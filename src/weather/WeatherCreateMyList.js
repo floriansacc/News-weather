@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import WeatherUID from "./WeatherUID";
-import { IoIosAddCircleOutline } from "react-icons/io";
 import MenuListe from "./MenuListe";
+import MenuOpenClose from "./MenuOpenClose";
 
 export default function WeatherCreateMyList(props) {
   const {
@@ -96,9 +96,9 @@ export default function WeatherCreateMyList(props) {
       setIsFetch(false);
       setIsFetch2(false);
       setCountSlide(0);
-      document.getElementById("Displaybutton").style.background = "";
-      document.getElementById("Displaybutton").style.color = "";
-      document.getElementById("Displaybutton").style.innerHTML = "";
+      document.getElementById("resetbutton").style.background = "";
+      document.getElementById("resetbutton").style.color = "";
+      document.getElementById("resetbutton").style.innerHTML = "";
     }
   };
 
@@ -116,10 +116,11 @@ export default function WeatherCreateMyList(props) {
     setSkyForecast({});
     setListeCounter(0);
     setCountSlide(0);
+    document.getElementById("resetbutton").style.borderColor = "";
+    document.getElementById("resetbutton").style.background = "";
+    document.getElementById("resetbutton").style.color = "";
+    document.getElementById("resetbutton").innerHTML = "Reset";
     document.getElementById("Displaybutton").style.borderColor = "";
-    document.getElementById("Displaybutton").style.background = "";
-    document.getElementById("Displaybutton").style.color = "";
-    document.getElementById("Displaybutton").innerHTML = "Display Weather";
   };
 
   const handleDisplayWeatherSlide = (e) => {
@@ -430,9 +431,9 @@ export default function WeatherCreateMyList(props) {
   }, [listeCounter]);
 
   useEffect(() => {
-    document.getElementById("Displaybutton").style.borderColor = "";
-    document.getElementById("Displaybutton").style.background = "";
-    document.getElementById("Displaybutton").innerHTML = "Display Weather";
+    document.getElementById("resetbutton").style.borderColor = "";
+    document.getElementById("resetbutton").style.background = "";
+    document.getElementById("resetbutton").innerHTML = "Reset";
   }, [listeCounter]);
 
   useEffect(() => {
@@ -441,10 +442,9 @@ export default function WeatherCreateMyList(props) {
 
   useEffect(() => {
     if (fetchFail) {
-      document.getElementById("Displaybutton").style.background = "#d45950";
-      document.getElementById("Displaybutton").style.color = "white";
-      document.getElementById("Displaybutton").innerHTML =
-        "Fail, click to reset";
+      document.getElementById("resetbutton").style.background = "#d45950";
+      document.getElementById("resetbutton").style.color = "white";
+      document.getElementById("resetbutton").innerHTML = "Fail, click to reset";
       window.console.log("a");
     }
     if (isFetch && isFetch2 && displayWeatherList === false) {
@@ -454,7 +454,6 @@ export default function WeatherCreateMyList(props) {
       setIsLoaded(true);
       setIsLoadedForecast(true);
       document.getElementById("Displaybutton").style.borderColor = "#d45950";
-      document.getElementById("Displaybutton").style.color = "white";
       document.getElementById("Displaybutton").innerHTML = "Display Weather";
     }
     if (displayWeatherList === true) {
@@ -599,21 +598,11 @@ export default function WeatherCreateMyList(props) {
         menuliston={menuListOn}
         setmenuliston={setMenuListOn}
       />
-      <div
-        className={`fixed bottom-5 right-5 inline-flex h-fit w-fit select-none items-center justify-center rounded-xl ${
-          menuListOn
-            ? "bg-green-600 bg-opacity-25"
-            : "bg-green-600 bg-opacity-80"
-        }  p-1`}
-        onClick={() => setMenuListOn(!menuListOn)}
-      >
-        <p className="px-2">{`${menuListOn ? "Close" : "Open"}`} list</p>
-        <IoIosAddCircleOutline
-          className={`h-10 w-10 transition-all duration-300 ${
-            menuListOn ? "rotate-[135deg]" : ""
-          }`}
-        />
-      </div>
+      <MenuOpenClose
+        menuliston={menuListOn}
+        setmenuliston={setMenuListOn}
+        foropen={false}
+      />
     </div>
   );
 }

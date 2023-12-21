@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import MenuOpenClose from "./MenuOpenClose";
 
 export default function MenuListe(props) {
   const {
@@ -43,10 +44,20 @@ export default function MenuListe(props) {
     document.getElementById("displaydescription").style.display = "none";
   };
 
+  useEffect(() => {
+    if (menuliston) {
+      document.body.style.overflowY = "hidden";
+    } else {
+      document.body.style.overflowY = "";
+    }
+  }, [menuliston]);
+
   return (
     <div
-      className={`mt-2 h-full w-11/12 flex-col items-start justify-start rounded-xl p-1 ${
-        menuliston ? "flex" : "hidden"
+      className={`left-[50%] top-[50%] z-50 w-10/12 -translate-x-[50%] -translate-y-[50%] flex-col  rounded-xl bg-red-100 p-2 ${
+        menuliston
+          ? "absolute flex items-center justify-center shadow-dim"
+          : "hidden"
       }`}
     >
       <div className="flex w-full flex-row flex-nowrap items-center justify-center rounded-xl border border-black">
@@ -58,33 +69,6 @@ export default function MenuListe(props) {
             onMouseLeave={mouseleave}
           >
             Add to my list
-          </button>
-          <button
-            className={`m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5
-        ${
-          fetchcheck[0] && fetchcheck[1]
-            ? "brightness-100"
-            : fetchcheck[2]
-              ? "brightness-100"
-              : "brightness-75"
-        }`}
-            onMouseEnter={fetchcheck[0] && fetchcheck[1] ? mouseenter : null}
-            onMouseLeave={
-              fetchcheck[0] && fetchcheck[1]
-                ? mouseleave
-                : handleDisplayMouseLeave
-            }
-            onMouseMove={handleDisplayDescription}
-            onClick={
-              fetchcheck[2]
-                ? resetlist
-                : fetchcheck[0] && fetchcheck[1]
-                  ? weatherslide
-                  : null
-            }
-            id="Displaybutton"
-          >
-            Display Weather
           </button>
         </div>
         <div>
@@ -169,10 +153,11 @@ export default function MenuListe(props) {
             Need to fill the list before display
           </p>
           <button
-            className="m-1.5 flex h-8 items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
+            className="m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
             onClick={resetlist}
             onMouseEnter={mouseenter}
             onMouseLeave={mouseleave}
+            id="resetbutton"
           >
             Reset
           </button>
@@ -185,19 +170,13 @@ export default function MenuListe(props) {
           </button>
         </div>
       </div>
-      {liste[0] && <p className="mt-6">List of city to display:</p>}
+      <p className="mt-6">List of city to display:</p>
       <div
-        className={`${
-          liste[0] ? "grid" : "hidden"
-        }  my-4 w-full auto-rows-t1 grid-cols-3 justify-items-center rounded-xl border border-solid border-black`}
+        className={`my-4 grid w-full auto-rows-t1 grid-cols-3 justify-items-center rounded-xl border border-solid border-black`}
       >
-        {liste[0] && (
-          <>
-            <p className="my-1 font-semibold">1단계</p>
-            <p className="my-1 font-semibold">2단계</p>
-            <p className="my-1 font-semibold">3단계</p>
-          </>
-        )}
+        <p className="my-1 font-semibold">1단계</p>
+        <p className="my-1 font-semibold">2단계</p>
+        <p className="my-1 font-semibold">3단계</p>
         {liste.map((x, i) => (
           <>
             <p className="min-w-33 text-center" key={`p1${i}`}>
@@ -212,6 +191,24 @@ export default function MenuListe(props) {
           </>
         ))}
       </div>
+      <button
+        className={`m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5
+        ${fetchcheck[0] && fetchcheck[1] ? "brightness-100" : "brightness-75"}`}
+        onMouseEnter={fetchcheck[0] && fetchcheck[1] ? mouseenter : null}
+        onMouseLeave={
+          fetchcheck[0] && fetchcheck[1] ? mouseleave : handleDisplayMouseLeave
+        }
+        onMouseMove={handleDisplayDescription}
+        onClick={fetchcheck[0] && fetchcheck[1] ? weatherslide : null}
+        id="Displaybutton"
+      >
+        Display Weather
+      </button>
+      <MenuOpenClose
+        menuliston={menuliston}
+        setmenuliston={setmenuliston}
+        foropen={true}
+      />
     </div>
   );
 }
