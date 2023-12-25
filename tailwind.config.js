@@ -51,7 +51,7 @@ module.exports = {
         blueflo: "#218fff",
       },
       boxShadow: {
-        dim: " 0 0 0 100vmax rgba(0, 0, 0, .3)",
+        dim: " 0 0 0 200vmax rgba(0, 0, 0, .3)",
       },
       transitionProperty: {
         shadowbox: "box-shadow",

@@ -13,7 +13,6 @@ export default function WeatherLocalisation(props) {
     updatedate,
     basedate,
     activetab,
-    size,
     menuon,
     setmenuon,
   } = props;
@@ -341,7 +340,7 @@ export default function WeatherLocalisation(props) {
     <div
       className={`${
         activetab === 1 ? "" : "mb-20"
-      } m-0 h-${size} w-fit flex-row items-start justify-around bg-slate-100 sm:w-full md:w-full md:flex-wrap lg:w-[45%] `}
+      } m-0 h-screen w-fit flex-row items-start justify-around bg-slate-100 sm:w-full md:w-full md:flex-wrap lg:w-[45%] `}
       onClick={() => (menuon ? setmenuon(false) : null)}
     >
       <div className="right-0 top-1 hidden">

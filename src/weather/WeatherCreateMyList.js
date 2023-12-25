@@ -469,91 +469,84 @@ export default function WeatherCreateMyList(props) {
 
   return (
     <div
-      className={`mt-4 flex h-full items-center justify-start bg-slate-100 sm:w-full sm:flex-col sm:flex-nowrap md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-3/6 lg:flex-row-reverse lg:flex-wrap`}
+      className={`mt-4 flex h-screen flex-shrink-0 flex-col flex-nowrap items-center justify-start  bg-slate-100 scrollbar-hide sm:m-0 sm:w-full sm:flex-col sm:flex-nowrap md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-full lg:flex-row-reverse lg:flex-wrap `}
       onClick={() => (menuon ? setmenuon(false) : null)}
     >
-      <div
-        className={`relative mx-6 box-content flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden rounded-3xl border-4 border-solid border-orange-500 bg-slate-700 scrollbar-hide sm:m-0 sm:w-full md:w-full lg:w-full ${
-          isLoaded ? "h-full" : "h-full animate-pulse-slow"
-        }`}
-      >
-        {isLoaded && isLoadedForecast && (
-          <ul
-            id="slider"
-            style={{
-              transform: `translate3d(${toTranslate}px, 0, 0)`,
-            }}
-            className={`relative z-20 flex h-full w-full justify-start ${
-              !isDragging ? "transition-all" : ""
-            } `}
-            onPointerDown={handlePointerDown}
-            onPointerUp={handlePointerUp}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-          >
-            {liste.map((x, i) => (
-              <li key={i}>
-                <WeatherUID
-                  dataimport={dataimport}
-                  srcimage={srcimage}
-                  loadstate={isLoaded}
-                  loadforecast={isLoadedForecast}
-                  raincond={
-                    weatherInfoNow[
-                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ][0]
-                  }
-                  humidity={
-                    weatherInfoNow[
-                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ][1]
-                  }
-                  hourrain={
-                    weatherInfoNow[
-                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ][2]
-                  }
-                  temp={
-                    weatherInfoNow[
-                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ][3]
-                  }
-                  winddir={
-                    weatherInfoNow[
-                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ][5]
-                  }
-                  windspeed={
-                    weatherInfoNow[
-                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ][7]
-                  }
-                  tempforecast={
-                    tempForecast[
-                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ]
-                  }
-                  skyforecast={
-                    skyForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
-                  }
-                  rainforecast={
-                    weatherForecast[
-                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ]
-                  }
-                  showbutton={false}
-                  titlename={true}
-                  forlist={true}
-                  resizew={resizew}
-                />
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      {isLoaded && isLoadedForecast && (
+        <ul
+          id="slider"
+          style={{
+            transform: `translate3d(${toTranslate}px, 0, 0)`,
+          }}
+          className={`relative z-20 flex h-full w-full justify-start ${
+            !isDragging ? "transition-all" : ""
+          } `}
+          onPointerDown={handlePointerDown}
+          onPointerUp={handlePointerUp}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          {liste.map((x, i) => (
+            <li key={i}>
+              <WeatherUID
+                dataimport={dataimport}
+                srcimage={srcimage}
+                loadstate={isLoaded}
+                loadforecast={isLoadedForecast}
+                raincond={
+                  weatherInfoNow[
+                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                  ][0]
+                }
+                humidity={
+                  weatherInfoNow[
+                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                  ][1]
+                }
+                hourrain={
+                  weatherInfoNow[
+                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                  ][2]
+                }
+                temp={
+                  weatherInfoNow[
+                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                  ][3]
+                }
+                winddir={
+                  weatherInfoNow[
+                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                  ][5]
+                }
+                windspeed={
+                  weatherInfoNow[
+                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                  ][7]
+                }
+                tempforecast={
+                  tempForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
+                }
+                skyforecast={
+                  skyForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
+                }
+                rainforecast={
+                  weatherForecast[
+                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                  ]
+                }
+                showbutton={false}
+                titlename={true}
+                forlist={true}
+                resizew={resizew}
+              />
+            </li>
+          ))}
+        </ul>
+      )}
+
       {displayWeatherList && (
-        <ul className="z-0 flex h-8 w-full list-none items-center justify-center rounded-2xl p-5">
+        <ul className="absolute bottom-0 left-0 z-50 flex h-8 w-4/6 list-none items-center justify-center self-start rounded-2xl px-4 pb-7">
           {liste.map((e, i) => (
             <li
               onClick={handleBullet}

@@ -54,7 +54,7 @@ export default function MenuList(props) {
 
   return (
     <div
-      className={`fixed left-[50%] top-[50%] z-50 flex w-10/12 -translate-x-[50%] flex-col items-center justify-center rounded-xl bg-red-100 p-2 transition-all duration-500 ${
+      className={`fixed left-[50%] top-[50%] z-50 flex w-10/12 -translate-x-[50%] flex-col items-center justify-center rounded-xl bg-slate-200 p-2 transition-all duration-500 ${
         menuliston ? "-translate-y-[50%]  shadow-dim" : "-translate-y-[-60vh]"
       }`}
     >

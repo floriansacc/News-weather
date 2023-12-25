@@ -21,7 +21,7 @@ export default function WeatherHome(props) {
   } = props;
   return (
     <div
-      className="flex h-full w-11/12 flex-row flex-wrap items-center justify-around bg-slate-100 sm:w-full sm:flex-col sm:flex-nowrap sm:items-center md:w-full md:flex-col md:flex-nowrap lg:m-2 lg:h-fit"
+      className="justify-aroun flex h-fit w-11/12 flex-row flex-wrap items-center  sm:w-full sm:flex-col sm:flex-nowrap sm:items-center md:w-full md:flex-col md:flex-nowrap lg:m-2 lg:h-fit"
       onClick={() => (menuon ? setmenuon(false) : null)}
     >
       <div className="my-10 flex h-fit w-full flex-col items-start justify-center bg-green-700 px-20 py-10 text-white">
@@ -34,6 +34,9 @@ export default function WeatherHome(props) {
         <p>- Make a list of city and display their weather </p>
         <p className="my-2">Future update will improve the list creation</p>
       </div>
+      <p className="my-2 rounded-2xl border border-solid border-red-400 p-2 text-2xl">
+        Location
+      </p>
       <WeatherLocalisation
         dataimport={dataimport}
         mouseenter={mouseenter}
@@ -47,9 +50,10 @@ export default function WeatherHome(props) {
         activetab={activetab}
         menuliston={menuliston}
         setmenuliston={setmenuliston}
-        size="fit"
       />
-
+      <p className="my-2 rounded-2xl border border-solid border-red-400 p-2 text-2xl">
+        List
+      </p>
       <WeatherCreateMyList
         dataimport={dataimport}
         mouseenter={mouseenter}

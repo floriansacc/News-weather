@@ -4,12 +4,12 @@ export default function MenuOpenClose(props) {
   const { menuliston, setmenuliston, foropen } = props;
   return (
     <div
-      className={`z-40 inline-flex h-fit w-fit select-none items-center justify-center rounded-xl  p-1 ${
+      className={`z-40 inline-flex h-fit w-fit select-none items-center justify-center rounded-xl p-1 ${
         foropen
           ? "relative mt-4 bg-red-200"
           : menuliston && !foropen
             ? " hidden"
-            : "fixed bottom-5 right-5 bg-green-600 bg-opacity-80"
+            : "fixed bottom-2 right-2 bg-green-600 bg-opacity-80"
       } `}
       onClick={() => setmenuliston(!menuliston)}
     >

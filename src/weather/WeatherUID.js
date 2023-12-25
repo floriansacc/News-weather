@@ -117,16 +117,15 @@ export default function WeatherUID(props) {
               />
             )}
           </div>
-          {cityselector ||
-            (titlename && (
-              <div className="flex w-full flex-nowrap items-center justify-center whitespace-nowrap py-4 text-right ">
-                <p className="w-fit p-px pb-1 text-xl font-semibold">
-                  {raincond.Phase1}
-                </p>
-                <p className="p-px">{` - ${raincond.Phase2} -`}</p>
-                <p className="p-px">{raincond.Phase3}</p>
-              </div>
-            ))}
+          {(cityselector || titlename) && (
+            <div className="flex w-full flex-nowrap items-center justify-center whitespace-nowrap py-4 text-right ">
+              <p className="w-fit p-px pb-1 text-xl font-semibold">
+                {raincond.Phase1}
+              </p>
+              <p className="p-px">{` - ${raincond.Phase2} -`}</p>
+              <p className="p-px">{raincond.Phase3}</p>
+            </div>
+          )}
           <div className="mt-2 flex w-5/12 flex-col items-center">
             <img
               className="h-28 w-28"
