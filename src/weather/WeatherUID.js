@@ -69,7 +69,7 @@ export default function WeatherUID(props) {
 
   return (
     <div
-      className={`z-30 flex h-full select-none flex-col ${backgroundColoring} flex-nowrap duration-500 md:w-full lg:w-full lg:rounded-2xl ${
+      className={`z-20 flex h-full select-none flex-col ${backgroundColoring} flex-nowrap duration-500 md:w-full lg:w-full lg:rounded-2xl ${
         showbutton ? "sm:w-full" : "sm:w-full sm:max-w-none"
       }`}
     >
@@ -96,26 +96,17 @@ export default function WeatherUID(props) {
           Console
         </button>
       </div>
-
-      {!loadstate && showbutton && (
-        <Skeleton borderRadius="16px" count={1} className="h-96 w-full" />
-      )}
       {loadstate && loadforecast && (
         <div className="flex h-full flex-wrap content-start justify-around rounded-2xl bg-transparent sm:w-screen md:w-screen lg:w-full">
-          <div className="my-2 flex h-fit w-full items-center justify-around rounded-2xl border-y border-solid border-white">
+          <div
+            className={`${
+              showbutton ? "" : "py-5"
+            } my-2 flex h-fit w-full items-center justify-around rounded-2xl border-y border-solid border-white`}
+          >
             <div className="flex flex-col flex-nowrap justify-start">
               <p className="block text-xl font-bold">Weather</p>
               <p className="text-sm">(Base time: {temp.time.slice(0, 2)}:30)</p>
             </div>
-            {titlename && (
-              <div className="flex w-fit flex-col flex-nowrap items-end whitespace-nowrap text-right ">
-                <p className="mb-1 w-fit border-b border-solid border-b-white p-px pb-1 text-xl font-semibold">
-                  {rainforecast[0].phase1}
-                </p>
-                <p className="p-px">{rainforecast[0].phase2}</p>
-                <p className="p-px">{rainforecast[0].phase3}</p>
-              </div>
-            )}
             {showbutton && (
               <WeatherCitySelector
                 dataimport={dataimport}
@@ -126,15 +117,16 @@ export default function WeatherUID(props) {
               />
             )}
           </div>
-          {cityselector && (
-            <div className="flex w-full flex-nowrap items-center justify-center whitespace-nowrap py-4 text-right ">
-              <p className="w-fit p-px pb-1 text-xl font-semibold">
-                {raincond.Phase1}
-              </p>
-              <p className="p-px">{` - ${raincond.Phase2} -`}</p>
-              <p className="p-px">{raincond.Phase3}</p>
-            </div>
-          )}
+          {cityselector ||
+            (titlename && (
+              <div className="flex w-full flex-nowrap items-center justify-center whitespace-nowrap py-4 text-right ">
+                <p className="w-fit p-px pb-1 text-xl font-semibold">
+                  {raincond.Phase1}
+                </p>
+                <p className="p-px">{` - ${raincond.Phase2} -`}</p>
+                <p className="p-px">{raincond.Phase3}</p>
+              </div>
+            ))}
           <div className="mt-2 flex w-5/12 flex-col items-center">
             <img
               className="h-28 w-28"

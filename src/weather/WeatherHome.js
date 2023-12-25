@@ -16,6 +16,8 @@ export default function WeatherHome(props) {
     resizew,
     menuon,
     setmenuon,
+    menuliston,
+    setmenuliston,
   } = props;
   return (
     <div
@@ -43,6 +45,8 @@ export default function WeatherHome(props) {
         updatedate={updatedate}
         basedate={basedate}
         activetab={activetab}
+        menuliston={menuliston}
+        setmenuliston={setmenuliston}
         size="fit"
       />
 
@@ -58,6 +62,9 @@ export default function WeatherHome(props) {
         basedate={basedate}
         activetab={activetab}
         resizew={resizew}
+        menuliston={menuliston}
+        setmenuliston={setmenuliston}
+        closemenu={false}
       />
     </div>
   );

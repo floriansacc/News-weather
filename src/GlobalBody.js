@@ -18,6 +18,7 @@ const images = [sunny, "", pCloudy, cloudy, rainy, snowy];
 export default function GlobalBody() {
   const [activeTab, setActiveTab] = useState(0);
   const [menuOn, setMenuOn] = useState(false);
+  const [menuListOn, setMenuListOn] = useState(false);
   const [resizeWidth, setResizeWidth] = useState(null);
 
   const date = new Date();
@@ -120,10 +121,12 @@ export default function GlobalBody() {
   }, []);
 
   return (
-    <div className="flex h-full w-full flex-row items-start justify-start overflow-x-hidden lg:h-screen">
+    <div className="flex h-screen w-full flex-row items-start justify-start overflow-x-hidden lg:h-screen">
       <Navigator
         menuon={menuOn}
         setmenuon={setMenuOn}
+        menuliston={menuListOn}
+        setmenuliston={setMenuListOn}
         activetab={activeTab}
         setactivetab={setActiveTab}
       />
@@ -147,6 +150,8 @@ export default function GlobalBody() {
               menuon={menuOn}
               setmenuon={setMenuOn}
               setactivetab={setActiveTab}
+              menuliston={menuListOn}
+              setmenuliston={setMenuListOn}
             />
           }
         ></Route>
@@ -166,6 +171,8 @@ export default function GlobalBody() {
               activetab={activeTab}
               menuon={menuOn}
               setmenuon={setMenuOn}
+              menuliston={menuListOn}
+              setmenuliston={setMenuListOn}
               size="screen"
             />
           }
@@ -187,6 +194,8 @@ export default function GlobalBody() {
               resizew={resizeWidth}
               menuon={menuOn}
               setmenuon={setMenuOn}
+              menuliston={menuListOn}
+              setmenuliston={setMenuListOn}
             />
           }
         ></Route>

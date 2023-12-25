@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import WeatherUID from "./WeatherUID";
-import MenuListe from "./MenuListe";
-import MenuOpenClose from "./MenuOpenClose";
+import MenuList from "./MenuList";
+import MenuOpenClose from "./ButtonOpenClose";
 
 export default function WeatherCreateMyList(props) {
   const {
@@ -17,6 +17,8 @@ export default function WeatherCreateMyList(props) {
     resizew,
     menuon,
     setmenuon,
+    menuliston,
+    setmenuliston,
   } = props;
   const [liste, setListe] = useState([]);
   const [elem, setElem] = useState([]);
@@ -38,8 +40,6 @@ export default function WeatherCreateMyList(props) {
 
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
-
-  const [menuListOn, setMenuListOn] = useState(false);
 
   const slider = document.getElementById("slider");
 
@@ -258,9 +258,9 @@ export default function WeatherCreateMyList(props) {
           ]);
           await jsonResponse.response.body.items.item.map((x, i) => {
             temporary[i] = {
-              phase1: name[0],
-              phase2: name[1],
-              phase3: name[2],
+              Phase1: name[0],
+              Phase2: name[1],
+              Phase3: name[2],
               category: x.category,
               value: x.obsrValue,
               time: x.baseTime,
@@ -337,9 +337,9 @@ export default function WeatherCreateMyList(props) {
           ]);
           jsonResponse.response.body.items.item.forEach((x, i) => {
             let newData = {
-              phase1: name[0],
-              phase2: name[1],
-              phase3: name[2],
+              Phase1: name[0],
+              Phase2: name[1],
+              Phase3: name[2],
               category: x.category,
               time: x.fcstTime,
               value: x.fcstValue,
@@ -469,12 +469,12 @@ export default function WeatherCreateMyList(props) {
 
   return (
     <div
-      className={`flex h-full items-center justify-around bg-slate-100 sm:w-full sm:flex-col sm:flex-nowrap md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-3/6 lg:flex-row-reverse lg:flex-wrap`}
+      className={`mt-4 flex h-full items-center justify-start bg-slate-100 sm:w-full sm:flex-col sm:flex-nowrap md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-3/6 lg:flex-row-reverse lg:flex-wrap`}
       onClick={() => (menuon ? setmenuon(false) : null)}
     >
       <div
-        className={`relative mx-6 box-content min-h-96 flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden rounded-3xl bg-slate-700 scrollbar-hide sm:m-0 sm:w-full md:w-full lg:w-full ${
-          isLoaded ? "h-fit" : "h-128 animate-pulse-slow"
+        className={`relative mx-6 box-content flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden rounded-3xl border-4 border-solid border-orange-500 bg-slate-700 scrollbar-hide sm:m-0 sm:w-full md:w-full lg:w-full ${
+          isLoaded ? "h-full" : "h-full animate-pulse-slow"
         }`}
       >
         {isLoaded && isLoadedForecast && (
@@ -483,7 +483,7 @@ export default function WeatherCreateMyList(props) {
             style={{
               transform: `translate3d(${toTranslate}px, 0, 0)`,
             }}
-            className={`relative z-30 flex h-full w-full justify-start ${
+            className={`relative z-20 flex h-full w-full justify-start ${
               !isDragging ? "transition-all" : ""
             } `}
             onPointerDown={handlePointerDown}
@@ -552,7 +552,6 @@ export default function WeatherCreateMyList(props) {
           </ul>
         )}
       </div>
-      {!displayWeatherList && <div className="h-8 w-full p-5"></div>}
       {displayWeatherList && (
         <ul className="z-0 flex h-8 w-full list-none items-center justify-center rounded-2xl p-5">
           {liste.map((e, i) => (
@@ -584,7 +583,7 @@ export default function WeatherCreateMyList(props) {
           </div>
         </ul>
       )}
-      <MenuListe
+      <MenuList
         addtolist={handleAddToList}
         mouseenter={mouseenter}
         mouseleave={mouseleave}
@@ -595,12 +594,12 @@ export default function WeatherCreateMyList(props) {
         cityselector={handleCitySelector}
         resetlist={handleResetListe}
         weatherslide={handleDisplayWeatherSlide}
-        menuliston={menuListOn}
-        setmenuliston={setMenuListOn}
+        menuliston={menuliston}
+        setmenuliston={setmenuliston}
       />
       <MenuOpenClose
-        menuliston={menuListOn}
-        setmenuliston={setMenuListOn}
+        menuliston={menuliston}
+        setmenuliston={setmenuliston}
         foropen={false}
       />
     </div>

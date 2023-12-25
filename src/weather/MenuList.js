@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import MenuOpenClose from "./MenuOpenClose";
+import MenuOpenClose from "./ButtonOpenClose";
 
-export default function MenuListe(props) {
+export default function MenuList(props) {
   const {
     addtolist,
     mouseenter,
@@ -54,10 +54,8 @@ export default function MenuListe(props) {
 
   return (
     <div
-      className={`left-[50%] top-[50%] z-50 w-10/12 -translate-x-[50%] -translate-y-[50%] flex-col  rounded-xl bg-red-100 p-2 ${
-        menuliston
-          ? "absolute flex items-center justify-center shadow-dim"
-          : "hidden"
+      className={`fixed left-[50%] top-[50%] z-50 flex w-10/12 -translate-x-[50%] flex-col items-center justify-center rounded-xl bg-red-100 p-2 transition-all duration-500 ${
+        menuliston ? "-translate-y-[50%]  shadow-dim" : "-translate-y-[-60vh]"
       }`}
     >
       <div className="flex w-full flex-row flex-nowrap items-center justify-center rounded-xl border border-black">

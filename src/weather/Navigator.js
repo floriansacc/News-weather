@@ -3,7 +3,14 @@ import { AiOutlineMenu } from "react-icons/ai";
 import { Link } from "react-router-dom";
 
 export default function Navigator(props) {
-  const { activetab, setactivetab, menuon, setmenuon } = props;
+  const {
+    activetab,
+    setactivetab,
+    menuon,
+    setmenuon,
+    menuliston,
+    setmenuliston,
+  } = props;
   const [lastSession, setLastSession] = useState(
     sessionStorage.getItem("lastValue"),
   );
@@ -26,12 +33,12 @@ export default function Navigator(props) {
   }, []);
 
   return (
-    <div className="fixed left-0 top-0 z-50 h-screen lg:sticky lg:mr-6">
+    <div className="fixed left-0 top-0 z-50 h-screen select-none lg:sticky lg:mr-6">
       <AiOutlineMenu
         className={`absolute left-7 top-5 z-40 h-10 w-10 rounded-xl border border-solid bg-slate-200 p-2 transition-all duration-300 hover:animate-pulse  hover:bg-slate-300 lg:hidden ${
           menuon ? "-rotate-180" : ""
         } `}
-        onClick={() => setmenuon(!menuon)}
+        onClick={!menuliston ? () => setmenuon(!menuon) : null}
       />
 
       <div
