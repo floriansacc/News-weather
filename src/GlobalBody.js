@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import Navigator from "./weather/Navigator";
 import WeatherHome from "./weather/WeatherHome";
@@ -15,11 +15,17 @@ import snowy from "./css/snow logo.png";
 
 const images = [sunny, "", pCloudy, cloudy, rainy, snowy];
 
+export const QueryContext = React.createContext();
+
 export default function GlobalBody() {
   const [activeTab, setActiveTab] = useState(0);
   const [menuOn, setMenuOn] = useState(false);
   const [menuListOn, setMenuListOn] = useState(false);
   const [resizeWidth, setResizeWidth] = useState(null);
+
+  const [lastSessionListe, setLastSessionListe] = useState(
+    JSON.parse(sessionStorage.getItem("lastValue")),
+  );
 
   const date = new Date();
 
@@ -121,85 +127,61 @@ export default function GlobalBody() {
   }, []);
 
   return (
-    <div className="flex h-screen w-full flex-row items-start justify-start overflow-x-hidden lg:h-screen">
-      <Navigator
-        menuon={menuOn}
-        setmenuon={setMenuOn}
-        menuliston={menuListOn}
-        setmenuliston={setMenuListOn}
-        activetab={activeTab}
-        setactivetab={setActiveTab}
-      />
-      <Routes>
-        <Route
-          exact
-          path="/"
-          element={
-            <WeatherHome
-              dataimport={dataimport}
-              mouseenter={handleButtonEnter}
-              mouseleave={handleButtonLeave}
-              basetime={baseTime}
-              basetimeforecast={baseTimeForecast}
-              servicekey={serviceKey}
-              srcimage={images}
-              updatedate={updateDates}
-              basedate={baseDate}
-              activetab={activeTab}
-              resizew={resizeWidth}
-              menuon={menuOn}
-              setmenuon={setMenuOn}
-              setactivetab={setActiveTab}
-              menuliston={menuListOn}
-              setmenuliston={setMenuListOn}
-            />
-          }
-        ></Route>
-        <Route
-          path="/Location"
-          element={
-            <WeatherLocalisation
-              dataimport={dataimport}
-              mouseenter={handleButtonEnter}
-              mouseleave={handleButtonLeave}
-              basetime={baseTime}
-              basetimeforecast={baseTimeForecast}
-              servicekey={serviceKey}
-              srcimage={images}
-              updatedate={updateDates}
-              basedate={baseDate}
-              activetab={activeTab}
-              menuon={menuOn}
-              setmenuon={setMenuOn}
-              menuliston={menuListOn}
-              setmenuliston={setMenuListOn}
-              size="screen"
-            />
-          }
-        ></Route>
-        <Route
-          path="/My-list"
-          element={
-            <WeatherCreateMyList
-              dataimport={dataimport}
-              mouseenter={handleButtonEnter}
-              mouseleave={handleButtonLeave}
-              basetime={baseTime}
-              basetimeforecast={baseTimeForecast}
-              servicekey={serviceKey}
-              srcimage={images}
-              updatedate={updateDates}
-              basedate={baseDate}
-              activetab={activeTab}
-              resizew={resizeWidth}
-              menuon={menuOn}
-              setmenuon={setMenuOn}
-              menuliston={menuListOn}
-              setmenuliston={setMenuListOn}
-            />
-          }
-        ></Route>
-      </Routes>
-    </div>
+    <QueryContext.Provider
+      value={{
+        dataimport,
+        activeTab,
+        setActiveTab,
+        menuOn,
+        setMenuOn,
+        menuListOn,
+        setMenuListOn,
+        lastSessionListe,
+        setLastSessionListe,
+        images,
+        updateDates,
+        serviceKey,
+        baseDate,
+        baseTime,
+        baseTimeForecast,
+      }}
+    >
+      <div className="flex h-screen w-full flex-row items-start justify-start overflow-x-hidden lg:h-screen">
+        <Navigator />
+        <Routes>
+          <Route
+            exact
+            path="/"
+            element={
+              <WeatherHome
+                mouseenter={handleButtonEnter}
+                mouseleave={handleButtonLeave}
+                resizew={resizeWidth}
+              />
+            }
+          ></Route>
+          <Route
+            path="/Location"
+            element={
+              <WeatherLocalisation
+                mouseenter={handleButtonEnter}
+                mouseleave={handleButtonLeave}
+                size="screen"
+              />
+            }
+          ></Route>
+          <Route
+            path="/My-list"
+            element={
+              <WeatherCreateMyList
+                mouseenter={handleButtonEnter}
+                mouseleave={handleButtonLeave}
+                resizew={resizeWidth}
+              />
+            }
+          ></Route>
+        </Routes>
+      </div>
+    </QueryContext.Provider>
   );
 }

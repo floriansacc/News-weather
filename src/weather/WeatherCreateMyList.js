@@ -1,25 +1,26 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import WeatherUID from "./WeatherUID";
 import MenuList from "./MenuList";
-import MenuOpenClose from "./ButtonOpenClose";
+import ButtonOpenClose from "./ButtonOpenClose";
+import { QueryContext } from "../GlobalBody";
 
 export default function WeatherCreateMyList(props) {
+  const { mouseenter, mouseleave, resizew } = props;
   const {
     dataimport,
-    mouseenter,
-    mouseleave,
-    basetime,
-    basetimeforecast,
-    servicekey,
-    srcimage,
-    updatedate,
-    basedate,
-    resizew,
-    menuon,
-    setmenuon,
-    menuliston,
-    setmenuliston,
-  } = props;
+    menuOn,
+    setMenuOn,
+    menuListOn,
+    setMenuListOn,
+    lastSessionListe,
+    setLastSessionListe,
+    images,
+    updateDates,
+    serviceKey,
+    baseDate,
+    baseTime,
+    baseTimeForecast,
+  } = useContext(QueryContext);
   const [liste, setListe] = useState([]);
   const [elem, setElem] = useState([]);
   const [listeCounter, setListeCounter] = useState(0);
@@ -76,6 +77,9 @@ export default function WeatherCreateMyList(props) {
       !elem[2]
     ) {
       window.console.log("nothing to add");
+      window.console.log(lastSessionListe);
+      window.console.log(liste);
+
       return false;
     } else {
       setListe((prev) => [
@@ -116,6 +120,8 @@ export default function WeatherCreateMyList(props) {
     setSkyForecast({});
     setListeCounter(0);
     setCountSlide(0);
+    sessionStorage.setItem("lastValue", null);
+    setLastSessionListe(null);
     document.getElementById("resetbutton").style.borderColor = "";
     document.getElementById("resetbutton").style.background = "";
     document.getElementById("resetbutton").style.color = "";
@@ -240,7 +246,7 @@ export default function WeatherCreateMyList(props) {
     } else {
       const getWeatherList = async (name, nx, ny) => {
         let temporary = [];
-        let urlWeatherList = `${weatherUrlNow}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetime}&nx=${nx}&ny=${ny}`;
+        let urlWeatherList = `${weatherUrlNow}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
         try {
           const response = await fetch(urlWeatherList, {
             headers: {
@@ -319,7 +325,7 @@ export default function WeatherCreateMyList(props) {
     } else {
       const getWeatherList = async (name, nx, ny) => {
         let temporary = [];
-        let urlWeatherForecast = `${weatherUrlForecast}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetimeforecast}&nx=${nx}&ny=${ny}`;
+        let urlWeatherForecast = `${weatherUrlForecast}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTimeForecast}&nx=${nx}&ny=${ny}`;
         try {
           const response = await fetch(urlWeatherForecast, {
             headers: {
@@ -343,7 +349,7 @@ export default function WeatherCreateMyList(props) {
               category: x.category,
               time: x.fcstTime,
               value: x.fcstValue,
-              basetime: x.baseTime,
+              baseTime: x.baseTime,
               nx: x.nx,
               ny: x.ny,
             };
@@ -355,6 +361,7 @@ export default function WeatherCreateMyList(props) {
               temporary[i] = newData;
             }
           });
+
           setIsFetch2(true);
           return temporary;
         } catch (error) {
@@ -438,6 +445,14 @@ export default function WeatherCreateMyList(props) {
 
   useEffect(() => {
     document.getElementById("displaydescription").style.background = "#d45950";
+    if (!lastSessionListe) {
+      setListe([]);
+    } else {
+      setListe(lastSessionListe);
+      setListeCounter((prev) => prev + 1);
+    }
+    window.console.log(liste);
+    window.console.log(lastSessionListe);
   }, []);
 
   useEffect(() => {
@@ -455,6 +470,7 @@ export default function WeatherCreateMyList(props) {
       setIsLoadedForecast(true);
       document.getElementById("Displaybutton").style.borderColor = "#d45950";
       document.getElementById("Displaybutton").innerHTML = "Display Weather";
+      sessionStorage.setItem("lastValue", JSON.stringify(liste));
     }
     if (displayWeatherList === true) {
       setDisplayWeatherList(false);
@@ -469,9 +485,12 @@ export default function WeatherCreateMyList(props) {
 
   return (
     <div
-      className={`mt-4 flex h-screen flex-shrink-0 flex-col flex-nowrap items-center justify-start  bg-slate-100 scrollbar-hide sm:m-0 sm:w-full sm:flex-col sm:flex-nowrap md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-full lg:flex-row-reverse lg:flex-wrap `}
-      onClick={() => (menuon ? setmenuon(false) : null)}
+      className={`mt-4 flex h-screen flex-shrink-0 flex-col flex-nowrap items-center justify-start bg-slate-100 scrollbar-hide sm:m-0 sm:w-full sm:flex-col sm:flex-nowrap md:m-0 md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-full lg:flex-row-reverse lg:flex-wrap `}
+      onClick={() => (menuOn ? setMenuOn(false) : null)}
     >
+      {lastSessionListe !== null && !displayWeatherList && (
+        <p className="p-10 text-2xl">Retrieving last list</p>
+      )}
       {isLoaded && isLoadedForecast && (
         <ul
           id="slider"
@@ -490,8 +509,6 @@ export default function WeatherCreateMyList(props) {
           {liste.map((x, i) => (
             <li key={i}>
               <WeatherUID
-                dataimport={dataimport}
-                srcimage={srcimage}
                 loadstate={isLoaded}
                 loadforecast={isLoadedForecast}
                 raincond={
@@ -583,16 +600,13 @@ export default function WeatherCreateMyList(props) {
         fetchcheck={[isFetch, isFetch2, fetchFail]}
         elem={elem}
         liste={liste}
-        dataimport={dataimport}
         cityselector={handleCitySelector}
         resetlist={handleResetListe}
         weatherslide={handleDisplayWeatherSlide}
-        menuliston={menuliston}
-        setmenuliston={setmenuliston}
       />
-      <MenuOpenClose
-        menuliston={menuliston}
-        setmenuliston={setmenuliston}
+      <ButtonOpenClose
+        menuListOn={menuListOn}
+        setMenuListOn={setMenuListOn}
         foropen={false}
       />
     </div>

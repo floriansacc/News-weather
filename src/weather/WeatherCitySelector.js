@@ -1,6 +1,9 @@
-export default function WeatherCitySelector(props) {
-  const { dataimport, cityselector, handlecityselector } = props;
+import { useContext } from "react";
+import { QueryContext } from "../GlobalBody";
 
+export default function WeatherCitySelector(props) {
+  const { cityselector, handlecityselector } = props;
+  const { dataimport } = useContext(QueryContext);
   return (
     <label className="flex flex-col flex-nowrap">
       <select

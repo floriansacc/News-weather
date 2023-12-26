@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import MenuOpenClose from "./ButtonOpenClose";
+import { useState, useEffect, useContext } from "react";
+import ButtonOpenClose from "./ButtonOpenClose";
+import { QueryContext } from "../GlobalBody";
 
 export default function MenuList(props) {
   const {
@@ -9,13 +10,11 @@ export default function MenuList(props) {
     fetchcheck,
     elem,
     liste,
-    dataimport,
     cityselector,
     resetlist,
     weatherslide,
-    menuliston,
-    setmenuliston,
   } = props;
+  const { dataimport, menuListOn, setMenuListOn } = useContext(QueryContext);
 
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
@@ -45,17 +44,17 @@ export default function MenuList(props) {
   };
 
   useEffect(() => {
-    if (menuliston) {
+    if (menuListOn) {
       document.body.style.overflowY = "hidden";
     } else {
       document.body.style.overflowY = "";
     }
-  }, [menuliston]);
+  }, [menuListOn]);
 
   return (
     <div
       className={`fixed left-[50%] top-[50%] z-50 flex w-10/12 -translate-x-[50%] flex-col items-center justify-center rounded-xl bg-slate-200 p-2 transition-all duration-500 ${
-        menuliston ? "-translate-y-[50%]  shadow-dim" : "-translate-y-[-60vh]"
+        menuListOn ? "-translate-y-[50%]  shadow-dim" : "-translate-y-[-60vh]"
       }`}
     >
       <div className="flex w-full flex-row flex-nowrap items-center justify-center rounded-xl border border-black">
@@ -202,9 +201,9 @@ export default function MenuList(props) {
       >
         Display Weather
       </button>
-      <MenuOpenClose
-        menuliston={menuliston}
-        setmenuliston={setmenuliston}
+      <ButtonOpenClose
+        menuListOn={menuListOn}
+        setMenuListOn={setMenuListOn}
         foropen={true}
       />
     </div>

@@ -1,21 +1,22 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import WeatherUID from "./WeatherUID";
+import { QueryContext } from "../GlobalBody";
 
 export default function WeatherLocalisation(props) {
+  const { mouseenter, mouseleave } = props;
+
   const {
     dataimport,
-    mouseenter,
-    mouseleave,
-    basetime,
-    basetimeforecast,
-    servicekey,
-    srcimage,
-    updatedate,
-    basedate,
-    activetab,
-    menuon,
-    setmenuon,
-  } = props;
+    activeTab,
+    menuOn,
+    setMenuOn,
+    images,
+    updateDates,
+    serviceKey,
+    baseDate,
+    baseTime,
+    baseTimeForecast,
+  } = useContext(QueryContext);
 
   const [gps, setGps] = useState({ lat: 0, long: 0 });
   const [weatherInfoNow, setWeatherInfoNow] = useState([]);
@@ -162,9 +163,9 @@ export default function WeatherLocalisation(props) {
     window.console.log(tempForecast);
     window.console.log(skyForecast);
     window.console.log(citySelector);
-    window.console.log(basedate);
-    window.console.log(basetime);
-    window.console.log(basetimeforecast);
+    window.console.log(baseDate);
+    window.console.log(baseTime);
+    window.console.log(baseTimeForecast);
   };
 
   const findclosest = (xValue, data, parameter) => {
@@ -219,7 +220,7 @@ export default function WeatherLocalisation(props) {
   };
 
   useEffect(() => {
-    updatedate();
+    updateDates();
   }, []);
 
   useEffect(() => {
@@ -231,7 +232,7 @@ export default function WeatherLocalisation(props) {
   }, [refreshData]);
 
   useEffect(() => {
-    const getUrlWeatherNow = `${weatherUrlNow}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetime}&nx=${citySelector[3]}&ny=${citySelector[4]}`;
+    const getUrlWeatherNow = `${weatherUrlNow}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTime}&nx=${citySelector[3]}&ny=${citySelector[4]}`;
     let getWeather = async () => {
       try {
         const response = await fetch(getUrlWeatherNow, {
@@ -275,7 +276,7 @@ export default function WeatherLocalisation(props) {
   }, [isLocated, refreshData2]);
 
   useEffect(() => {
-    const getUrlWeatherForecast = `${weatherUrlForecast}?serviceKey=${servicekey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${basedate}&base_time=${basetimeforecast}&nx=${citySelector[3]}&ny=${citySelector[4]}`;
+    const getUrlWeatherForecast = `${weatherUrlForecast}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTimeForecast}&nx=${citySelector[3]}&ny=${citySelector[4]}`;
     const getWeather2 = async () => {
       try {
         const response = await fetch(getUrlWeatherForecast, {
@@ -297,7 +298,7 @@ export default function WeatherLocalisation(props) {
                 category: x.category,
                 time: x.fcstTime,
                 value: x.fcstValue,
-                basetime: x.baseTime,
+                baseTime: x.baseTime,
               },
             ]);
           } else if (x.category === "T1H") {
@@ -307,7 +308,7 @@ export default function WeatherLocalisation(props) {
                 category: x.category,
                 time: x.fcstTime,
                 value: x.fcstValue,
-                basetime: x.baseTime,
+                baseTime: x.baseTime,
               },
             ]);
           } else if (x.category === "SKY") {
@@ -317,7 +318,7 @@ export default function WeatherLocalisation(props) {
                 category: x.category,
                 time: x.fcstTime,
                 value: x.fcstValue,
-                basetime: x.baseTime,
+                baseTime: x.baseTime,
               },
             ]);
           }
@@ -339,9 +340,9 @@ export default function WeatherLocalisation(props) {
   return (
     <div
       className={`${
-        activetab === 1 ? "" : "mb-20"
+        activeTab === 1 ? "" : "mb-20"
       } m-0 h-screen w-fit flex-row items-start justify-around bg-slate-100 sm:w-full md:w-full md:flex-wrap lg:w-[45%] `}
-      onClick={() => (menuon ? setmenuon(false) : null)}
+      onClick={() => (menuOn ? setMenuOn(false) : null)}
     >
       <div className="right-0 top-1 hidden">
         <h1>
@@ -354,9 +355,7 @@ export default function WeatherLocalisation(props) {
       <WeatherUID
         handlecityselector={handleCitySelector}
         cityselector={citySelector}
-        dataimport={dataimport}
         displayinfo={handleDisplayInfo}
-        srcimage={srcimage}
         loadstate={isLoaded}
         loadforecast={isLoadedForecast}
         refresh={handleRefresh}
@@ -373,7 +372,6 @@ export default function WeatherLocalisation(props) {
         mouseleave={mouseleave}
         showbutton={true}
         titlename={false}
-        activetab={activetab}
         islocated={isLocated}
       />
     </div>

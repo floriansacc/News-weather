@@ -1,14 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import WeatherPrediction from "./WeatherPrediction";
 import WeatherCitySelector from "./WeatherCitySelector";
+import { QueryContext } from "../GlobalBody";
 
 export default function WeatherUID(props) {
   const {
     handlecityselector,
     cityselector,
-    dataimport,
     displayinfo,
     raincond,
     humidity,
@@ -19,7 +19,6 @@ export default function WeatherUID(props) {
     refresh,
     loadstate,
     loadforecast,
-    srcimage,
     tempforecast,
     skyforecast,
     rainforecast,
@@ -27,11 +26,11 @@ export default function WeatherUID(props) {
     mouseleave,
     showbutton,
     titlename,
-    activetab,
     islocated,
     forlist,
     resizew,
   } = props;
+  const { dataimport, images, activeTab } = useContext(QueryContext);
 
   const [previousBg, setPreviousBg] = useState(null);
   let bgSet;
@@ -109,7 +108,6 @@ export default function WeatherUID(props) {
             </div>
             {showbutton && (
               <WeatherCitySelector
-                dataimport={dataimport}
                 cityselector={cityselector}
                 handlecityselector={handlecityselector}
                 mouseenter={mouseenter}
@@ -130,7 +128,7 @@ export default function WeatherUID(props) {
             <img
               className="h-28 w-28"
               src={
-                srcimage[
+                images[
                   raincond.value === "1"
                     ? 4
                     : raincond.value === "3"
@@ -173,7 +171,6 @@ export default function WeatherUID(props) {
           <WeatherPrediction
             loadforecast={loadforecast}
             tempforecast={tempforecast}
-            srcimage={srcimage}
             raincond={raincond}
             skyforecast={skyforecast}
             rainforecast={rainforecast}
