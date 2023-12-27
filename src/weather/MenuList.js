@@ -13,6 +13,8 @@ export default function MenuList(props) {
     cityselector,
     resetlist,
     weatherslide,
+    savelist,
+    handleCommand
   } = props;
   const { dataimport, menuListOn, setMenuListOn } = useContext(QueryContext);
 
@@ -23,15 +25,7 @@ export default function MenuList(props) {
     top: mousePosition.y + 15,
   };
 
-  /*const handleCommand = () => {
-    window.console.log("MAP");
-    window.console.log(weatherInfoNow);
-    window.console.log("MAP2");
-    window.console.log(weatherForecast);
-    window.console.log(skyForecast);
-    window.console.log(tempForecast);
-    window.console.log(liste.length);
-  };*/
+
 
   const handleDisplayDescription = (e) => {
     document.getElementById("displaydescription").style.display =
@@ -159,9 +153,10 @@ export default function MenuList(props) {
             Reset
           </button>
           <button
-            className="m-1.5 hidden h-8 items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
+            className="m-1.5 h-8 items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
             onMouseEnter={mouseenter}
             onMouseLeave={mouseleave}
+            onClick={handleCommand}
           >
             Console
           </button>
@@ -188,19 +183,31 @@ export default function MenuList(props) {
           </>
         ))}
       </div>
-      <button
-        className={`m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5
+      <div className="flex items-center justify-center">
+        <button
+          className={`m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5
         ${fetchcheck[0] && fetchcheck[1] ? "brightness-100" : "brightness-75"}`}
-        onMouseEnter={fetchcheck[0] && fetchcheck[1] ? mouseenter : null}
-        onMouseLeave={
-          fetchcheck[0] && fetchcheck[1] ? mouseleave : handleDisplayMouseLeave
-        }
-        onMouseMove={handleDisplayDescription}
-        onClick={fetchcheck[0] && fetchcheck[1] ? weatherslide : null}
-        id="Displaybutton"
-      >
-        Display Weather
-      </button>
+          onMouseEnter={fetchcheck[0] && fetchcheck[1] ? mouseenter : null}
+          onMouseLeave={
+            fetchcheck[0] && fetchcheck[1]
+              ? mouseleave
+              : handleDisplayMouseLeave
+          }
+          onMouseMove={handleDisplayDescription}
+          onClick={fetchcheck[0] && fetchcheck[1] ? weatherslide : null}
+          id="Displaybutton"
+        >
+          Display Weather
+        </button>
+        <button
+          className="m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
+          onMouseEnter={mouseenter}
+          onMouseLeave={mouseleave}
+          onClick={savelist}
+        >
+          Save list
+        </button>
+      </div>
       <ButtonOpenClose
         menuListOn={menuListOn}
         setMenuListOn={setMenuListOn}

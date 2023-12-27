@@ -14,6 +14,7 @@ export default function WeatherCreateMyList(props) {
     setMenuListOn,
     lastSessionListe,
     setLastSessionListe,
+    activeTab,
     images,
     updateDates,
     serviceKey,
@@ -24,6 +25,7 @@ export default function WeatherCreateMyList(props) {
   const [liste, setListe] = useState([]);
   const [elem, setElem] = useState([]);
   const [listeCounter, setListeCounter] = useState(0);
+  const [listSaved, setListSaved] = useState(false);
   const [isFetch, setIsFetch] = useState(false);
   const [isFetch2, setIsFetch2] = useState(false);
   const [fetchFail, setFetchFail] = useState(false);
@@ -77,9 +79,6 @@ export default function WeatherCreateMyList(props) {
       !elem[2]
     ) {
       window.console.log("nothing to add");
-      window.console.log(lastSessionListe);
-      window.console.log(liste);
-
       return false;
     } else {
       setListe((prev) => [
@@ -121,7 +120,7 @@ export default function WeatherCreateMyList(props) {
     setListeCounter(0);
     setCountSlide(0);
     sessionStorage.setItem("lastValue", null);
-    setLastSessionListe(null);
+    setListSaved(false);
     document.getElementById("resetbutton").style.borderColor = "";
     document.getElementById("resetbutton").style.background = "";
     document.getElementById("resetbutton").style.color = "";
@@ -144,6 +143,10 @@ export default function WeatherCreateMyList(props) {
       e.target.style.color = "";
       setCountSlide(0);
     }
+  };
+
+  const handleSaveList = (e) => {
+    sessionStorage.setItem("lastValue", JSON.stringify(liste));
   };
 
   const handleBullet = (e) => {
@@ -262,8 +265,8 @@ export default function WeatherCreateMyList(props) {
             jsonResponse.response.header["resultMsg"],
             jsonResponse.response.body.items.item,
           ]);
-          await jsonResponse.response.body.items.item.map((x, i) => {
-            temporary[i] = {
+          await jsonResponse.response.body.items.item.forEach((x, i) => {
+            let newData = {
               Phase1: name[0],
               Phase2: name[1],
               Phase3: name[2],
@@ -273,27 +276,28 @@ export default function WeatherCreateMyList(props) {
               nx: nx,
               ny: ny,
             };
+            temporary[i] = newData;
           });
           setIsFetch(true);
           return temporary;
         } catch (error) {
           console.log(`Premier fetch error: ${error}`);
-          setFetchFail(true);
           setIsFetch(false);
+          setFetchFail(true);
           setIsLoaded(false);
         }
       };
       let saveData = async () => {
-        let resultsFirstFetch = await getWeatherList(
-          [
-            liste[listeCounter - 1]["Phase1"],
-            liste[listeCounter - 1]["Phase2"],
-            liste[listeCounter - 1]["Phase3"],
-          ],
-          liste[listeCounter - 1]["nx"],
-          liste[listeCounter - 1]["ny"],
-        );
         try {
+          let resultsFirstFetch = await getWeatherList(
+            [
+              liste[listeCounter - 1]["Phase1"],
+              liste[listeCounter - 1]["Phase2"],
+              liste[listeCounter - 1]["Phase3"],
+            ],
+            liste[listeCounter - 1]["nx"],
+            liste[listeCounter - 1]["ny"],
+          );
           setWeatherInfoNow((prev) => ({
             ...prev,
             [`${liste[listeCounter - 1]["Phase2"]} - ${
@@ -305,12 +309,6 @@ export default function WeatherCreateMyList(props) {
           setIsFetch(false);
         }
       };
-      setWeatherInfoNow((prev) => ({
-        ...prev,
-        [`${liste[listeCounter - 1]["Phase2"]} - ${
-          liste[listeCounter - 1]["Phase3"]
-        }`]: [],
-      }));
       saveData();
     }
     return () => {
@@ -318,6 +316,77 @@ export default function WeatherCreateMyList(props) {
       setIsFetch(false);
     };
   }, [listeCounter]);
+
+  useEffect(() => {
+    if (!liste[0]) {
+      return;
+    } else {
+      const getWeatherList = async (name, nx, ny) => {
+        let temporary = [];
+        let urlWeatherList = `${weatherUrlNow}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
+        try {
+          const response = await fetch(urlWeatherList, {
+            headers: {
+              Accept: "application / json",
+            },
+          });
+          if (!response.ok) {
+            throw new Error("Pas de météo pour toi");
+          }
+          const jsonResponse = await response.json();
+          window.console.log([
+            "LIST",
+            jsonResponse.response.header["resultMsg"],
+            jsonResponse.response.body.items.item,
+          ]);
+          await jsonResponse.response.body.items.item.forEach((x, i) => {
+            let newData = {
+              Phase1: name[0],
+              Phase2: name[1],
+              Phase3: name[2],
+              category: x.category,
+              value: x.obsrValue,
+              time: x.baseTime,
+              nx: nx,
+              ny: ny,
+            };
+            temporary[i] = newData;
+          });
+          //setIsFetch(true);
+          return temporary;
+        } catch (error) {
+          console.log(`Premier fetch error: ${error}`);
+          setIsFetch(false);
+          setFetchFail(true);
+          setIsLoaded(false);
+        }
+      };
+      let saveData = async () => {
+        for (let i in liste) {
+          try {
+            let resultsFirstFetch = await getWeatherList(
+              [liste[i]["Phase1"], liste[i]["Phase2"], liste[i]["Phase3"]],
+              liste[i]["nx"],
+              liste[i]["ny"],
+            );
+            setWeatherInfoNow((prev) => ({
+              ...prev,
+              [`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]:
+                resultsFirstFetch ? resultsFirstFetch : [],
+            }));
+          } catch (error) {
+            window.console.log(error);
+            setIsFetch(false);
+          }
+        }
+      };
+      saveData();
+    }
+    return () => {
+      setIsLoaded(false);
+      setIsFetch(false);
+    };
+  }, [listSaved]);
 
   useEffect(() => {
     if (!liste[0]) {
@@ -341,7 +410,7 @@ export default function WeatherCreateMyList(props) {
             jsonResponse.response.header["resultMsg"],
             jsonResponse.response.body.items.item,
           ]);
-          jsonResponse.response.body.items.item.forEach((x, i) => {
+          await jsonResponse.response.body.items.item.forEach((x, i) => {
             let newData = {
               Phase1: name[0],
               Phase2: name[1],
@@ -361,7 +430,6 @@ export default function WeatherCreateMyList(props) {
               temporary[i] = newData;
             }
           });
-
           setIsFetch2(true);
           return temporary;
         } catch (error) {
@@ -411,31 +479,105 @@ export default function WeatherCreateMyList(props) {
           setIsFetch2(false);
         }
       };
-      setWeatherForecast((prev) => ({
-        ...prev,
-        [`${liste[listeCounter - 1]["Phase2"]} - ${
-          liste[listeCounter - 1]["Phase3"]
-        }`]: [],
-      }));
-      setTempForecast((prev) => ({
-        ...prev,
-        [`${liste[listeCounter - 1]["Phase2"]} - ${
-          liste[listeCounter - 1]["Phase3"]
-        }`]: [],
-      }));
-      setSkyForecast((prev) => ({
-        ...prev,
-        [`${liste[listeCounter - 1]["Phase2"]} - ${
-          liste[listeCounter - 1]["Phase3"]
-        }`]: [],
-      }));
       saveData();
     }
-
     return () => {
       setIsFetch2(false);
     };
   }, [listeCounter]);
+
+  useEffect(() => {
+    if (!liste[0]) {
+      return;
+    } else {
+      const getWeatherList = async (name, nx, ny) => {
+        let temporary = [];
+        let urlWeatherForecast = `${weatherUrlForecast}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTimeForecast}&nx=${nx}&ny=${ny}`;
+        try {
+          const response = await fetch(urlWeatherForecast, {
+            headers: {
+              Accept: "application / json",
+            },
+          });
+          if (!response.ok) {
+            throw new Error("Pas de météo pour toi");
+          }
+          const jsonResponse = await response.json();
+          window.console.log([
+            `List Predi ${name}`,
+            jsonResponse.response.header["resultMsg"],
+            jsonResponse.response.body.items.item,
+          ]);
+          await jsonResponse.response.body.items.item.forEach((x, i) => {
+            let newData = {
+              Phase1: name[0],
+              Phase2: name[1],
+              Phase3: name[2],
+              category: x.category,
+              time: x.fcstTime,
+              value: x.fcstValue,
+              baseTime: x.baseTime,
+              nx: x.nx,
+              ny: x.ny,
+            };
+            if (x.category === "PTY") {
+              temporary[i] = newData;
+            } else if (x.category === "T1H") {
+              temporary[i] = newData;
+            } else if (x.category === "SKY") {
+              temporary[i] = newData;
+            }
+          });
+          //setIsFetch2(true);
+          return temporary;
+        } catch (error) {
+          console.log(`Second fetch error: ${error}`);
+          setIsFetch2(false);
+          setFetchFail(true);
+          setIsLoaded(false);
+        }
+      };
+      let saveData = async () => {
+        for (let i in liste) {
+          try {
+            let resultsFirstFetch = await getWeatherList(
+              [liste[i]["Phase1"], liste[i]["Phase2"], liste[i]["Phase3"]],
+              liste[i]["nx"],
+              liste[i]["ny"],
+            );
+            setSkyForecast((prev) => ({
+              ...prev,
+              [`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]:
+                resultsFirstFetch
+                  ? resultsFirstFetch.filter((x) => x.category === "SKY")
+                  : [],
+            }));
+            setWeatherForecast((prev) => ({
+              ...prev,
+              [`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]:
+                resultsFirstFetch
+                  ? resultsFirstFetch.filter((x) => x.category === "PTY")
+                  : [],
+            }));
+            setTempForecast((prev) => ({
+              ...prev,
+              [`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]:
+                resultsFirstFetch
+                  ? resultsFirstFetch.filter((x) => x.category === "T1H")
+                  : [],
+            }));
+          } catch (error) {
+            window.console.log(error);
+            setIsFetch2(false);
+          }
+        }
+      };
+      saveData();
+    }
+    return () => {
+      setIsFetch2(false);
+    };
+  }, [listSaved]);
 
   useEffect(() => {
     document.getElementById("resetbutton").style.borderColor = "";
@@ -444,15 +586,18 @@ export default function WeatherCreateMyList(props) {
   }, [listeCounter]);
 
   useEffect(() => {
+    liste.length === 0 && activeTab === 2
+      ? setMenuListOn(true)
+      : setMenuListOn(false);
     document.getElementById("displaydescription").style.background = "#d45950";
-    if (!lastSessionListe) {
+    if (!lastSessionListe && typeof lastSessionListe !== "object") {
       setListe([]);
+      sessionStorage.setItem("lastValue", null);
     } else {
       setListe(lastSessionListe);
-      setListeCounter((prev) => prev + 1);
+      setListeCounter(parseInt(lastSessionListe.length));
+      setListSaved(true);
     }
-    window.console.log(liste);
-    window.console.log(lastSessionListe);
   }, []);
 
   useEffect(() => {
@@ -460,17 +605,16 @@ export default function WeatherCreateMyList(props) {
       document.getElementById("resetbutton").style.background = "#d45950";
       document.getElementById("resetbutton").style.color = "white";
       document.getElementById("resetbutton").innerHTML = "Fail, click to reset";
-      window.console.log("a");
+      window.console.log("Fetch fail");
     }
     if (isFetch && isFetch2 && displayWeatherList === false) {
-      window.console.log("b");
+      window.console.log("Fetch Sucess");
       setToTranslate(0);
-      setDisplayWeatherList(true);
+      //setDisplayWeatherList(true);
       setIsLoaded(true);
       setIsLoadedForecast(true);
       document.getElementById("Displaybutton").style.borderColor = "#d45950";
       document.getElementById("Displaybutton").innerHTML = "Display Weather";
-      sessionStorage.setItem("lastValue", JSON.stringify(liste));
     }
     if (displayWeatherList === true) {
       setDisplayWeatherList(false);
@@ -483,6 +627,16 @@ export default function WeatherCreateMyList(props) {
     }
   }, [isFetch, isFetch2, fetchFail]);
 
+  const handleCommand = () => {
+    window.console.log("MAP");
+    window.console.log(weatherInfoNow);
+    window.console.log("MAP2");
+    window.console.log(weatherForecast);
+    window.console.log(skyForecast);
+    window.console.log(tempForecast);
+    window.console.log(liste.length);
+  };
+
   return (
     <div
       className={`mt-4 flex h-screen flex-shrink-0 flex-col flex-nowrap items-center justify-start bg-slate-100 scrollbar-hide sm:m-0 sm:w-full sm:flex-col sm:flex-nowrap md:m-0 md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-full lg:flex-row-reverse lg:flex-wrap `}
@@ -491,7 +645,7 @@ export default function WeatherCreateMyList(props) {
       {lastSessionListe !== null && !displayWeatherList && (
         <p className="p-10 text-2xl">Retrieving last list</p>
       )}
-      {isLoaded && isLoadedForecast && (
+      {displayWeatherList && (
         <ul
           id="slider"
           style={{
@@ -506,59 +660,63 @@ export default function WeatherCreateMyList(props) {
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          {liste.map((x, i) => (
-            <li key={i}>
-              <WeatherUID
-                loadstate={isLoaded}
-                loadforecast={isLoadedForecast}
-                raincond={
-                  weatherInfoNow[
-                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                  ][0]
-                }
-                humidity={
-                  weatherInfoNow[
-                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                  ][1]
-                }
-                hourrain={
-                  weatherInfoNow[
-                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                  ][2]
-                }
-                temp={
-                  weatherInfoNow[
-                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                  ][3]
-                }
-                winddir={
-                  weatherInfoNow[
-                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                  ][5]
-                }
-                windspeed={
-                  weatherInfoNow[
-                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                  ][7]
-                }
-                tempforecast={
-                  tempForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
-                }
-                skyforecast={
-                  skyForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
-                }
-                rainforecast={
-                  weatherForecast[
-                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                  ]
-                }
-                showbutton={false}
-                titlename={true}
-                forlist={true}
-                resizew={resizew}
-              />
-            </li>
-          ))}
+          {isFetch &&
+            isFetch2 &&
+            liste.map((x, i) => (
+              <li key={i}>
+                <WeatherUID
+                  loadstate={isLoaded}
+                  loadforecast={isLoadedForecast}
+                  raincond={
+                    weatherInfoNow[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ][0]
+                  }
+                  humidity={
+                    weatherInfoNow[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ][1]
+                  }
+                  hourrain={
+                    weatherInfoNow[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ][2]
+                  }
+                  temp={
+                    weatherInfoNow[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ][3]
+                  }
+                  winddir={
+                    weatherInfoNow[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ][5]
+                  }
+                  windspeed={
+                    weatherInfoNow[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ][7]
+                  }
+                  tempforecast={
+                    tempForecast[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ]
+                  }
+                  skyforecast={
+                    skyForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
+                  }
+                  rainforecast={
+                    weatherForecast[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ]
+                  }
+                  showbutton={false}
+                  titlename={true}
+                  forlist={true}
+                  resizew={resizew}
+                />
+              </li>
+            ))}
         </ul>
       )}
 
@@ -603,6 +761,8 @@ export default function WeatherCreateMyList(props) {
         cityselector={handleCitySelector}
         resetlist={handleResetListe}
         weatherslide={handleDisplayWeatherSlide}
+        savelist={handleSaveList}
+        handleCommand={handleCommand}
       />
       <ButtonOpenClose
         menuListOn={menuListOn}
