@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { QueryContext } from "../GlobalBody";
 
 export default function Navigator(props) {
+  const { menu } = props;
   const {
     menuOn,
     setMenuOn,
@@ -12,10 +13,6 @@ export default function Navigator(props) {
     activeTab,
     setActiveTab,
   } = useContext(QueryContext);
-  const [lastSession, setLastSession] = useState(
-    sessionStorage.getItem("lastValue"),
-  );
-  const menu = ["Home", "Location", "My-list"];
 
   const tabSelection = (e) => {
     menu.forEach((x, i) => {
@@ -23,15 +20,11 @@ export default function Navigator(props) {
         if (activeTab !== i) {
           setActiveTab(i);
           setMenuOn(false);
-          sessionStorage.setItem("lastValue", i);
+          sessionStorage.setItem("lastTab", i);
         }
       }
     });
   };
-
-  useEffect(() => {
-    setActiveTab(!lastSession ? 0 : parseInt(lastSession));
-  }, []);
 
   return (
     <div className="fixed left-0 top-0 z-50 h-screen select-none lg:sticky lg:mr-6">

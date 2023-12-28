@@ -14,6 +14,7 @@ export default function MenuList(props) {
     resetlist,
     weatherslide,
     savelist,
+    displayon,
   } = props;
   const { dataimport, menuListOn, setMenuListOn } = useContext(QueryContext);
 
@@ -21,14 +22,17 @@ export default function MenuList(props) {
 
   const toStyleDisplayDescription = {
     left: mousePosition.x,
-    top: mousePosition.y + 15,
+    top: mousePosition.y - 15,
   };
 
   const handleDisplayDescription = (e) => {
     document.getElementById("displaydescription").style.display = fetchcheck[0]
       ? "none"
       : "block";
-    setMousePosition({ x: e.clientX, y: e.clientY });
+    setMousePosition({
+      x: e.clientX - e.target.offsetLeft,
+      y: e.clientY - e.target.offsetTop,
+    });
   };
 
   const handleDisplayMouseLeave = (e) => {
@@ -45,7 +49,7 @@ export default function MenuList(props) {
 
   return (
     <div
-      className={`fixed left-[50%] top-[50%] z-50 flex w-10/12 -translate-x-[50%] flex-col items-center justify-center rounded-xl bg-slate-200 p-2 transition-all duration-500 ${
+      className={`fixed left-[50%] top-[50%] z-50 flex -translate-x-[50%] flex-col items-center justify-center rounded-xl bg-slate-200 p-2 transition-all duration-500 sm:w-10/12 md:w-4/6 lg:w-[650px] ${
         menuListOn ? "-translate-y-[50%]  shadow-dim" : "-translate-y-[-60vh]"
       }`}
     >
@@ -136,7 +140,7 @@ export default function MenuList(props) {
         <div className="flex w-fit flex-col flex-nowrap items-center">
           <p
             style={toStyleDisplayDescription}
-            className="absolute hidden h-fit w-fit rounded-3xl border border-solid border-black bg-white px-2 py-1 text-white"
+            className="absolute z-50 hidden h-fit w-fit rounded-3xl border border-solid border-black bg-white px-2 py-1 text-white"
             id="displaydescription"
           >
             Need to fill the list before display
@@ -183,7 +187,7 @@ export default function MenuList(props) {
           onClick={fetchcheck[0] ? weatherslide : null}
           id="Displaybutton"
         >
-          Display Weather
+          Display {displayon ? "on" : "off"}
         </button>
         <button
           className="m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"

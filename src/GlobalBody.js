@@ -13,12 +13,15 @@ import cloudy from "./css/cloudy logo.png";
 import rainy from "./css/rainy logo.png";
 import snowy from "./css/snow logo.png";
 
+const menu = ["Home", "Location", "My list"];
 const images = [sunny, "", pCloudy, cloudy, rainy, snowy];
 
 export const QueryContext = React.createContext();
 
 export default function GlobalBody() {
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(
+    parseInt(sessionStorage["lastTab"] ? sessionStorage.getItem("lastTab") : 0),
+  );
   const [menuOn, setMenuOn] = useState(false);
   const [menuListOn, setMenuListOn] = useState(false);
   const [resizeWidth, setResizeWidth] = useState(null);
@@ -156,7 +159,7 @@ export default function GlobalBody() {
       }}
     >
       <div className="flex h-screen w-full flex-row items-start justify-start overflow-x-hidden lg:h-screen">
-        <Navigator />
+        <Navigator menu={menu} />
         <Routes>
           <Route
             exact
@@ -166,7 +169,6 @@ export default function GlobalBody() {
                 mouseenter={handleButtonEnter}
                 mouseleave={handleButtonLeave}
                 resizew={resizeWidth}
-                activetab={0}
               />
             }
           ></Route>
@@ -177,20 +179,16 @@ export default function GlobalBody() {
                 mouseenter={handleButtonEnter}
                 mouseleave={handleButtonLeave}
                 size="screen"
-                activetab={1}
-                
               />
             }
           ></Route>
           <Route
-            path="/My-list"
+            path={`/${menu[2]}`}
             element={
               <WeatherCreateMyList
                 mouseenter={handleButtonEnter}
                 mouseleave={handleButtonLeave}
                 resizew={resizeWidth}
-                activetab={2}
-                
               />
             }
           ></Route>

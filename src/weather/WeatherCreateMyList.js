@@ -5,7 +5,7 @@ import ButtonOpenClose from "./ButtonOpenClose";
 import { QueryContext } from "../GlobalBody";
 
 export default function WeatherCreateMyList(props) {
-  const { mouseenter, mouseleave, resizew, activetab } = props;
+  const { mouseenter, mouseleave, resizew } = props;
   const {
     dataimport,
     menuOn,
@@ -123,22 +123,17 @@ export default function WeatherCreateMyList(props) {
     document.getElementById("resetbutton").style.color = "";
     document.getElementById("resetbutton").innerHTML = "Reset";
     document.getElementById("Displaybutton").style.borderColor = "";
+    document.getElementById("Displaybutton").style.color = "";
   };
 
   const handleDisplayWeatherSlide = (e) => {
-    if (isFetch && displayWeatherList === false) {
-      setToTranslate(0);
+    if (isFetch && !displayWeatherList) {
       setDisplayWeatherList(true);
-      setIsLoaded(true);
-      setIsLoadedForecast(true);
       e.target.style.color = "#fff";
     }
-    if (displayWeatherList === true) {
+    if (displayWeatherList) {
       setDisplayWeatherList(false);
-      setIsLoaded(false);
-      setIsLoadedForecast(false);
       e.target.style.color = "";
-      setCountSlide(0);
     }
   };
 
@@ -390,6 +385,8 @@ export default function WeatherCreateMyList(props) {
       Promise.all([saveDataNow(), saveDataForecast()]).then(() => {
         window.console.log("He oui mon gars ca marche");
         setIsFetch(true);
+        setIsLoaded(true);
+        setIsLoadedForecast(true);
       });
     }
     return () => {
@@ -541,6 +538,8 @@ export default function WeatherCreateMyList(props) {
       Promise.all([saveDataNow(), saveDataForecast()]).then(() => {
         window.console.log("All fetch finished");
         setIsFetch(true);
+        setIsLoaded(true);
+        setIsLoadedForecast(true);
       });
     }
     return () => {
@@ -577,23 +576,16 @@ export default function WeatherCreateMyList(props) {
       document.getElementById("resetbutton").innerHTML = "Fail, click to reset";
       window.console.log("Fetch fail");
     }
-    if (isFetch && displayWeatherList === false) {
-      window.console.log("Fetch Sucess");
+    if (isFetch && !displayWeatherList) {
       setToTranslate(0);
       setDisplayWeatherList(true);
-      setIsLoaded(true);
-      setIsLoadedForecast(true);
       document.getElementById("Displaybutton").style.borderColor = "#d45950";
-      document.getElementById("Displaybutton").innerHTML = "Display Weather";
+      document.getElementById("Displaybutton").style.color = "#fff";
     }
-    if (displayWeatherList === true) {
+    if (displayWeatherList) {
       setDisplayWeatherList(false);
-      setIsLoaded(false);
-      setIsLoadedForecast(false);
       setCountSlide(0);
-      document.getElementById("Displaybutton").style.borderColor = "";
       document.getElementById("Displaybutton").style.color = "";
-      document.getElementById("Displaybutton").innerHTML = "Display Weather";
     }
   }, [isFetch, fetchFail]);
 
@@ -630,65 +622,61 @@ export default function WeatherCreateMyList(props) {
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          {isFetch &&
-            liste.map((x, i) => (
-              <li key={i}>
-                <WeatherUID
-                  loadstate={isLoaded}
-                  loadforecast={isLoadedForecast}
-                  raincond={
-                    weatherInfoNow[
-                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ][0]
-                  }
-                  humidity={
-                    weatherInfoNow[
-                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ][1]
-                  }
-                  hourrain={
-                    weatherInfoNow[
-                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ][2]
-                  }
-                  temp={
-                    weatherInfoNow[
-                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ][3]
-                  }
-                  winddir={
-                    weatherInfoNow[
-                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ][5]
-                  }
-                  windspeed={
-                    weatherInfoNow[
-                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ][7]
-                  }
-                  tempforecast={
-                    tempForecast[
-                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ]
-                  }
-                  skyforecast={
-                    skyForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
-                  }
-                  rainforecast={
-                    weatherForecast[
-                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ]
-                  }
-                  showbutton={false}
-                  titlename={true}
-                  forlist={true}
-                  resizew={resizew}
-                />
-              </li>
-            ))}
+          {liste.map((x, i) => (
+            <li key={i}>
+              <WeatherUID
+                loadstate={isLoaded}
+                loadforecast={isLoadedForecast}
+                raincond={
+                  weatherInfoNow[
+                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                  ][0]
+                }
+                humidity={
+                  weatherInfoNow[
+                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                  ][1]
+                }
+                hourrain={
+                  weatherInfoNow[
+                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                  ][2]
+                }
+                temp={
+                  weatherInfoNow[
+                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                  ][3]
+                }
+                winddir={
+                  weatherInfoNow[
+                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                  ][5]
+                }
+                windspeed={
+                  weatherInfoNow[
+                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                  ][7]
+                }
+                tempforecast={
+                  tempForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
+                }
+                skyforecast={
+                  skyForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
+                }
+                rainforecast={
+                  weatherForecast[
+                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                  ]
+                }
+                showbutton={false}
+                titlename={true}
+                forlist={true}
+                resizew={resizew}
+              />
+            </li>
+          ))}
         </ul>
       )}
-
       {displayWeatherList && (
         <ul className="absolute bottom-0 left-0 z-50 flex h-8 w-4/6 list-none items-center justify-center self-start rounded-2xl px-4 pb-7">
           {liste.map((e, i) => (
@@ -730,6 +718,7 @@ export default function WeatherCreateMyList(props) {
         cityselector={handleCitySelector}
         resetlist={handleResetListe}
         weatherslide={handleDisplayWeatherSlide}
+        displayon={displayWeatherList}
         savelist={handleSaveList}
       />
       <ButtonOpenClose
