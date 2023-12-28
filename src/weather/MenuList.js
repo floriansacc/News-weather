@@ -14,7 +14,6 @@ export default function MenuList(props) {
     resetlist,
     weatherslide,
     savelist,
-    handleCommand
   } = props;
   const { dataimport, menuListOn, setMenuListOn } = useContext(QueryContext);
 
@@ -25,11 +24,10 @@ export default function MenuList(props) {
     top: mousePosition.y + 15,
   };
 
-
-
   const handleDisplayDescription = (e) => {
-    document.getElementById("displaydescription").style.display =
-      fetchcheck[0] && fetchcheck[1] ? "none" : "block";
+    document.getElementById("displaydescription").style.display = fetchcheck[0]
+      ? "none"
+      : "block";
     setMousePosition({ x: e.clientX, y: e.clientY });
   };
 
@@ -152,14 +150,6 @@ export default function MenuList(props) {
           >
             Reset
           </button>
-          <button
-            className="m-1.5 h-8 items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
-            onMouseEnter={mouseenter}
-            onMouseLeave={mouseleave}
-            onClick={handleCommand}
-          >
-            Console
-          </button>
         </div>
       </div>
       <p className="mt-6">List of city to display:</p>
@@ -186,15 +176,11 @@ export default function MenuList(props) {
       <div className="flex items-center justify-center">
         <button
           className={`m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5
-        ${fetchcheck[0] && fetchcheck[1] ? "brightness-100" : "brightness-75"}`}
-          onMouseEnter={fetchcheck[0] && fetchcheck[1] ? mouseenter : null}
-          onMouseLeave={
-            fetchcheck[0] && fetchcheck[1]
-              ? mouseleave
-              : handleDisplayMouseLeave
-          }
+        ${fetchcheck[0] ? "brightness-100" : "brightness-75"}`}
+          onMouseEnter={fetchcheck[0] ? mouseenter : null}
+          onMouseLeave={fetchcheck[0] ? mouseleave : handleDisplayMouseLeave}
           onMouseMove={handleDisplayDescription}
-          onClick={fetchcheck[0] && fetchcheck[1] ? weatherslide : null}
+          onClick={fetchcheck[0] ? weatherslide : null}
           id="Displaybutton"
         >
           Display Weather

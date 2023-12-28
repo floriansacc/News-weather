@@ -5,7 +5,7 @@ import ButtonOpenClose from "./ButtonOpenClose";
 import { QueryContext } from "../GlobalBody";
 
 export default function WeatherCreateMyList(props) {
-  const { mouseenter, mouseleave, resizew } = props;
+  const { mouseenter, mouseleave, resizew, activetab } = props;
   const {
     dataimport,
     menuOn,
@@ -27,7 +27,6 @@ export default function WeatherCreateMyList(props) {
   const [listeCounter, setListeCounter] = useState(0);
   const [listSaved, setListSaved] = useState(false);
   const [isFetch, setIsFetch] = useState(false);
-  const [isFetch2, setIsFetch2] = useState(false);
   const [fetchFail, setFetchFail] = useState(false);
   const [displayWeatherList, setDisplayWeatherList] = useState(false);
 
@@ -92,12 +91,11 @@ export default function WeatherCreateMyList(props) {
         },
       ]);
       setElem(["선택"]);
-      setListeCounter((prev) => prev + 1);
+      setListeCounter(liste.length + 1);
       setDisplayWeatherList(false);
       setIsLoaded(false);
       setIsLoadedForecast(false);
       setIsFetch(false);
-      setIsFetch2(false);
       setCountSlide(0);
       document.getElementById("resetbutton").style.background = "";
       document.getElementById("resetbutton").style.color = "";
@@ -111,7 +109,6 @@ export default function WeatherCreateMyList(props) {
     setIsLoaded(false);
     setIsLoadedForecast(false);
     setIsFetch(false);
-    setIsFetch2(false);
     setFetchFail(false);
     setWeatherInfoNow({});
     setWeatherForecast({});
@@ -129,7 +126,7 @@ export default function WeatherCreateMyList(props) {
   };
 
   const handleDisplayWeatherSlide = (e) => {
-    if (isFetch && isFetch2 && displayWeatherList === false) {
+    if (isFetch && displayWeatherList === false) {
       setToTranslate(0);
       setDisplayWeatherList(true);
       setIsLoaded(true);
@@ -247,7 +244,7 @@ export default function WeatherCreateMyList(props) {
     if (!liste[0]) {
       return;
     } else {
-      const getWeatherList = async (name, nx, ny) => {
+      const getWeatherListNow = async (name, nx, ny) => {
         let temporary = [];
         let urlWeatherList = `${weatherUrlNow}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
         try {
@@ -278,121 +275,13 @@ export default function WeatherCreateMyList(props) {
             };
             temporary[i] = newData;
           });
-          setIsFetch(true);
           return temporary;
         } catch (error) {
           console.log(`Premier fetch error: ${error}`);
-          setIsFetch(false);
-          setFetchFail(true);
           setIsLoaded(false);
         }
       };
-      let saveData = async () => {
-        try {
-          let resultsFirstFetch = await getWeatherList(
-            [
-              liste[listeCounter - 1]["Phase1"],
-              liste[listeCounter - 1]["Phase2"],
-              liste[listeCounter - 1]["Phase3"],
-            ],
-            liste[listeCounter - 1]["nx"],
-            liste[listeCounter - 1]["ny"],
-          );
-          setWeatherInfoNow((prev) => ({
-            ...prev,
-            [`${liste[listeCounter - 1]["Phase2"]} - ${
-              liste[listeCounter - 1]["Phase3"]
-            }`]: resultsFirstFetch ? resultsFirstFetch : [],
-          }));
-        } catch (error) {
-          window.console.log(error);
-          setIsFetch(false);
-        }
-      };
-      saveData();
-    }
-    return () => {
-      setIsLoaded(false);
-      setIsFetch(false);
-    };
-  }, [listeCounter]);
-
-  useEffect(() => {
-    if (!liste[0]) {
-      return;
-    } else {
-      const getWeatherList = async (name, nx, ny) => {
-        let temporary = [];
-        let urlWeatherList = `${weatherUrlNow}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
-        try {
-          const response = await fetch(urlWeatherList, {
-            headers: {
-              Accept: "application / json",
-            },
-          });
-          if (!response.ok) {
-            throw new Error("Pas de météo pour toi");
-          }
-          const jsonResponse = await response.json();
-          window.console.log([
-            "LIST",
-            jsonResponse.response.header["resultMsg"],
-            jsonResponse.response.body.items.item,
-          ]);
-          await jsonResponse.response.body.items.item.forEach((x, i) => {
-            let newData = {
-              Phase1: name[0],
-              Phase2: name[1],
-              Phase3: name[2],
-              category: x.category,
-              value: x.obsrValue,
-              time: x.baseTime,
-              nx: nx,
-              ny: ny,
-            };
-            temporary[i] = newData;
-          });
-          //setIsFetch(true);
-          return temporary;
-        } catch (error) {
-          console.log(`Premier fetch error: ${error}`);
-          setIsFetch(false);
-          setFetchFail(true);
-          setIsLoaded(false);
-        }
-      };
-      let saveData = async () => {
-        for (let i in liste) {
-          try {
-            let resultsFirstFetch = await getWeatherList(
-              [liste[i]["Phase1"], liste[i]["Phase2"], liste[i]["Phase3"]],
-              liste[i]["nx"],
-              liste[i]["ny"],
-            );
-            setWeatherInfoNow((prev) => ({
-              ...prev,
-              [`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]:
-                resultsFirstFetch ? resultsFirstFetch : [],
-            }));
-          } catch (error) {
-            window.console.log(error);
-            setIsFetch(false);
-          }
-        }
-      };
-      saveData();
-    }
-    return () => {
-      setIsLoaded(false);
-      setIsFetch(false);
-    };
-  }, [listSaved]);
-
-  useEffect(() => {
-    if (!liste[0]) {
-      return;
-    } else {
-      const getWeatherList = async (name, nx, ny) => {
+      const getWeatherListForecast = async (name, nx, ny) => {
         let temporary = [];
         let urlWeatherForecast = `${weatherUrlForecast}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTimeForecast}&nx=${nx}&ny=${ny}`;
         try {
@@ -430,18 +319,37 @@ export default function WeatherCreateMyList(props) {
               temporary[i] = newData;
             }
           });
-          setIsFetch2(true);
           return temporary;
         } catch (error) {
           console.log(`Second fetch error: ${error}`);
-          setIsFetch2(false);
-          setFetchFail(true);
+          setIsLoadedForecast(false);
+        }
+      };
+      let saveDataNow = async () => {
+        try {
+          let resultsFirstFetch = await getWeatherListNow(
+            [
+              liste[listeCounter - 1]["Phase1"],
+              liste[listeCounter - 1]["Phase2"],
+              liste[listeCounter - 1]["Phase3"],
+            ],
+            liste[listeCounter - 1]["nx"],
+            liste[listeCounter - 1]["ny"],
+          );
+          setWeatherInfoNow((prev) => ({
+            ...prev,
+            [`${liste[listeCounter - 1]["Phase2"]} - ${
+              liste[listeCounter - 1]["Phase3"]
+            }`]: resultsFirstFetch ? resultsFirstFetch : [],
+          }));
+        } catch (error) {
+          window.console.log(error);
           setIsLoaded(false);
         }
       };
-      let saveData = async () => {
+      let saveDataForecast = async () => {
         try {
-          let resultsFirstFetch = await getWeatherList(
+          let resultsFirstFetch = await getWeatherListForecast(
             [
               liste[listeCounter - 1]["Phase1"],
               liste[listeCounter - 1]["Phase2"],
@@ -476,13 +384,18 @@ export default function WeatherCreateMyList(props) {
           }));
         } catch (error) {
           window.console.log(error);
-          setIsFetch2(false);
+          setIsLoadedForecast(false);
         }
       };
-      saveData();
+      Promise.all([saveDataNow(), saveDataForecast()]).then(() => {
+        window.console.log("He oui mon gars ca marche");
+        setIsFetch(true);
+      });
     }
     return () => {
-      setIsFetch2(false);
+      setIsFetch(false);
+      setIsLoaded(false);
+      setIsLoadedForecast(false);
     };
   }, [listeCounter]);
 
@@ -490,7 +403,44 @@ export default function WeatherCreateMyList(props) {
     if (!liste[0]) {
       return;
     } else {
-      const getWeatherList = async (name, nx, ny) => {
+      const getWeatherListNow = async (name, nx, ny) => {
+        let temporary = [];
+        let urlWeatherList = `${weatherUrlNow}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
+        try {
+          const response = await fetch(urlWeatherList, {
+            headers: {
+              Accept: "application / json",
+            },
+          });
+          if (!response.ok) {
+            throw new Error("Pas de météo pour toi");
+          }
+          const jsonResponse = await response.json();
+          window.console.log([
+            "LIST",
+            jsonResponse.response.header["resultMsg"],
+            jsonResponse.response.body.items.item,
+          ]);
+          await jsonResponse.response.body.items.item.forEach((x, i) => {
+            let newData = {
+              Phase1: name[0],
+              Phase2: name[1],
+              Phase3: name[2],
+              category: x.category,
+              value: x.obsrValue,
+              time: x.baseTime,
+              nx: nx,
+              ny: ny,
+            };
+            temporary[i] = newData;
+          });
+          return temporary;
+        } catch (error) {
+          console.log(`Premier fetch error: ${error}`);
+          setIsLoaded(false);
+        }
+      };
+      const getWeatherListForecast = async (name, nx, ny) => {
         let temporary = [];
         let urlWeatherForecast = `${weatherUrlForecast}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTimeForecast}&nx=${nx}&ny=${ny}`;
         try {
@@ -528,19 +478,35 @@ export default function WeatherCreateMyList(props) {
               temporary[i] = newData;
             }
           });
-          //setIsFetch2(true);
           return temporary;
         } catch (error) {
           console.log(`Second fetch error: ${error}`);
-          setIsFetch2(false);
-          setFetchFail(true);
-          setIsLoaded(false);
+          setIsLoadedForecast(false);
         }
       };
-      let saveData = async () => {
+      let saveDataNow = async () => {
         for (let i in liste) {
           try {
-            let resultsFirstFetch = await getWeatherList(
+            let resultsFirstFetch = await getWeatherListNow(
+              [liste[i]["Phase1"], liste[i]["Phase2"], liste[i]["Phase3"]],
+              liste[i]["nx"],
+              liste[i]["ny"],
+            );
+            setWeatherInfoNow((prev) => ({
+              ...prev,
+              [`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]:
+                resultsFirstFetch ? resultsFirstFetch : [],
+            }));
+          } catch (error) {
+            window.console.log(error);
+            setIsLoaded(false);
+          }
+        }
+      };
+      let saveDataForecast = async () => {
+        for (let i in liste) {
+          try {
+            let resultsFirstFetch = await getWeatherListForecast(
               [liste[i]["Phase1"], liste[i]["Phase2"], liste[i]["Phase3"]],
               liste[i]["nx"],
               liste[i]["ny"],
@@ -568,14 +534,19 @@ export default function WeatherCreateMyList(props) {
             }));
           } catch (error) {
             window.console.log(error);
-            setIsFetch2(false);
+            setIsLoadedForecast(false);
           }
         }
       };
-      saveData();
+      Promise.all([saveDataNow(), saveDataForecast()]).then(() => {
+        window.console.log("All fetch finished");
+        setIsFetch(true);
+      });
     }
     return () => {
-      setIsFetch2(false);
+      setIsFetch(false);
+      setIsLoaded(false);
+      setIsLoadedForecast(false);
     };
   }, [listSaved]);
 
@@ -586,16 +557,15 @@ export default function WeatherCreateMyList(props) {
   }, [listeCounter]);
 
   useEffect(() => {
-    liste.length === 0 && activeTab === 2
+    !lastSessionListe && activeTab === 2
       ? setMenuListOn(true)
       : setMenuListOn(false);
     document.getElementById("displaydescription").style.background = "#d45950";
-    if (!lastSessionListe && typeof lastSessionListe !== "object") {
+    if (!lastSessionListe) {
       setListe([]);
       sessionStorage.setItem("lastValue", null);
-    } else {
+    } else if (lastSessionListe && typeof lastSessionListe === "object") {
       setListe(lastSessionListe);
-      setListeCounter(parseInt(lastSessionListe.length));
       setListSaved(true);
     }
   }, []);
@@ -607,10 +577,10 @@ export default function WeatherCreateMyList(props) {
       document.getElementById("resetbutton").innerHTML = "Fail, click to reset";
       window.console.log("Fetch fail");
     }
-    if (isFetch && isFetch2 && displayWeatherList === false) {
+    if (isFetch && displayWeatherList === false) {
       window.console.log("Fetch Sucess");
       setToTranslate(0);
-      //setDisplayWeatherList(true);
+      setDisplayWeatherList(true);
       setIsLoaded(true);
       setIsLoadedForecast(true);
       document.getElementById("Displaybutton").style.borderColor = "#d45950";
@@ -625,9 +595,9 @@ export default function WeatherCreateMyList(props) {
       document.getElementById("Displaybutton").style.color = "";
       document.getElementById("Displaybutton").innerHTML = "Display Weather";
     }
-  }, [isFetch, isFetch2, fetchFail]);
+  }, [isFetch, fetchFail]);
 
-  const handleCommand = () => {
+  /*const handleCommand = () => {
     window.console.log("MAP");
     window.console.log(weatherInfoNow);
     window.console.log("MAP2");
@@ -635,7 +605,7 @@ export default function WeatherCreateMyList(props) {
     window.console.log(skyForecast);
     window.console.log(tempForecast);
     window.console.log(liste.length);
-  };
+  };*/
 
   return (
     <div
@@ -661,7 +631,6 @@ export default function WeatherCreateMyList(props) {
           onTouchEnd={handleTouchEnd}
         >
           {isFetch &&
-            isFetch2 &&
             liste.map((x, i) => (
               <li key={i}>
                 <WeatherUID
@@ -755,14 +724,13 @@ export default function WeatherCreateMyList(props) {
         addtolist={handleAddToList}
         mouseenter={mouseenter}
         mouseleave={mouseleave}
-        fetchcheck={[isFetch, isFetch2, fetchFail]}
+        fetchcheck={[isFetch, fetchFail]}
         elem={elem}
         liste={liste}
         cityselector={handleCitySelector}
         resetlist={handleResetListe}
         weatherslide={handleDisplayWeatherSlide}
         savelist={handleSaveList}
-        handleCommand={handleCommand}
       />
       <ButtonOpenClose
         menuListOn={menuListOn}

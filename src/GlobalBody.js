@@ -124,6 +124,15 @@ export default function GlobalBody() {
 
   useEffect(() => {
     setResizeWidth(window.innerWidth);
+    const handleEchap = (e) => {
+      if (e.code === "Escape") {
+        setMenuListOn(false);
+      }
+    };
+    document.addEventListener("keydown", handleEchap);
+    return () => {
+      document.removeEventListener("keydown", handleEchap);
+    };
   }, []);
 
   return (
@@ -157,6 +166,7 @@ export default function GlobalBody() {
                 mouseenter={handleButtonEnter}
                 mouseleave={handleButtonLeave}
                 resizew={resizeWidth}
+                activetab={0}
               />
             }
           ></Route>
@@ -167,6 +177,8 @@ export default function GlobalBody() {
                 mouseenter={handleButtonEnter}
                 mouseleave={handleButtonLeave}
                 size="screen"
+                activetab={1}
+                
               />
             }
           ></Route>
@@ -177,6 +189,8 @@ export default function GlobalBody() {
                 mouseenter={handleButtonEnter}
                 mouseleave={handleButtonLeave}
                 resizew={resizeWidth}
+                activetab={2}
+                
               />
             }
           ></Route>
