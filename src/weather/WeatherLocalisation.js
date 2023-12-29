@@ -33,8 +33,8 @@ export default function WeatherLocalisation(props) {
     null,
     null,
   ]);
-  const [refreshData, setRefreshData] = useState(0);
-  const [refreshData2, setRefreshData2] = useState(0);
+  const [refreshGeoloc, setRefreshGeoloc] = useState(0);
+  const [refreshFetch, setRefreshFetch] = useState(0);
 
   const weatherUrlNow =
     "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
@@ -123,7 +123,7 @@ export default function WeatherLocalisation(props) {
     setSkyForecast([]);
     setIsLoaded(false);
     setIsLoadedForecast(false);
-    setRefreshData((prev) => prev + 1);
+    setRefreshGeoloc((prev) => prev + 1);
   };
 
   const handleCitySelector = (e) => {
@@ -153,7 +153,7 @@ export default function WeatherLocalisation(props) {
       setSkyForecast([]);
       setIsLoaded(false);
       setIsLoadedForecast(false);
-      setRefreshData2((prev) => prev + 1);
+      setRefreshFetch((prev) => prev + 1);
     }
   };
 
@@ -229,11 +229,11 @@ export default function WeatherLocalisation(props) {
       setIsLocated(false);
       setCitySelector(["없음", "없음", "없음", null, null]);
     };
-  }, [refreshData]);
+  }, [refreshGeoloc]);
 
   useEffect(() => {
-    const getUrlWeatherNow = `${weatherUrlNow}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTime}&nx=${citySelector[3]}&ny=${citySelector[4]}`;
-    let getWeather = async () => {
+    const getWeather = async () => {
+      const getUrlWeatherNow = `${weatherUrlNow}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTime}&nx=${citySelector[3]}&ny=${citySelector[4]}`;
       try {
         const response = await fetch(getUrlWeatherNow, {
           headers: {
@@ -244,40 +244,32 @@ export default function WeatherLocalisation(props) {
           throw new Error("Pas de météo pour toi");
         }
         const jsonResponse = await response.json();
-        window.console.log(jsonResponse.response.header);
-        window.console.log(jsonResponse.response.body.items.item);
-        await jsonResponse.response.body.items.item.map((x) => {
+        window.console.log([
+          `Geolocalisation ${citySelector}`,
+          jsonResponse.response.header["resultMsg"],
+        ]);
+        await jsonResponse.response.body.items.item.forEach((x) => {
           setWeatherInfoNow((prev) => [
             ...prev,
             {
-              category: x.category,
-              value: x.obsrValue,
-              time: x.baseTime,
-              nx: x.nx,
               ny: x.ny,
               Phase1: citySelector[0],
               Phase2: citySelector[1],
               Phase3: citySelector[2],
+              category: x.category,
+              value: x.obsrValue,
+              time: x.baseTime,
+              nx: x.nx,
             },
           ]);
         });
-        setIsLoaded(true);
       } catch (error) {
         window.console.log(error);
         setIsLoaded(false);
       }
     };
-    if (isLocated) {
-      getWeather();
-    }
-    return () => {
-      setIsLoaded(false);
-    };
-  }, [isLocated, refreshData2]);
-
-  useEffect(() => {
-    const getUrlWeatherForecast = `${weatherUrlForecast}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTimeForecast}&nx=${citySelector[3]}&ny=${citySelector[4]}`;
     const getWeather2 = async () => {
+      const getUrlWeatherForecast = `${weatherUrlForecast}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTimeForecast}&nx=${citySelector[3]}&ny=${citySelector[4]}`;
       try {
         const response = await fetch(getUrlWeatherForecast, {
           headers: {
@@ -288,54 +280,50 @@ export default function WeatherLocalisation(props) {
           throw new Error("Pas de météo pour toi");
         }
         const jsonResponse = await response.json();
-        window.console.log(jsonResponse.response.header);
-        window.console.log(jsonResponse.response.body.items.item);
+        window.console.log([
+          `Geolocalisation Forecast ${citySelector}`,
+          jsonResponse.response.header["resultMsg"],
+        ]);
         await jsonResponse.response.body.items.item.forEach((x) => {
+          let newData = {
+            Phase1: citySelector[0],
+            Phase2: citySelector[1],
+            Phase3: citySelector[2],
+            category: x.category,
+            time: x.fcstTime,
+            value: x.fcstValue,
+            baseTime: x.baseTime,
+          };
           if (x.category === "PTY") {
-            setWeatherForecast((prev) => [
-              ...prev,
-              {
-                category: x.category,
-                time: x.fcstTime,
-                value: x.fcstValue,
-                baseTime: x.baseTime,
-              },
-            ]);
+            setWeatherForecast((prev) => [...prev, newData]);
           } else if (x.category === "T1H") {
-            setTempForecast((prev) => [
-              ...prev,
-              {
-                category: x.category,
-                time: x.fcstTime,
-                value: x.fcstValue,
-                baseTime: x.baseTime,
-              },
-            ]);
+            setTempForecast((prev) => [...prev, newData]);
           } else if (x.category === "SKY") {
-            setSkyForecast((prev) => [
-              ...prev,
-              {
-                category: x.category,
-                time: x.fcstTime,
-                value: x.fcstValue,
-                baseTime: x.baseTime,
-              },
-            ]);
+            setSkyForecast((prev) => [...prev, newData]);
           }
         });
-        setIsLoadedForecast(true);
       } catch (error) {
         window.console.log(error);
         setIsLoadedForecast(false);
       }
     };
     if (isLocated) {
-      getWeather2();
+      Promise.all([getWeather(), getWeather2()])
+        .then(() => {
+          setIsLoaded(true);
+          setIsLoadedForecast(true);
+        })
+        .catch((e) => {
+          window.console.log(`Geolocation fetch error: ${e}`);
+          setIsLoaded(false);
+          setIsLoadedForecast(false);
+        });
     }
     return () => {
+      setIsLoaded(false);
       setIsLoadedForecast(false);
     };
-  }, [isLocated, refreshData2]);
+  }, [isLocated, refreshFetch]);
 
   return (
     <div

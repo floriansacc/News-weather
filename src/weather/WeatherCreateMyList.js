@@ -253,9 +253,8 @@ export default function WeatherCreateMyList(props) {
           }
           const jsonResponse = await response.json();
           window.console.log([
-            "LIST",
+            `List ${name[0]} ${name[1]}`,
             jsonResponse.response.header["resultMsg"],
-            jsonResponse.response.body.items.item,
           ]);
           await jsonResponse.response.body.items.item.forEach((x, i) => {
             let newData = {
@@ -290,9 +289,8 @@ export default function WeatherCreateMyList(props) {
           }
           const jsonResponse = await response.json();
           window.console.log([
-            `List Predi ${name}`,
+            `List Forecast ${name[0]} ${name[1]}`,
             jsonResponse.response.header["resultMsg"],
-            jsonResponse.response.body.items.item,
           ]);
           await jsonResponse.response.body.items.item.forEach((x, i) => {
             let newData = {
@@ -414,9 +412,8 @@ export default function WeatherCreateMyList(props) {
           }
           const jsonResponse = await response.json();
           window.console.log([
-            "LIST",
+            `List ${name[0]} ${name[1]}`,
             jsonResponse.response.header["resultMsg"],
-            jsonResponse.response.body.items.item,
           ]);
           await jsonResponse.response.body.items.item.forEach((x, i) => {
             let newData = {
@@ -451,9 +448,8 @@ export default function WeatherCreateMyList(props) {
           }
           const jsonResponse = await response.json();
           window.console.log([
-            `List Predi ${name}`,
+            `List Forecast ${name[0]} ${name[1]}`,
             jsonResponse.response.header["resultMsg"],
-            jsonResponse.response.body.items.item,
           ]);
           await jsonResponse.response.body.items.item.forEach((x, i) => {
             let newData = {

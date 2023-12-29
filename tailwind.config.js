@@ -27,6 +27,10 @@ module.exports = {
       borderWidth: {
         DEFAULT: "1px",
       },
+      borderColor: {
+        perso4: "linear-gradient(45deg, #d8d2cf, #d4e6ed 60%, #ffcc00 110%)",
+        perso5: "linear-gradient(#ffcc00, #e5d075)",
+      },
       minHeight: {
         96: "24rem",
       },
