@@ -3,7 +3,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import WeatherPrediction from "./WeatherPrediction";
 import WeatherCitySelector from "./WeatherCitySelector";
-import { QueryContext } from "../GlobalBody";
+import { QueryContext } from "../App";
 
 export default function WeatherUID(props) {
   const {

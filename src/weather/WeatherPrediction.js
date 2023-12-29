@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { QueryContext } from "../GlobalBody";
+import { QueryContext } from "../App";
 
 export default function WeatherPrediction(props) {
   const { raincond, skyforecast, tempforecast, rainforecast } = props;

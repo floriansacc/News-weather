@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { QueryContext } from "../GlobalBody";
+import { QueryContext } from "../App";
 
 export default function WeatherCitySelector(props) {
   const { cityselector, handlecityselector } = props;

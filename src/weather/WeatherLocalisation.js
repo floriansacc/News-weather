@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import WeatherUID from "./WeatherUID";
-import { QueryContext } from "../GlobalBody";
+import { QueryContext } from "../App";
 
 export default function WeatherLocalisation(props) {
   const { mouseenter, mouseleave } = props;

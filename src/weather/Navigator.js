@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import { QueryContext } from "../GlobalBody";
+import { QueryContext } from "../App";
 
 export default function Navigator(props) {
   const { menu } = props;

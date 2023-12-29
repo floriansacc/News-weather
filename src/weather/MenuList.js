@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import ButtonOpenClose from "./ButtonOpenClose";
-import { QueryContext } from "../GlobalBody";
+import { QueryContext } from "../App";
 
 export default function MenuList(props) {
   const {

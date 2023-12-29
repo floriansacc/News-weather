@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useContext } from "react";
 import WeatherUID from "./WeatherUID";
 import MenuList from "./MenuList";
 import ButtonOpenClose from "./ButtonOpenClose";
-import { QueryContext } from "../GlobalBody";
+import { QueryContext } from "../App";
 
 export default function WeatherCreateMyList(props) {
   const { mouseenter, mouseleave, resizew } = props;

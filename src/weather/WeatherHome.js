@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import WeatherCreateMyList from "./WeatherCreateMyList";
 import WeatherLocalisation from "./WeatherLocalisation";
-import { QueryContext } from "../GlobalBody";
+import { QueryContext } from "../App";
 
 export default function WeatherHome(props) {
   const { mouseenter, mouseleave, resizew } = props;
