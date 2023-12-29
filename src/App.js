@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { HashRouter as Router, Route, Routes } from "react-router-dom";
 import Navigator from "./weather/Navigator";
 import WeatherHome from "./weather/WeatherHome";
 import WeatherLocalisation from "./weather/WeatherLocalisation";
@@ -139,7 +139,7 @@ export default function App() {
   }, []);
 
   return (
-    <Router basename="/News-weather">
+    <Router>
       <QueryContext.Provider
         value={{
           dataimport,
