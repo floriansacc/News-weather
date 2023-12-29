@@ -1,28 +1,21 @@
-const date = new Date();
+let currentDate = new Date();
+let hours = currentDate.getHours();
+let minutes = currentDate.getMinutes();
 
-let day = date.getDate();
-let month = date.getMonth() + 1;
-let year = date.getFullYear();
-let hours = date.getHours();
-let minutes = date.getMinutes();
+let todayYear = currentDate.getFullYear();
+let todayMonth = String(currentDate.getMonth() + 1).padStart(2, "0"); // Adding 1 because months are zero-based
+let todayDay = String(currentDate.getDate()).padStart(2, "0");
+let formattedToday = `${todayYear}${todayMonth}${todayDay}`;
 
-const todayDate = () => {
-  let months;
-  let days;
-  if (month < 10) {
-    months = `0${month}`;
-  } else {
-    months = month;
-  }
-  if (day < 10) {
-    days = `0${day}`;
-  } else {
-    days = day;
-  }
-  return `${year}${months}${days}`;
-};
+let tomorrow = new Date(currentDate);
+tomorrow.setDate(currentDate.getDate() + 1);
 
-const todayTime = (hour) => {
+let tomorrowYear = tomorrow.getFullYear();
+let tomorrowMonth = String(tomorrow.getMonth() + 1).padStart(2, "0"); // Adding 1 because months are zero-based
+let tomorrowDay = String(tomorrow.getDate()).padStart(2, "0");
+let formattedTomorrow = `${tomorrowYear}${tomorrowMonth}${tomorrowDay}`;
+
+const futureTime = (hour) => {
   if (hour <= 2) {
     return `no data`;
   } else if (hour <= 4) {
@@ -43,5 +36,15 @@ const todayTime = (hour) => {
     return `2300`;
   }
 };
+console.log(todayTime(hours));
+console.log(minutes);
+console.log(formattedToday);
+console.log(formattedTomorrow);
 
-export { todayTime, todayDate, hours, minutes };
+export {
+  todayTime,
+  formattedToday as todayDate,
+  formattedTomorrow as tomorrowDay,
+  hours,
+  minutes,
+};

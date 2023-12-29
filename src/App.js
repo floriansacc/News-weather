@@ -5,7 +5,6 @@ import WeatherHome from "./weather/WeatherHome";
 import WeatherLocalisation from "./weather/WeatherLocalisation";
 import WeatherCreateMyList from "./weather/WeatherCreateMyList";
 import dataimport from "./weather/dataimport.json";
-import { todayDate } from "./news/settings";
 
 import sunny from "./css/sunny logo.png";
 import pCloudy from "./css/partial cloudy logo.png";
@@ -30,16 +29,43 @@ export default function App() {
     JSON.parse(sessionStorage.getItem("lastValue")),
   );
 
-  const date = new Date();
-
-  let month = date.getMonth() + 1;
-  let year = date.getFullYear();
-  let day = date.getDate();
-  let hours = date.getHours();
-  let minutes = date.getMinutes();
-
   const serviceKey = process.env.REACT_APP_WEATHER_KEY;
-  const baseDate = hours === 0 && minutes < 30 ? todayDate() - 1 : todayDate();
+
+  let currentDate = new Date();
+  let year = currentDate.getFullYear();
+  let month = currentDate.getMonth() + 1;
+  let day = currentDate.getDate();
+  let hours = currentDate.getHours();
+  let minutes = currentDate.getMinutes();
+
+  let todayYear = currentDate.getFullYear();
+  let todayMonth = String(currentDate.getMonth() + 1).padStart(2, "0"); // Adding 1 because months are zero-based
+  let todayDay = String(currentDate.getDate()).padStart(2, "0");
+  let formattedToday = `${todayYear}${todayMonth}${todayDay}`;
+
+  let tomorrow = new Date(currentDate);
+  tomorrow.setDate(currentDate.getDate() + 1);
+  let tomorrowYear = tomorrow.getFullYear();
+  let tomorrowMonth = String(tomorrow.getMonth() + 1).padStart(2, "0"); // Adding 1 because months are zero-based
+  let tomorrowDaytoChange = String(tomorrow.getDate()).padStart(2, "0");
+  let tomorrowDate = `${tomorrowYear}${tomorrowMonth}${tomorrowDaytoChange}`;
+
+  let afterTomorrow = new Date(currentDate);
+  afterTomorrow.setDate(currentDate.getDate() + 2);
+  let afterTomorrowYear = afterTomorrow.getFullYear();
+  let afterTomorrowMonth = String(afterTomorrow.getMonth() + 1).padStart(
+    2,
+    "0",
+  ); // Adding 1 because months are zero-based
+  let afterTomorrowDaytoChange = String(afterTomorrow.getDate()).padStart(
+    2,
+    "0",
+  );
+  let afterTomorrowDate = `${afterTomorrowYear}${afterTomorrowMonth}${afterTomorrowDaytoChange}`;
+
+  const baseDate =
+    hours === 0 && minutes < 30 ? formattedToday - 1 : formattedToday;
+
   const baseTimeCalcNow = () => {
     if (hours < 10 && hours !== 0) {
       if (minutes < 30) {
@@ -65,7 +91,6 @@ export default function App() {
       }
     }
   };
-
   const baseTimeCalcForecast = () => {
     if (hours < 10 && hours !== 0) {
       if (minutes < 30) {
@@ -92,18 +117,41 @@ export default function App() {
     }
   };
 
-  const updateDates = () => {
-    hours = date.getHours();
-    minutes = date.getMinutes();
-    if (hours === 0 && minutes < 30) {
-      day = date.getDate() - 1;
+  const baseTimeCalcFuture = (hour) => {
+    if (hour <= 2) {
+      return `2300`;
+    } else if (hour <= 4) {
+      return "0200";
+    } else if (hour <= 7) {
+      return `0500`;
+    } else if (hour <= 10) {
+      return `0800`;
+    } else if (hour <= 13) {
+      return `1100`;
+    } else if (hour <= 16) {
+      return `1400`;
+    } else if (hour <= 19) {
+      return `1700`;
+    } else if (hour <= 22) {
+      return `2000`;
     } else {
-      day = date.getDate();
+      return `2300`;
     }
   };
 
   const baseTime = baseTimeCalcNow();
   const baseTimeForecast = baseTimeCalcForecast();
+  const futureTime = baseTimeCalcFuture();
+
+  const updateDates = () => {
+    hours = currentDate.getHours();
+    minutes = currentDate.getMinutes();
+    if (hours === 0 && minutes < 30) {
+      day = currentDate.getDate() - 1;
+    } else {
+      day = currentDate.getDate();
+    }
+  };
 
   const handleButtonEnter = (e) => {
     e.target.style.cursor = "pointer";
@@ -157,6 +205,9 @@ export default function App() {
           baseDate,
           baseTime,
           baseTimeForecast,
+          tomorrowDate,
+          afterTomorrowDate,
+          futureTime,
         }}
       >
         <div className="flex h-screen w-full flex-row items-start justify-start overflow-x-hidden lg:h-screen">

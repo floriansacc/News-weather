@@ -4,6 +4,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import WeatherPrediction from "./WeatherPrediction";
 import WeatherCitySelector from "./WeatherCitySelector";
 import { QueryContext } from "../App";
+import WeatherLongTerm from "./WeatherLongTerm";
 
 export default function WeatherUID(props) {
   const {
@@ -29,6 +30,9 @@ export default function WeatherUID(props) {
     islocated,
     forlist,
     resizew,
+    tempnextday,
+    temptwoday,
+    isforecasted,
   } = props;
   const { dataimport, images, activeTab } = useContext(QueryContext);
 
@@ -174,6 +178,11 @@ export default function WeatherUID(props) {
             raincond={raincond}
             skyforecast={skyforecast}
             rainforecast={rainforecast}
+          />
+          <WeatherLongTerm
+            tempnextday={tempnextday}
+            temptwoday={temptwoday}
+            isforecasted={isforecasted}
           />
         </div>
       )}

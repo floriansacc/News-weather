@@ -16,6 +16,9 @@ export default function WeatherLocalisation(props) {
     baseDate,
     baseTime,
     baseTimeForecast,
+    tomorrowDate,
+    afterTomorrowDate,
+    futureTime,
   } = useContext(QueryContext);
 
   const [gps, setGps] = useState({ lat: 0, long: 0 });
@@ -23,9 +26,11 @@ export default function WeatherLocalisation(props) {
   const [weatherForecast, setWeatherForecast] = useState([]);
   const [skyForecast, setSkyForecast] = useState([]);
   const [tempForecast, setTempForecast] = useState([]);
+  const [tempNextDay, setTempNextDay] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoadedForecast, setIsLoadedForecast] = useState(false);
   const [isLocated, setIsLocated] = useState(false);
+  const [isForecasted, setisForecasted] = useState([]);
   const [citySelector, setCitySelector] = useState([
     "선택",
     "",
@@ -40,6 +45,8 @@ export default function WeatherLocalisation(props) {
     "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
   const weatherUrlForecast =
     "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst";
+  const weatherNextDay =
+    "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
 
   const RE = 6371.00877; // Earth radius (km)
   const GRID = 5.0; // Grid interval (km)
@@ -121,6 +128,7 @@ export default function WeatherLocalisation(props) {
     setWeatherForecast([]);
     setTempForecast([]);
     setSkyForecast([]);
+    setTempNextDay([]);
     setIsLoaded(false);
     setIsLoadedForecast(false);
     setRefreshGeoloc((prev) => prev + 1);
@@ -151,6 +159,7 @@ export default function WeatherLocalisation(props) {
       setWeatherForecast([]);
       setTempForecast([]);
       setSkyForecast([]);
+      setTempNextDay([]);
       setIsLoaded(false);
       setIsLoadedForecast(false);
       setRefreshFetch((prev) => prev + 1);
@@ -245,7 +254,7 @@ export default function WeatherLocalisation(props) {
         }
         const jsonResponse = await response.json();
         window.console.log([
-          `Geolocalisation ${citySelector}`,
+          `Geolocation ${citySelector}`,
           jsonResponse.response.header["resultMsg"],
         ]);
         await jsonResponse.response.body.items.item.forEach((x) => {
@@ -264,8 +273,8 @@ export default function WeatherLocalisation(props) {
           ]);
         });
       } catch (error) {
-        window.console.log(error);
         setIsLoaded(false);
+        window.console.log(error);
       }
     };
     const getWeather2 = async () => {
@@ -281,7 +290,7 @@ export default function WeatherLocalisation(props) {
         }
         const jsonResponse = await response.json();
         window.console.log([
-          `Geolocalisation Forecast ${citySelector}`,
+          `Geolocation Forecast ${citySelector}`,
           jsonResponse.response.header["resultMsg"],
         ]);
         await jsonResponse.response.body.items.item.forEach((x) => {
@@ -303,8 +312,8 @@ export default function WeatherLocalisation(props) {
           }
         });
       } catch (error) {
-        window.console.log(error);
         setIsLoadedForecast(false);
+        return Promise.reject(window.console.log(error));
       }
     };
     if (isLocated) {
@@ -312,6 +321,7 @@ export default function WeatherLocalisation(props) {
         .then(() => {
           setIsLoaded(true);
           setIsLoadedForecast(true);
+          window.console.log("Geolocation all fetched");
         })
         .catch((e) => {
           window.console.log(`Geolocation fetch error: ${e}`);
@@ -325,6 +335,56 @@ export default function WeatherLocalisation(props) {
     };
   }, [isLocated, refreshFetch]);
 
+  useEffect(() => {
+    const getWeather3 = async () => {
+      const getUrlWeatherNextDay = `${weatherNextDay}?serviceKey=${serviceKey}&numOfRows=800&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${futureTime}&nx=${citySelector[3]}&ny=${citySelector[4]}`;
+      try {
+        const response = await fetch(getUrlWeatherNextDay, {
+          headers: {
+            Accept: "application / json",
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Pas de météo pour toi");
+        }
+        const jsonResponse = await response.json();
+        window.console.log([
+          `Geolocation next day ${citySelector}`,
+          jsonResponse.response.header["resultMsg"],
+        ]);
+        window.console.log(jsonResponse.response.body.items.item);
+        await jsonResponse.response.body.items.item.forEach((x, i) => {
+          let newData = {
+            Phase1: citySelector[0],
+            Phase2: citySelector[1],
+            Phase3: citySelector[2],
+            category: x.category,
+            date: x.fcstDate,
+            value: x.fcstValue,
+            baseTime: x.baseTime,
+          };
+          if (
+            (x.category === "TMN" || x.category === "TMX") &&
+            (x.fcstDate === tomorrowDate || x.fcstDate === afterTomorrowDate)
+          ) {
+            setTempNextDay((prev) => [...prev, newData]);
+          }
+        });
+      } catch (error) {
+        window.console.log(error);
+        setIsLoaded(false);
+      }
+    };
+    if (isLocated) {
+      Promise.all([getWeather3()]).then(() => {
+        setisForecasted(true);
+      });
+    }
+    return () => {
+      setisForecasted(false);
+    };
+  }, [isLocated]);
+
   return (
     <div
       className={`${
@@ -333,6 +393,13 @@ export default function WeatherLocalisation(props) {
       onClick={() => (menuOn ? setMenuOn(false) : null)}
     >
       <div className="right-0 top-1 hidden">
+        <button
+          onClick={() => {
+            window.console.log(tempNextDay);
+          }}
+        >
+          OUI
+        </button>
         <h1>
           X {citySelector[3]}, Y {citySelector[4]}
         </h1>
@@ -361,6 +428,8 @@ export default function WeatherLocalisation(props) {
         showbutton={true}
         titlename={false}
         islocated={isLocated}
+        tempnextday={tempNextDay}
+        isforecasted={isForecasted}
       />
     </div>
   );
