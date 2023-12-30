@@ -22,14 +22,19 @@ export default function WeatherLocalisation(props) {
   } = useContext(QueryContext);
 
   const [gps, setGps] = useState({ lat: 0, long: 0 });
+
   const [weatherInfoNow, setWeatherInfoNow] = useState([]);
   const [weatherForecast, setWeatherForecast] = useState([]);
   const [skyForecast, setSkyForecast] = useState([]);
   const [tempForecast, setTempForecast] = useState([]);
-  const [tempNextDay, setTempNextDay] = useState([]);
+  const [highestNextDays, setHighestNextDays] = useState([]);
+  const [tempNextDays, setTempNextDays] = useState([]);
+  const [skyNextDays, setSkyNextDays] = useState([]);
+
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoadedForecast, setIsLoadedForecast] = useState(false);
   const [isLocated, setIsLocated] = useState(false);
+
   const [isForecasted, setisForecasted] = useState([]);
   const [citySelector, setCitySelector] = useState([
     "선택",
@@ -128,7 +133,9 @@ export default function WeatherLocalisation(props) {
     setWeatherForecast([]);
     setTempForecast([]);
     setSkyForecast([]);
-    setTempNextDay([]);
+    setHighestNextDays([]);
+    setTempNextDays([]);
+    setSkyNextDays([]);
     setIsLoaded(false);
     setIsLoadedForecast(false);
     setRefreshGeoloc((prev) => prev + 1);
@@ -159,9 +166,12 @@ export default function WeatherLocalisation(props) {
       setWeatherForecast([]);
       setTempForecast([]);
       setSkyForecast([]);
-      setTempNextDay([]);
+      setHighestNextDays([]);
+      setTempNextDays([]);
+      setSkyNextDays([]);
       setIsLoaded(false);
       setIsLoadedForecast(false);
+      setisForecasted(false);
       setRefreshFetch((prev) => prev + 1);
     }
   };
@@ -361,13 +371,24 @@ export default function WeatherLocalisation(props) {
             category: x.category,
             date: x.fcstDate,
             value: x.fcstValue,
-            baseTime: x.baseTime,
+            time: x.fcstTime,
           };
           if (
             (x.category === "TMN" || x.category === "TMX") &&
             (x.fcstDate === tomorrowDate || x.fcstDate === afterTomorrowDate)
           ) {
-            setTempNextDay((prev) => [...prev, newData]);
+            setHighestNextDays((prev) => [...prev, newData]);
+          } else if (
+            x.category === "TMP" &&
+            (x.fcstDate === tomorrowDate || x.fcstDate === afterTomorrowDate)
+          ) {
+            setTempNextDays((prev) => [...prev, newData]);
+          } else if (
+            (x.category === "SKY" || x.category === "PTY") &&
+            (x.fcstDate === tomorrowDate || x.fcstDate === afterTomorrowDate) &&
+            (x.fcstTime === "0600" || x.fcstTime === "1500")
+          ) {
+            setSkyNextDays((prev) => [...prev, newData]);
           }
         });
       } catch (error) {
@@ -376,14 +397,19 @@ export default function WeatherLocalisation(props) {
       }
     };
     if (isLocated) {
-      Promise.all([getWeather3()]).then(() => {
-        setisForecasted(true);
-      });
+      Promise.all([getWeather3()])
+        .then(() => {
+          setisForecasted(true);
+        })
+        .catch((e) => {
+          window.console.log(e);
+          setisForecasted(false);
+        });
     }
     return () => {
       setisForecasted(false);
     };
-  }, [isLocated]);
+  }, [isLocated, refreshFetch]);
 
   return (
     <div
@@ -395,7 +421,8 @@ export default function WeatherLocalisation(props) {
       <div className="right-0 top-1 hidden">
         <button
           onClick={() => {
-            window.console.log(tempNextDay);
+            window.console.log(tempNextDays);
+            window.console.log(skyNextDays);
           }}
         >
           OUI
@@ -428,7 +455,9 @@ export default function WeatherLocalisation(props) {
         showbutton={true}
         titlename={false}
         islocated={isLocated}
-        tempnextday={tempNextDay}
+        highestnextday={highestNextDays}
+        tempnextdays={tempNextDays}
+        skynextdays={skyNextDays}
         isforecasted={isForecasted}
       />
     </div>

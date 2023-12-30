@@ -117,22 +117,22 @@ export default function App() {
     }
   };
 
-  const baseTimeCalcFuture = (hour) => {
-    if (hour <= 2) {
+  const baseTimeCalcFuture = () => {
+    if (hours <= 2) {
       return `2300`;
-    } else if (hour <= 4) {
+    } else if (hours <= 4) {
       return "0200";
-    } else if (hour <= 7) {
+    } else if (hours <= 7) {
       return `0500`;
-    } else if (hour <= 10) {
+    } else if (hours <= 10) {
       return `0800`;
-    } else if (hour <= 13) {
+    } else if (hours <= 13) {
       return `1100`;
-    } else if (hour <= 16) {
+    } else if (hours <= 16) {
       return `1400`;
-    } else if (hour <= 19) {
+    } else if (hours <= 19) {
       return `1700`;
-    } else if (hour <= 22) {
+    } else if (hours <= 22) {
       return `2000`;
     } else {
       return `2300`;

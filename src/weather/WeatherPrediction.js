@@ -5,7 +5,7 @@ export default function WeatherPrediction(props) {
   const { raincond, skyforecast, tempforecast, rainforecast } = props;
   const { images } = useContext(QueryContext);
   return (
-    <div className="border-1 m-2 mt-10 w-full rounded-2xl border-solid border-transparent bg-white bg-opacity-25 p-2">
+    <div className="border-1 m-2 mt-1 w-full rounded-2xl border-solid border-transparent bg-white bg-opacity-25 p-2">
       Prediction:
       <div className="flex w-full flex-row flex-nowrap justify-between">
         {tempforecast.slice(1, 6).map((x, i) => (
@@ -21,9 +21,13 @@ export default function WeatherPrediction(props) {
                 images[
                   rainforecast[i + 1].value === "1"
                     ? 4
-                    : rainforecast[i + 1].value === "5"
-                      ? 4
-                      : `${skyforecast[i + 1].value - 1}`
+                    : rainforecast[i + 1].value === "2"
+                      ? 5
+                      : rainforecast[i + 1].value === "3"
+                        ? 5
+                        : rainforecast[i + 1].value === "5"
+                          ? 4
+                          : `${skyforecast[i + 1].value - 1}`
                 ]
               }
               className="h-7 w-auto"

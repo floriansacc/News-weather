@@ -30,8 +30,9 @@ export default function WeatherUID(props) {
     islocated,
     forlist,
     resizew,
-    tempnextday,
-    temptwoday,
+    highestnextday,
+    tempnextdays,
+    skynextdays,
     isforecasted,
   } = props;
   const { dataimport, images, activeTab } = useContext(QueryContext);
@@ -77,7 +78,7 @@ export default function WeatherUID(props) {
       }`}
     >
       <div
-        className={`m-1 mb-4 flex flex-col items-end justify-end ${
+        className={`m-1 mb-2 flex flex-col items-end justify-end ${
           showbutton ? "block" : "hidden"
         }`}
       >
@@ -162,6 +163,9 @@ export default function WeatherUID(props) {
           <div className="mb-2 flex flex-col justify-center">
             <p className="mx-4 text-2xl font-semibold">{temp.value} °C</p>
             <p>
+              Humidity: <span className="font-semibold">{humidity.value}%</span>
+            </p>
+            <p>
               {`${windspeed.value} m/s`}
               {windspeed.value < 9
                 ? " (Weak)"
@@ -169,7 +173,6 @@ export default function WeatherUID(props) {
                   ? " (Strong)"
                   : " (Very strong)"}
             </p>
-            <p>Humidity: {humidity.value}%</p>
           </div>
 
           <WeatherPrediction
@@ -179,11 +182,14 @@ export default function WeatherUID(props) {
             skyforecast={skyforecast}
             rainforecast={rainforecast}
           />
-          <WeatherLongTerm
-            tempnextday={tempnextday}
-            temptwoday={temptwoday}
-            isforecasted={isforecasted}
-          />
+          {isforecasted && (
+            <WeatherLongTerm
+              highestnextday={highestnextday}
+              isforecasted={isforecasted}
+              tempnextdays={tempnextdays}
+              skynextdays={skynextdays}
+            />
+          )}
         </div>
       )}
     </div>

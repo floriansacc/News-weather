@@ -60,7 +60,7 @@ module.exports = {
       },
       backgroundImage: {
         perso1: "linear-gradient(300deg,#c5e2f7 2%,#92bad2 20%,#53789E 70%)",
-        perso2: "linear-gradient(105deg, #cce5ec, #fffafa 50%, #93e7fb 100%)",
+        perso2: "linear-gradient(13deg, #cce5ec, #fffafa 50%, #93e7fb 100%)",
         perso3: "linear-gradient(45deg, #d8d2cf, #d4e6ed 80%)",
         perso4: "linear-gradient(45deg, #d8d2cf, #d4e6ed 60%, #ffcc00 110%)",
         perso5: "linear-gradient(225deg, #ffcc00, #e5d075 30%, #f5e0b0 70%)",
