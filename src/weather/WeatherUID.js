@@ -107,7 +107,7 @@ export default function WeatherUID(props) {
               showbutton ? "" : "py-5"
             } my-2 flex h-fit w-full items-center justify-around rounded-2xl border-y border-solid border-white`}
           >
-            <div className="flex flex-col flex-nowrap justify-start">
+            <div className="ml-2 flex flex-col flex-nowrap justify-start">
               <p className="block text-xl font-bold">Weather</p>
               <p className="text-sm">(Base time: {temp.time.slice(0, 2)}:30)</p>
             </div>

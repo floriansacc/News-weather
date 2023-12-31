@@ -285,6 +285,7 @@ export default function WeatherLocalisation(props) {
       } catch (error) {
         setIsLoaded(false);
         window.console.log(error);
+        return Promise.reject(error);
       }
     };
     const getWeather2 = async () => {
@@ -323,7 +324,7 @@ export default function WeatherLocalisation(props) {
         });
       } catch (error) {
         setIsLoadedForecast(false);
-        return Promise.reject(window.console.log(error));
+        return Promise.reject(error);
       }
     };
     if (isLocated) {
@@ -380,7 +381,9 @@ export default function WeatherLocalisation(props) {
             setHighestNextDays((prev) => [...prev, newData]);
           } else if (
             x.category === "TMP" &&
-            (x.fcstDate === tomorrowDate || x.fcstDate === afterTomorrowDate)
+            (x.fcstDate === baseDate ||
+              x.fcstDate === tomorrowDate ||
+              x.fcstDate === afterTomorrowDate)
           ) {
             setTempNextDays((prev) => [...prev, newData]);
           } else if (
@@ -394,6 +397,7 @@ export default function WeatherLocalisation(props) {
       } catch (error) {
         window.console.log(error);
         setIsLoaded(false);
+        return Promise.reject(error);
       }
     };
     if (isLocated) {
@@ -418,7 +422,7 @@ export default function WeatherLocalisation(props) {
       } m-0 h-screen w-fit flex-row items-start justify-around bg-slate-100 sm:w-full md:w-full md:flex-wrap lg:w-[45%] `}
       onClick={() => (menuOn ? setMenuOn(false) : null)}
     >
-      <div className="right-0 top-1 hidden">
+      <div className="right-0 top-1 ">
         <button
           onClick={() => {
             window.console.log(tempNextDays);

@@ -147,6 +147,7 @@ export default function WeatherCreateMyList(props) {
 
   const handlePointerDown = (e) => {
     setIsDragging(true);
+    e.preventDefault();
     setStartX(e.clientX - toTranslate);
   };
 
@@ -273,6 +274,7 @@ export default function WeatherCreateMyList(props) {
         } catch (error) {
           console.log(`Premier fetch error: ${error}`);
           setIsLoaded(false);
+          return Promise.reject(error);
         }
       };
       const getWeatherListForecast = async (name, nx, ny) => {
@@ -316,6 +318,7 @@ export default function WeatherCreateMyList(props) {
         } catch (error) {
           console.log(`Second fetch error: ${error}`);
           setIsLoadedForecast(false);
+          return Promise.reject(error);
         }
       };
       let saveDataNow = async () => {
@@ -338,6 +341,7 @@ export default function WeatherCreateMyList(props) {
         } catch (error) {
           window.console.log(error);
           setIsLoaded(false);
+          return Promise.reject(error);
         }
       };
       let saveDataForecast = async () => {
@@ -378,14 +382,19 @@ export default function WeatherCreateMyList(props) {
         } catch (error) {
           window.console.log(error);
           setIsLoadedForecast(false);
+          return Promise.reject(error);
         }
       };
-      Promise.all([saveDataNow(), saveDataForecast()]).then(() => {
-        window.console.log("He oui mon gars ca marche");
-        setIsFetch(true);
-        setIsLoaded(true);
-        setIsLoadedForecast(true);
-      });
+      Promise.all([(saveDataNow(), saveDataForecast())])
+        .then(() => {
+          window.console.log("New addition succes");
+          setIsFetch(true);
+          setIsLoaded(true);
+          setIsLoadedForecast(true);
+        })
+        .catch((e) => {
+          window.console.log(`New addition failed: ${e}`);
+        });
     }
     return () => {
       setIsFetch(false);
@@ -430,8 +439,9 @@ export default function WeatherCreateMyList(props) {
           });
           return temporary;
         } catch (error) {
-          console.log(`Premier fetch error: ${error}`);
+          window.console.log(`Premier fetch error: ${error}`);
           setIsLoaded(false);
+          return Promise.reject(error);
         }
       };
       const getWeatherListForecast = async (name, nx, ny) => {
@@ -473,8 +483,9 @@ export default function WeatherCreateMyList(props) {
           });
           return temporary;
         } catch (error) {
-          console.log(`Second fetch error: ${error}`);
+          window.console.log(`Second fetch error: ${error}`);
           setIsLoadedForecast(false);
+          return Promise.reject(error);
         }
       };
       let saveDataNow = async () => {
@@ -493,6 +504,7 @@ export default function WeatherCreateMyList(props) {
           } catch (error) {
             window.console.log(error);
             setIsLoaded(false);
+            return Promise.reject(error);
           }
         }
       };
@@ -528,15 +540,20 @@ export default function WeatherCreateMyList(props) {
           } catch (error) {
             window.console.log(error);
             setIsLoadedForecast(false);
+            return Promise.reject(error);
           }
         }
       };
-      Promise.all([saveDataNow(), saveDataForecast()]).then(() => {
-        window.console.log("All fetch finished");
-        setIsFetch(true);
-        setIsLoaded(true);
-        setIsLoadedForecast(true);
-      });
+      Promise.all([saveDataNow(), saveDataForecast()])
+        .then(() => {
+          window.console.log("List recover sucess");
+          setIsFetch(true);
+          setIsLoaded(true);
+          setIsLoadedForecast(true);
+        })
+        .catch((e) => {
+          window.console.log(`List recover fail: ${e}`);
+        });
     }
     return () => {
       setIsFetch(false);
@@ -609,7 +626,7 @@ export default function WeatherCreateMyList(props) {
           style={{
             transform: `translate3d(${toTranslate}px, 0, 0)`,
           }}
-          className={`relative z-20 flex h-full w-full justify-start ${
+          className={`relative z-20 flex h-full w-full touch-pan-x justify-start ${
             !isDragging ? "transition-all" : ""
           } `}
           onPointerDown={handlePointerDown}
