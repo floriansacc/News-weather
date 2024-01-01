@@ -10,7 +10,6 @@ export default function WeatherLocalisation(props) {
     activeTab,
     menuOn,
     setMenuOn,
-    images,
     updateDates,
     serviceKey,
     baseDate,
@@ -35,8 +34,8 @@ export default function WeatherLocalisation(props) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoadedForecast, setIsLoadedForecast] = useState(false);
   const [isLocated, setIsLocated] = useState(false);
+  const [isForecasted, setisForecasted] = useState(false);
 
-  const [isForecasted, setisForecasted] = useState([]);
   const [citySelector, setCitySelector] = useState([
     "선택",
     "",
@@ -243,7 +242,7 @@ export default function WeatherLocalisation(props) {
 
   useEffect(() => {
     updateDates();
-  }, []);
+  }, [updateDates]);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(succesLocation, errorLocation);
@@ -433,7 +432,7 @@ export default function WeatherLocalisation(props) {
       } m-0 h-screen w-fit flex-row items-start justify-around bg-slate-100 sm:w-full md:w-full md:flex-wrap lg:w-[45%] `}
       onClick={() => (menuOn ? setMenuOn(false) : null)}
     >
-      <div className="right-0 top-1 ">
+      <div className="right-0 top-1 hidden">
         <button
           onClick={() => {
             window.console.log(tempNextDays);

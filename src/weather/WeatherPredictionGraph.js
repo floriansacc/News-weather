@@ -4,14 +4,7 @@ import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 
 export default function WeatherPredictionGraph(props) {
-  const {
-    raincond,
-    skyforecast,
-    tempforecast,
-    rainforecast,
-    tempnextdays,
-    resizew,
-  } = props;
+  const { tempnextdays, resizew } = props;
   const { images } = useContext(QueryContext);
 
   const data = {
@@ -68,7 +61,7 @@ export default function WeatherPredictionGraph(props) {
   return (
     <div className="border-1 m-2 mt-1 w-full overflow-x-scroll rounded-2xl border-solid border-transparent bg-white bg-opacity-25 p-2">
       <div className="flex w-fit flex-col items-center justify-center">
-        <div className="flex w-fit flex-row flex-nowrap justify-between">
+        <div className="flex w-full flex-row flex-nowrap justify-between">
           {tempnextdays.slice(1, 23).map((x, i) => (
             <ul
               className="flex w-3/12 list-none flex-col flex-nowrap items-center rounded-xl px-3"
@@ -80,7 +73,7 @@ export default function WeatherPredictionGraph(props) {
             </ul>
           ))}
         </div>
-        <div className={`mx-5 h-20 w-full max-w-[1000px]`}>
+        <div className={`mx-5 h-16 w-[96%]`}>
           <Line style={styleChart} options={options} data={data} />
         </div>
         <div className="flex w-full flex-row flex-nowrap justify-between">

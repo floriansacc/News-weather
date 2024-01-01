@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext } from "react";
-import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import WeatherPrediction from "./WeatherPrediction";
 import WeatherCitySelector from "./WeatherCitySelector";
@@ -10,12 +9,10 @@ export default function WeatherUID(props) {
   const {
     handlecityselector,
     cityselector,
-    displayinfo,
     raincond,
     humidity,
     hourrain,
     temp,
-    winddir,
     windspeed,
     refresh,
     loadstate,
@@ -28,15 +25,13 @@ export default function WeatherUID(props) {
     showbutton,
     titlename,
     islocated,
-    forlist,
-    resizew,
     highestnextday,
     tempnextdays,
     skynextdays,
     rainnextdays,
     isforecasted,
   } = props;
-  const { dataimport, images, activeTab } = useContext(QueryContext);
+  const { images } = useContext(QueryContext);
 
   const [previousBg, setPreviousBg] = useState(null);
   let bgSet;
@@ -70,7 +65,8 @@ export default function WeatherUID(props) {
 
   useEffect(() => {
     setPreviousBg(bgSet);
-  }, [refresh]);
+    window.console.log("ping");
+  }, [bgSet]);
 
   return (
     <div
@@ -84,21 +80,16 @@ export default function WeatherUID(props) {
         }`}
       >
         <button
-          className="m-1.5 flex h-8 w-fit items-center rounded-full border-2 border-solid border-gray-400 bg-gradient-to-r from-gray-300/25 to-gray-700/25 p-1.5"
+          className={`m-1.5 mb-0 flex h-8 w-fit items-center rounded-full border-2 border-solid border-gray-400 ${
+            islocated
+              ? "bg-gradient-to-r from-gray-300/25 to-gray-700/25"
+              : "bg-gradient-to-r from-red-300/75 to-red-700/75"
+          }  p-1.5`}
           onClick={refresh}
           onMouseEnter={mouseenter}
           onMouseLeave={mouseleave}
         >
           Refresh location
-        </button>
-        <p>located: {islocated ? "yes" : "no"}</p>
-        <button
-          className="m-1.5 hidden h-8 w-fit items-center rounded-full border-2 border-solid border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
-          onClick={displayinfo}
-          onMouseEnter={mouseenter}
-          onMouseLeave={mouseleave}
-        >
-          Console
         </button>
       </div>
       {loadstate && loadforecast && (
@@ -132,6 +123,7 @@ export default function WeatherUID(props) {
           )}
           <div className="mt-2 flex w-5/12 flex-col items-center">
             <img
+              alt="mainimg"
               className="h-28 w-28"
               src={
                 images[
@@ -175,20 +167,18 @@ export default function WeatherUID(props) {
                   : " (Very strong)"}
             </p>
           </div>
-
+          <WeatherPrediction
+            loadforecast={loadforecast}
+            tempforecast={tempforecast}
+            isforecasted={isforecasted}
+            tempnextdays={tempnextdays}
+            skyforecast={skyforecast}
+            rainnextdays={rainnextdays}
+            skynextdays={skynextdays}
+            rainforecast={rainforecast}
+          />
           {isforecasted && (
             <>
-              <WeatherPrediction
-                loadforecast={loadforecast}
-                tempforecast={tempforecast}
-                isforecasted={isforecasted}
-                tempnextdays={tempnextdays}
-                skyforecast={skyforecast}
-                rainnextdays={rainnextdays}
-                skynextdays={skynextdays}
-                rainforecast={rainforecast}
-              />
-
               <WeatherLongTerm
                 highestnextday={highestnextday}
                 isforecasted={isforecasted}

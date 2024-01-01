@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import WeatherUID from "./WeatherUID";
 import MenuList from "./MenuList";
 import ButtonOpenClose from "./ButtonOpenClose";
@@ -13,14 +13,14 @@ export default function WeatherCreateMyList(props) {
     menuListOn,
     setMenuListOn,
     lastSessionListe,
-    setLastSessionListe,
     activeTab,
-    images,
-    updateDates,
     serviceKey,
     baseDate,
     baseTime,
     baseTimeForecast,
+    tomorrowDate,
+    afterTomorrowDate,
+    futureTime,
   } = useContext(QueryContext);
   const [liste, setListe] = useState([]);
   const [elem, setElem] = useState([]);
@@ -34,8 +34,13 @@ export default function WeatherCreateMyList(props) {
   const [weatherForecast, setWeatherForecast] = useState({});
   const [skyForecast, setSkyForecast] = useState({});
   const [tempForecast, setTempForecast] = useState({});
+  const [highestNextDays, setHighestNextDays] = useState({});
+  const [tempNextDays, setTempNextDays] = useState({});
+  const [skyNextDays, setSkyNextDays] = useState({});
+  const [rainNextDays, setRainNextDays] = useState({});
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoadedForecast, setIsLoadedForecast] = useState(false);
+  const [isForecasted, setisForecasted] = useState(false);
 
   const [countSlide, setCountSlide] = useState(0);
   const [toTranslate, setToTranslate] = useState(0);
@@ -49,6 +54,8 @@ export default function WeatherCreateMyList(props) {
     "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
   const weatherUrlForecast =
     "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst";
+  const weatherNextDay =
+    "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
 
   const handleCitySelector = (e) => {
     if (e.target.name === "one") {
@@ -96,6 +103,7 @@ export default function WeatherCreateMyList(props) {
       setIsLoaded(false);
       setIsLoadedForecast(false);
       setIsFetch(false);
+      setisForecasted(false);
       setCountSlide(0);
       document.getElementById("resetbutton").style.background = "";
       document.getElementById("resetbutton").style.color = "";
@@ -109,6 +117,7 @@ export default function WeatherCreateMyList(props) {
     setIsLoaded(false);
     setIsLoadedForecast(false);
     setIsFetch(false);
+    setisForecasted(false);
     setFetchFail(false);
     setWeatherInfoNow({});
     setWeatherForecast({});
@@ -321,6 +330,70 @@ export default function WeatherCreateMyList(props) {
           return Promise.reject(error);
         }
       };
+      const getWeatherNextDays = async (name, nx, ny) => {
+        let temporary = [];
+        const getUrlWeatherNextDay = `${weatherNextDay}?serviceKey=${serviceKey}&numOfRows=800&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${futureTime}&nx=${nx}&ny=${ny}`;
+        try {
+          const response = await fetch(getUrlWeatherNextDay, {
+            headers: {
+              Accept: "application / json",
+            },
+          });
+          if (!response.ok) {
+            throw new Error("Pas de météo pour toi");
+          }
+          const jsonResponse = await response.json();
+          window.console.log([
+            `List next day ${name[0]} ${name[1]}`,
+            jsonResponse.response.header["resultMsg"],
+          ]);
+          await jsonResponse.response.body.items.item.forEach((x, i) => {
+            let newData = {
+              Phase1: name[0],
+              Phase2: name[1],
+              Phase3: name[2],
+              category: x.category,
+              date: x.fcstDate,
+              value: x.fcstValue,
+              time: x.fcstTime,
+              nx: nx,
+              ny: ny,
+            };
+            if (
+              (x.category === "TMN" || x.category === "TMX") &&
+              (x.fcstDate === tomorrowDate || x.fcstDate === afterTomorrowDate)
+            ) {
+              temporary[i] = newData;
+            } else if (
+              x.category === "TMP" &&
+              (x.fcstDate === baseDate ||
+                x.fcstDate === tomorrowDate ||
+                x.fcstDate === afterTomorrowDate)
+            ) {
+              temporary[i] = newData;
+            } else if (
+              x.category === "SKY" &&
+              (x.fcstDate === baseDate ||
+                x.fcstDate === tomorrowDate ||
+                x.fcstDate === afterTomorrowDate)
+            ) {
+              temporary[i] = newData;
+            } else if (
+              x.category === "PTY" &&
+              (x.fcstDate === baseDate ||
+                x.fcstDate === tomorrowDate ||
+                x.fcstDate === afterTomorrowDate)
+            ) {
+              temporary[i] = newData;
+            }
+          });
+          return temporary;
+        } catch (error) {
+          window.console.log(error);
+          setisForecasted(false);
+          return Promise.reject(error);
+        }
+      };
       let saveDataNow = async () => {
         try {
           let resultsFirstFetch = await getWeatherListNow(
@@ -385,12 +458,64 @@ export default function WeatherCreateMyList(props) {
           return Promise.reject(error);
         }
       };
-      Promise.all([(saveDataNow(), saveDataForecast())])
+      let saveDataNextDays = async () => {
+        try {
+          let resultsFirstFetch = await getWeatherNextDays(
+            [
+              liste[listeCounter - 1]["Phase1"],
+              liste[listeCounter - 1]["Phase2"],
+              liste[listeCounter - 1]["Phase3"],
+            ],
+            liste[listeCounter - 1]["nx"],
+            liste[listeCounter - 1]["ny"],
+          );
+          setHighestNextDays((prev) => ({
+            ...prev,
+            [`${liste[listeCounter - 1]["Phase2"]} - ${
+              liste[listeCounter - 1]["Phase3"]
+            }`]: resultsFirstFetch
+              ? resultsFirstFetch.filter(
+                  (x) => x.category === "TMN" || x.category === "TMX",
+                )
+              : [],
+          }));
+          setSkyNextDays((prev) => ({
+            ...prev,
+            [`${liste[listeCounter - 1]["Phase2"]} - ${
+              liste[listeCounter - 1]["Phase3"]
+            }`]: resultsFirstFetch
+              ? resultsFirstFetch.filter((x) => x.category === "SKY")
+              : [],
+          }));
+          setRainNextDays((prev) => ({
+            ...prev,
+            [`${liste[listeCounter - 1]["Phase2"]} - ${
+              liste[listeCounter - 1]["Phase3"]
+            }`]: resultsFirstFetch
+              ? resultsFirstFetch.filter((x) => x.category === "PTY")
+              : [],
+          }));
+          setTempNextDays((prev) => ({
+            ...prev,
+            [`${liste[listeCounter - 1]["Phase2"]} - ${
+              liste[listeCounter - 1]["Phase3"]
+            }`]: resultsFirstFetch
+              ? resultsFirstFetch.filter((x) => x.category === "TMP")
+              : [],
+          }));
+        } catch (error) {
+          window.console.log(error);
+          setisForecasted(false);
+          return Promise.reject(error);
+        }
+      };
+      Promise.all([(saveDataNow(), saveDataForecast(), saveDataNextDays())])
         .then(() => {
           window.console.log("New addition succes");
           setIsFetch(true);
           setIsLoaded(true);
           setIsLoadedForecast(true);
+          setisForecasted(true);
         })
         .catch((e) => {
           window.console.log(`New addition failed: ${e}`);
@@ -400,6 +525,7 @@ export default function WeatherCreateMyList(props) {
       setIsFetch(false);
       setIsLoaded(false);
       setIsLoadedForecast(false);
+      setisForecasted(false);
     };
   }, [listeCounter]);
 
@@ -488,6 +614,70 @@ export default function WeatherCreateMyList(props) {
           return Promise.reject(error);
         }
       };
+      const getWeatherNextDays = async (name, nx, ny) => {
+        let temporary = [];
+        const getUrlWeatherNextDay = `${weatherNextDay}?serviceKey=${serviceKey}&numOfRows=800&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${futureTime}&nx=${nx}&ny=${ny}`;
+        try {
+          const response = await fetch(getUrlWeatherNextDay, {
+            headers: {
+              Accept: "application / json",
+            },
+          });
+          if (!response.ok) {
+            throw new Error("Pas de météo pour toi");
+          }
+          const jsonResponse = await response.json();
+          window.console.log([
+            `List next day ${name[0]} ${name[1]}`,
+            jsonResponse.response.header["resultMsg"],
+          ]);
+          await jsonResponse.response.body.items.item.forEach((x, i) => {
+            let newData = {
+              Phase1: name[0],
+              Phase2: name[1],
+              Phase3: name[2],
+              category: x.category,
+              date: x.fcstDate,
+              value: x.fcstValue,
+              time: x.fcstTime,
+              nx: nx,
+              ny: ny,
+            };
+            if (
+              (x.category === "TMN" || x.category === "TMX") &&
+              (x.fcstDate === tomorrowDate || x.fcstDate === afterTomorrowDate)
+            ) {
+              temporary[i] = newData;
+            } else if (
+              x.category === "TMP" &&
+              (x.fcstDate === baseDate ||
+                x.fcstDate === tomorrowDate ||
+                x.fcstDate === afterTomorrowDate)
+            ) {
+              temporary[i] = newData;
+            } else if (
+              x.category === "SKY" &&
+              (x.fcstDate === baseDate ||
+                x.fcstDate === tomorrowDate ||
+                x.fcstDate === afterTomorrowDate)
+            ) {
+              temporary[i] = newData;
+            } else if (
+              x.category === "PTY" &&
+              (x.fcstDate === baseDate ||
+                x.fcstDate === tomorrowDate ||
+                x.fcstDate === afterTomorrowDate)
+            ) {
+              temporary[i] = newData;
+            }
+          });
+          return temporary;
+        } catch (error) {
+          window.console.log(error);
+          setisForecasted(false);
+          return Promise.reject(error);
+        }
+      };
       let saveDataNow = async () => {
         for (let i in liste) {
           try {
@@ -544,12 +734,58 @@ export default function WeatherCreateMyList(props) {
           }
         }
       };
-      Promise.all([saveDataNow(), saveDataForecast()])
+      let saveDataNextDays = async () => {
+        for (let i in liste) {
+          try {
+            let resultsFirstFetch = await getWeatherNextDays(
+              [liste[i]["Phase1"], liste[i]["Phase2"], liste[i]["Phase3"]],
+              liste[i]["nx"],
+              liste[i]["ny"],
+            );
+            setHighestNextDays((prev) => ({
+              ...prev,
+              [`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]:
+                resultsFirstFetch
+                  ? resultsFirstFetch.filter(
+                      (x) => x.category === "TMN" || x.category === "TMX",
+                    )
+                  : [],
+            }));
+            setSkyNextDays((prev) => ({
+              ...prev,
+              [`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]:
+                resultsFirstFetch
+                  ? resultsFirstFetch.filter((x) => x.category === "SKY")
+                  : [],
+            }));
+            setRainNextDays((prev) => ({
+              ...prev,
+              [`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]:
+                resultsFirstFetch
+                  ? resultsFirstFetch.filter((x) => x.category === "PTY")
+                  : [],
+            }));
+            setTempNextDays((prev) => ({
+              ...prev,
+              [`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]:
+                resultsFirstFetch
+                  ? resultsFirstFetch.filter((x) => x.category === "TMP")
+                  : [],
+            }));
+          } catch (error) {
+            window.console.log(error);
+            setisForecasted(false);
+            return Promise.reject(error);
+          }
+        }
+      };
+      Promise.all([saveDataNow(), saveDataForecast(), saveDataNextDays()])
         .then(() => {
           window.console.log("List recover sucess");
           setIsFetch(true);
           setIsLoaded(true);
           setIsLoadedForecast(true);
+          setisForecasted(true);
         })
         .catch((e) => {
           window.console.log(`List recover fail: ${e}`);
@@ -559,6 +795,7 @@ export default function WeatherCreateMyList(props) {
       setIsFetch(false);
       setIsLoaded(false);
       setIsLoadedForecast(false);
+      setisForecasted(false);
     };
   }, [listSaved]);
 
@@ -681,6 +918,21 @@ export default function WeatherCreateMyList(props) {
                     `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
                   ]
                 }
+                highestnextday={
+                  highestNextDays[
+                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                  ]
+                }
+                tempnextdays={
+                  tempNextDays[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
+                }
+                skynextdays={
+                  skyNextDays[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
+                }
+                rainnextdays={
+                  rainNextDays[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
+                }
+                isforecasted={isForecasted}
                 showbutton={false}
                 titlename={true}
                 forlist={true}
