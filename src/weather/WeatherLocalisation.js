@@ -30,6 +30,7 @@ export default function WeatherLocalisation(props) {
   const [highestNextDays, setHighestNextDays] = useState([]);
   const [tempNextDays, setTempNextDays] = useState([]);
   const [skyNextDays, setSkyNextDays] = useState([]);
+  const [rainNextDays, setRainNextDays] = useState([]);
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoadedForecast, setIsLoadedForecast] = useState(false);
@@ -136,6 +137,7 @@ export default function WeatherLocalisation(props) {
     setHighestNextDays([]);
     setTempNextDays([]);
     setSkyNextDays([]);
+    setRainNextDays([]);
     setIsLoaded(false);
     setIsLoadedForecast(false);
     setRefreshGeoloc((prev) => prev + 1);
@@ -169,6 +171,7 @@ export default function WeatherLocalisation(props) {
       setHighestNextDays([]);
       setTempNextDays([]);
       setSkyNextDays([]);
+      setRainNextDays([]);
       setIsLoaded(false);
       setIsLoadedForecast(false);
       setisForecasted(false);
@@ -387,11 +390,19 @@ export default function WeatherLocalisation(props) {
           ) {
             setTempNextDays((prev) => [...prev, newData]);
           } else if (
-            (x.category === "SKY" || x.category === "PTY") &&
-            (x.fcstDate === tomorrowDate || x.fcstDate === afterTomorrowDate) &&
-            (x.fcstTime === "0600" || x.fcstTime === "1500")
+            x.category === "SKY" &&
+            (x.fcstDate === baseDate ||
+              x.fcstDate === tomorrowDate ||
+              x.fcstDate === afterTomorrowDate)
           ) {
             setSkyNextDays((prev) => [...prev, newData]);
+          } else if (
+            x.category === "PTY" &&
+            (x.fcstDate === baseDate ||
+              x.fcstDate === tomorrowDate ||
+              x.fcstDate === afterTomorrowDate)
+          ) {
+            setRainNextDays((prev) => [...prev, newData]);
           }
         });
       } catch (error) {
@@ -427,6 +438,7 @@ export default function WeatherLocalisation(props) {
           onClick={() => {
             window.console.log(tempNextDays);
             window.console.log(skyNextDays);
+            window.console.log(rainNextDays);
           }}
         >
           OUI
@@ -462,6 +474,7 @@ export default function WeatherLocalisation(props) {
         highestnextday={highestNextDays}
         tempnextdays={tempNextDays}
         skynextdays={skyNextDays}
+        rainnextdays={rainNextDays}
         isforecasted={isForecasted}
       />
     </div>

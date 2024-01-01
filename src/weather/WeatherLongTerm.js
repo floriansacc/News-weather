@@ -2,7 +2,13 @@ import { useContext } from "react";
 import { QueryContext } from "../App";
 
 export default function WeatherLongTerm(props) {
-  const { highestnextday, tempnextdays, skynextdays, isforecasted } = props;
+  const {
+    highestnextday,
+    tempnextdays,
+    skynextdays,
+    rainnextdays,
+    isforecasted,
+  } = props;
   const { images, tomorrowDate, afterTomorrowDate } = useContext(QueryContext);
 
   //TMX: 최고기온
@@ -14,12 +20,16 @@ export default function WeatherLongTerm(props) {
       highest: highestnextday.filter((y) => y.category === "TMX")[0],
       lowest: highestnextday.filter((y) => y.category === "TMN")[0],
       sky: [
-        skynextdays.filter((y) => y.category === "SKY")[0],
-        skynextdays.filter((y) => y.category === "SKY")[1],
+        skynextdays.filter((y) => y.category === "SKY" && y.time === "0600")[0],
+        skynextdays.filter((y) => y.category === "SKY" && y.time === "1500")[0],
       ],
       rain: [
-        skynextdays.filter((y) => y.category === "PTY")[0],
-        skynextdays.filter((y) => y.category === "PTY")[1],
+        rainnextdays.filter(
+          (y) => y.category === "PTY" && y.time === "0600",
+        )[0],
+        rainnextdays.filter(
+          (y) => y.category === "PTY" && y.time === "1500",
+        )[0],
       ],
     },
     {
@@ -27,15 +37,24 @@ export default function WeatherLongTerm(props) {
       highest: highestnextday.filter((y) => y.category === "TMX")[1],
       lowest: highestnextday.filter((y) => y.category === "TMN")[1],
       sky: [
-        skynextdays.filter((y) => y.category === "SKY")[2],
-        skynextdays.filter((y) => y.category === "SKY")[3],
+        skynextdays.filter((y) => y.category === "SKY" && y.time === "0600")[1],
+        skynextdays.filter((y) => y.category === "SKY" && y.time === "1500")[1],
       ],
       rain: [
-        skynextdays.filter((y) => y.category === "PTY")[2],
-        skynextdays.filter((y) => y.category === "PTY")[3],
+        rainnextdays.filter(
+          (y) => y.category === "PTY" && y.time === "0600",
+        )[1],
+        rainnextdays.filter(
+          (y) => y.category === "PTY" && y.time === "1500",
+        )[1],
       ],
     },
   ];
+
+  window.console.log(
+    skynextdays.filter((y) => y.category === "SKY" && y.time === "0600"),
+  );
+
   return (
     <div className="mx-2 flex w-full rounded-2xl border border-solid border-transparent bg-white bg-opacity-25 py-2">
       {isforecasted &&

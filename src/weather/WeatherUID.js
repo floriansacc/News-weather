@@ -33,6 +33,7 @@ export default function WeatherUID(props) {
     highestnextday,
     tempnextdays,
     skynextdays,
+    rainnextdays,
     isforecasted,
   } = props;
   const { dataimport, images, activeTab } = useContext(QueryContext);
@@ -175,20 +176,28 @@ export default function WeatherUID(props) {
             </p>
           </div>
 
-          <WeatherPrediction
-            loadforecast={loadforecast}
-            tempforecast={tempforecast}
-            raincond={raincond}
-            skyforecast={skyforecast}
-            rainforecast={rainforecast}
-          />
           {isforecasted && (
-            <WeatherLongTerm
-              highestnextday={highestnextday}
-              isforecasted={isforecasted}
-              tempnextdays={tempnextdays}
-              skynextdays={skynextdays}
-            />
+            <>
+              <WeatherPrediction
+                loadforecast={loadforecast}
+                tempforecast={tempforecast}
+                isforecasted={isforecasted}
+                tempnextdays={tempnextdays}
+                skyforecast={skyforecast}
+                rainnextdays={rainnextdays}
+                skynextdays={skynextdays}
+                rainforecast={rainforecast}
+              />
+
+              <WeatherLongTerm
+                highestnextday={highestnextday}
+                isforecasted={isforecasted}
+                tempnextdays={tempnextdays}
+                skyforecast={skyforecast}
+                skynextdays={skynextdays}
+                rainnextdays={rainnextdays}
+              />
+            </>
           )}
         </div>
       )}
