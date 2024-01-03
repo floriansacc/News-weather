@@ -30,6 +30,7 @@ export default function WeatherUID(props) {
     skynextdays,
     rainnextdays,
     isforecasted,
+    canRefersh,
   } = props;
   const { images } = useContext(QueryContext);
 
@@ -65,12 +66,11 @@ export default function WeatherUID(props) {
 
   useEffect(() => {
     setPreviousBg(bgSet);
-    window.console.log("ping");
   }, [bgSet]);
 
   return (
     <div
-      className={`z-20 flex h-full select-none flex-col ${backgroundColoring} flex-nowrap duration-500 md:w-full lg:w-full lg:rounded-2xl ${
+      className={`z-20 flex h-fit min-h-full select-none flex-col ${backgroundColoring} flex-nowrap duration-500 md:w-full lg:w-full lg:rounded-2xl ${
         showbutton ? "sm:w-full" : "sm:w-full sm:max-w-none"
       }`}
     >
@@ -80,14 +80,17 @@ export default function WeatherUID(props) {
         }`}
       >
         <button
-          className={`m-1.5 mb-0 flex h-8 w-fit items-center rounded-full border-2 border-solid border-gray-400 ${
-            islocated
-              ? "bg-gradient-to-r from-gray-300/25 to-gray-700/25"
-              : "bg-gradient-to-r from-red-300/75 to-red-700/75"
-          }  p-1.5`}
+          className={` m-1.5 mb-0 flex h-8 w-fit items-center rounded-full border-2 border-solid border-gray-400 p-1.5 ${
+            islocated ? "" : ""
+          } ${
+            canRefersh
+              ? "pointer-events-auto bg-gradient-to-r from-gray-300/25 to-gray-700/25"
+              : "pointer-events-none bg-gradient-to-r from-red-300/75 to-red-700/75"
+          }`}
           onClick={refresh}
           onMouseEnter={mouseenter}
           onMouseLeave={mouseleave}
+          id="refresh-button"
         >
           Refresh location
         </button>

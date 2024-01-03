@@ -1,41 +1,16 @@
 import { useState, useEffect, useContext } from "react";
 import WeatherUID from "./WeatherUID";
 import { QueryContext } from "../App";
+import useFetchLocation from "../fetch/useFetchLocation";
 
 export default function WeatherLocalisation(props) {
   const { mouseenter, mouseleave } = props;
 
-  const {
-    dataimport,
-    activeTab,
-    menuOn,
-    setMenuOn,
-    updateDates,
-    serviceKey,
-    baseDate,
-    baseTime,
-    baseTimeForecast,
-    tomorrowDate,
-    afterTomorrowDate,
-    futureTime,
-  } = useContext(QueryContext);
+  const { dataimport, activeTab, menuOn, setMenuOn, updateDates } =
+    useContext(QueryContext);
 
   const [gps, setGps] = useState({ lat: 0, long: 0 });
-
-  const [weatherInfoNow, setWeatherInfoNow] = useState([]);
-  const [weatherForecast, setWeatherForecast] = useState([]);
-  const [skyForecast, setSkyForecast] = useState([]);
-  const [tempForecast, setTempForecast] = useState([]);
-  const [highestNextDays, setHighestNextDays] = useState([]);
-  const [tempNextDays, setTempNextDays] = useState([]);
-  const [skyNextDays, setSkyNextDays] = useState([]);
-  const [rainNextDays, setRainNextDays] = useState([]);
-
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isLoadedForecast, setIsLoadedForecast] = useState(false);
   const [isLocated, setIsLocated] = useState(false);
-  const [isForecasted, setisForecasted] = useState(false);
-
   const [citySelector, setCitySelector] = useState([
     "선택",
     "",
@@ -46,12 +21,31 @@ export default function WeatherLocalisation(props) {
   const [refreshGeoloc, setRefreshGeoloc] = useState(0);
   const [refreshFetch, setRefreshFetch] = useState(0);
 
-  const weatherUrlNow =
-    "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
-  const weatherUrlForecast =
-    "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst";
-  const weatherNextDay =
-    "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
+  const {
+    weatherInfoNow,
+    setWeatherInfoNow,
+    weatherForecast,
+    setWeatherForecast,
+    skyForecast,
+    setSkyForecast,
+    tempForecast,
+    setTempForecast,
+    highestNextDays,
+    setHighestNextDays,
+    tempNextDays,
+    setTempNextDays,
+    skyNextDays,
+    setSkyNextDays,
+    rainNextDays,
+    setRainNextDays,
+    isLoaded,
+    setIsLoaded,
+    isLoadedForecast,
+    setIsLoadedForecast,
+    isForecasted,
+    setisForecasted,
+    canRefersh,
+  } = useFetchLocation(citySelector, isLocated, refreshFetch);
 
   const RE = 6371.00877; // Earth radius (km)
   const GRID = 5.0; // Grid interval (km)
@@ -178,17 +172,6 @@ export default function WeatherLocalisation(props) {
     }
   };
 
-  const handleDisplayInfo = () => {
-    window.console.log(weatherInfoNow);
-    window.console.log(weatherForecast);
-    window.console.log(tempForecast);
-    window.console.log(skyForecast);
-    window.console.log(citySelector);
-    window.console.log(baseDate);
-    window.console.log(baseTime);
-    window.console.log(baseTimeForecast);
-  };
-
   const findclosest = (xValue, data, parameter) => {
     let closestObject = null;
     let minDistance = 0.1;
@@ -248,182 +231,9 @@ export default function WeatherLocalisation(props) {
     navigator.geolocation.getCurrentPosition(succesLocation, errorLocation);
     return () => {
       setIsLocated(false);
-      setCitySelector(["없음", "없음", "없음", null, null]);
+      setCitySelector([null, null, null, null, null]);
     };
   }, [refreshGeoloc]);
-
-  useEffect(() => {
-    const getWeather = async () => {
-      const getUrlWeatherNow = `${weatherUrlNow}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTime}&nx=${citySelector[3]}&ny=${citySelector[4]}`;
-      try {
-        const response = await fetch(getUrlWeatherNow, {
-          headers: {
-            Accept: "application / json",
-          },
-        });
-        if (!response.ok) {
-          throw new Error("Pas de météo pour toi");
-        }
-        const jsonResponse = await response.json();
-        window.console.log([
-          `Geolocation ${citySelector}`,
-          jsonResponse.response.header["resultMsg"],
-        ]);
-        await jsonResponse.response.body.items.item.forEach((x) => {
-          setWeatherInfoNow((prev) => [
-            ...prev,
-            {
-              ny: x.ny,
-              Phase1: citySelector[0],
-              Phase2: citySelector[1],
-              Phase3: citySelector[2],
-              category: x.category,
-              value: x.obsrValue,
-              time: x.baseTime,
-              nx: x.nx,
-            },
-          ]);
-        });
-      } catch (error) {
-        setIsLoaded(false);
-        window.console.log(error);
-        return Promise.reject(error);
-      }
-    };
-    const getWeather2 = async () => {
-      const getUrlWeatherForecast = `${weatherUrlForecast}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTimeForecast}&nx=${citySelector[3]}&ny=${citySelector[4]}`;
-      try {
-        const response = await fetch(getUrlWeatherForecast, {
-          headers: {
-            Accept: "application / json",
-          },
-        });
-        if (!response.ok) {
-          throw new Error("Pas de météo pour toi");
-        }
-        const jsonResponse = await response.json();
-        window.console.log([
-          `Geolocation Forecast ${citySelector}`,
-          jsonResponse.response.header["resultMsg"],
-        ]);
-        await jsonResponse.response.body.items.item.forEach((x) => {
-          let newData = {
-            Phase1: citySelector[0],
-            Phase2: citySelector[1],
-            Phase3: citySelector[2],
-            category: x.category,
-            time: x.fcstTime,
-            value: x.fcstValue,
-            baseTime: x.baseTime,
-          };
-          if (x.category === "PTY") {
-            setWeatherForecast((prev) => [...prev, newData]);
-          } else if (x.category === "T1H") {
-            setTempForecast((prev) => [...prev, newData]);
-          } else if (x.category === "SKY") {
-            setSkyForecast((prev) => [...prev, newData]);
-          }
-        });
-      } catch (error) {
-        setIsLoadedForecast(false);
-        return Promise.reject(error);
-      }
-    };
-    if (isLocated) {
-      Promise.all([getWeather(), getWeather2()])
-        .then(() => {
-          setIsLoaded(true);
-          setIsLoadedForecast(true);
-          window.console.log("Geolocation all fetched");
-        })
-        .catch((e) => {
-          window.console.log(`Geolocation fetch error: ${e}`);
-          setIsLoaded(false);
-          setIsLoadedForecast(false);
-        });
-    }
-    return () => {
-      setIsLoaded(false);
-      setIsLoadedForecast(false);
-    };
-  }, [isLocated, refreshFetch]);
-
-  useEffect(() => {
-    const getWeather3 = async () => {
-      const getUrlWeatherNextDay = `${weatherNextDay}?serviceKey=${serviceKey}&numOfRows=800&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${futureTime}&nx=${citySelector[3]}&ny=${citySelector[4]}`;
-      try {
-        const response = await fetch(getUrlWeatherNextDay, {
-          headers: {
-            Accept: "application / json",
-          },
-        });
-        if (!response.ok) {
-          throw new Error("Pas de météo pour toi");
-        }
-        const jsonResponse = await response.json();
-        window.console.log([
-          `Geolocation next day ${citySelector}`,
-          jsonResponse.response.header["resultMsg"],
-        ]);
-        window.console.log(jsonResponse.response.body.items.item);
-        await jsonResponse.response.body.items.item.forEach((x, i) => {
-          let newData = {
-            Phase1: citySelector[0],
-            Phase2: citySelector[1],
-            Phase3: citySelector[2],
-            category: x.category,
-            date: x.fcstDate,
-            value: x.fcstValue,
-            time: x.fcstTime,
-          };
-          if (
-            (x.category === "TMN" || x.category === "TMX") &&
-            (x.fcstDate === tomorrowDate || x.fcstDate === afterTomorrowDate)
-          ) {
-            setHighestNextDays((prev) => [...prev, newData]);
-          } else if (
-            x.category === "TMP" &&
-            (x.fcstDate === baseDate ||
-              x.fcstDate === tomorrowDate ||
-              x.fcstDate === afterTomorrowDate)
-          ) {
-            setTempNextDays((prev) => [...prev, newData]);
-          } else if (
-            x.category === "SKY" &&
-            (x.fcstDate === baseDate ||
-              x.fcstDate === tomorrowDate ||
-              x.fcstDate === afterTomorrowDate)
-          ) {
-            setSkyNextDays((prev) => [...prev, newData]);
-          } else if (
-            x.category === "PTY" &&
-            (x.fcstDate === baseDate ||
-              x.fcstDate === tomorrowDate ||
-              x.fcstDate === afterTomorrowDate)
-          ) {
-            setRainNextDays((prev) => [...prev, newData]);
-          }
-        });
-      } catch (error) {
-        window.console.log(error);
-        setIsLoaded(false);
-        return Promise.reject(error);
-      }
-    };
-    if (isLocated) {
-      Promise.all([getWeather3()])
-        .then(() => {
-          setisForecasted(true);
-        })
-        .catch((e) => {
-          window.console.log(e);
-          setisForecasted(false);
-        });
-    }
-    return () => {
-      setisForecasted(false);
-    };
-  }, [isLocated, refreshFetch]);
 
   return (
     <div
@@ -434,6 +244,7 @@ export default function WeatherLocalisation(props) {
     >
       <div className="right-0 top-1 hidden">
         <button
+          className="bg-red-200 p-2"
           onClick={() => {
             window.console.log(tempNextDays);
             window.console.log(skyNextDays);
@@ -452,7 +263,6 @@ export default function WeatherLocalisation(props) {
       <WeatherUID
         handlecityselector={handleCitySelector}
         cityselector={citySelector}
-        displayinfo={handleDisplayInfo}
         loadstate={isLoaded}
         loadforecast={isLoadedForecast}
         refresh={handleRefresh}
@@ -475,6 +285,7 @@ export default function WeatherLocalisation(props) {
         skynextdays={skyNextDays}
         rainnextdays={rainNextDays}
         isforecasted={isForecasted}
+        canRefersh={canRefersh}
       />
     </div>
   );

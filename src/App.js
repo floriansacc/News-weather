@@ -6,11 +6,11 @@ import WeatherLocalisation from "./weather/WeatherLocalisation";
 import WeatherCreateMyList from "./weather/WeatherCreateMyList";
 import dataimport from "./weather/dataimport.json";
 
-import sunny from "./css/sunny logo.png";
-import pCloudy from "./css/partial cloudy logo.png";
-import cloudy from "./css/cloudy logo.png";
-import rainy from "./css/rainy logo.png";
-import snowy from "./css/snow logo.png";
+import sunny from "./images/sunny logo.png";
+import pCloudy from "./images/partial cloudy logo.png";
+import cloudy from "./images/cloudy logo.png";
+import rainy from "./images/rainy logo.png";
+import snowy from "./images/snow logo.png";
 
 const menu = ["Home", "Location", "My list"];
 const images = [sunny, "", pCloudy, cloudy, rainy, snowy];

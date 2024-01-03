@@ -3,6 +3,7 @@ import WeatherUID from "./WeatherUID";
 import MenuList from "./MenuList";
 import ButtonOpenClose from "./ButtonOpenClose";
 import { QueryContext } from "../App";
+import useFetchCreateList from "../fetch/useFetchCreateList";
 
 export default function WeatherCreateMyList(props) {
   const { mouseenter, mouseleave, resizew } = props;
@@ -12,41 +13,53 @@ export default function WeatherCreateMyList(props) {
     setMenuOn,
     menuListOn,
     setMenuListOn,
-    lastSessionListe,
     activeTab,
-    serviceKey,
-    baseDate,
-    baseTime,
-    baseTimeForecast,
-    tomorrowDate,
-    afterTomorrowDate,
-    futureTime,
+    lastSessionListe,
+    setLastSessionListe,
   } = useContext(QueryContext);
   const [liste, setListe] = useState([]);
   const [elem, setElem] = useState([]);
-  const [listeCounter, setListeCounter] = useState(0);
-  const [listSaved, setListSaved] = useState(false);
-  const [isFetch, setIsFetch] = useState(false);
+
   const [fetchFail, setFetchFail] = useState(false);
   const [displayWeatherList, setDisplayWeatherList] = useState(false);
-
-  const [weatherInfoNow, setWeatherInfoNow] = useState({});
-  const [weatherForecast, setWeatherForecast] = useState({});
-  const [skyForecast, setSkyForecast] = useState({});
-  const [tempForecast, setTempForecast] = useState({});
-  const [highestNextDays, setHighestNextDays] = useState({});
-  const [tempNextDays, setTempNextDays] = useState({});
-  const [skyNextDays, setSkyNextDays] = useState({});
-  const [rainNextDays, setRainNextDays] = useState({});
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isLoadedForecast, setIsLoadedForecast] = useState(false);
-  const [isForecasted, setisForecasted] = useState(false);
-
   const [countSlide, setCountSlide] = useState(0);
   const [toTranslate, setToTranslate] = useState(0);
 
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+
+  const {
+    listeCounter,
+    setListeCounter,
+    listSaved,
+    setListSaved,
+    isFetch,
+    setIsFetch,
+    weatherInfoNow,
+    setWeatherInfoNow,
+    weatherForecast,
+    setWeatherForecast,
+    skyForecast,
+    setSkyForecast,
+    tempForecast,
+    setTempForecast,
+    highestNextDays,
+    setHighestNextDays,
+    tempNextDays,
+    setTempNextDays,
+    skyNextDays,
+    setSkyNextDays,
+    rainNextDays,
+    setRainNextDays,
+    isLoaded,
+    setIsLoaded,
+    isLoadedForecast,
+    setIsLoadedForecast,
+    isForecasted,
+    setisForecasted,
+  } = useFetchCreateList(liste);
 
   const slider = document.getElementById("slider");
 
@@ -126,6 +139,7 @@ export default function WeatherCreateMyList(props) {
     setListeCounter(0);
     setCountSlide(0);
     sessionStorage.setItem("lastValue", null);
+    setLastSessionListe(null);
     setListSaved(false);
     document.getElementById("resetbutton").style.borderColor = "";
     document.getElementById("resetbutton").style.background = "";
@@ -148,16 +162,41 @@ export default function WeatherCreateMyList(props) {
 
   const handleSaveList = (e) => {
     sessionStorage.setItem("lastValue", JSON.stringify(liste));
+    setLastSessionListe(liste);
   };
 
   const handleBullet = (e) => {
     setCountSlide(parseInt(e.target.innerHTML));
   };
 
+  const handleOverallMove = (e) => {
+    let minDist = e === "touch" ? 50 : resizew / 3;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minDist;
+    const isRightSwipe = distance < -minDist;
+    if (isLeftSwipe && countSlide !== liste.length - 1) {
+      setCountSlide((prev) => prev + 1);
+      window.console.log("left swipe");
+    } else if (isRightSwipe && countSlide !== 0) {
+      setCountSlide((prev) => prev - 1);
+      window.console.log("right swipe");
+    } else if (isRightSwipe && countSlide === 0) {
+      setCountSlide(0);
+      setToTranslate(0);
+    } else if (isLeftSwipe && countSlide === liste.length - 1) {
+      setCountSlide(liste.length - 1);
+      setToTranslate(-resizew * countSlide);
+    } else if (!isLeftSwipe && !isRightSwipe) {
+      setToTranslate(-resizew * countSlide);
+    }
+  };
+
   const handlePointerDown = (e) => {
     setIsDragging(true);
     e.preventDefault();
     setStartX(e.clientX - toTranslate);
+    setTouchStart(e.clientX);
+    setTouchEnd(null);
   };
 
   const handlePointerMove = (e) => {
@@ -165,21 +204,26 @@ export default function WeatherCreateMyList(props) {
       const newTranslate = e.clientX - startX;
       setToTranslate(newTranslate);
     }
+    setTouchEnd(e.clientX);
   };
 
   const handlePointerUp = (e) => {
     setIsDragging(false);
+    handleOverallMove();
   };
 
   const handlePointerUpDocument = (e) => {
     if (isDragging) {
       setIsDragging(false);
     }
+    handleOverallMove();
   };
 
   const handleTouchStart = (e) => {
     setIsDragging(true);
     setStartX(e.touches[0].clientX - toTranslate);
+    setTouchStart(e.targetTouches[0].clientX);
+    setTouchEnd(null);
   };
 
   const handleTouchMove = (e) => {
@@ -187,617 +231,26 @@ export default function WeatherCreateMyList(props) {
       const newTranslate = e.touches[0].clientX - startX;
       setToTranslate(newTranslate);
     }
+    setTouchEnd(e.targetTouches[0].clientX);
   };
 
   const handleTouchEnd = (e) => {
     setIsDragging(false);
+    handleOverallMove("touch");
   };
 
   useEffect(() => {
     document.addEventListener("pointerup", handlePointerUpDocument);
     document.addEventListener("pointermove", handlePointerMove);
-    if (isDragging) {
-      document.body.style.overflow = "hidden";
-    }
     return () => {
       document.removeEventListener("pointerup", handlePointerUpDocument);
       document.removeEventListener("pointermove", handlePointerMove);
-      document.body.style.overflow = "";
     };
-  }, [isDragging]);
-
-  useEffect(() => {
-    if (isDragging) return;
-    if (
-      countSlide >= 0 &&
-      countSlide < liste.length - 1 &&
-      -toTranslate > resizew * (countSlide + 1) - resizew * 0.6
-    ) {
-      setCountSlide((prev) => prev + 1);
-    } else if (
-      countSlide > 0 &&
-      countSlide < liste.length &&
-      -toTranslate < resizew * countSlide - resizew * 0.4
-    ) {
-      setCountSlide((prev) => prev - 1);
-    } else if (
-      -toTranslate < resizew * (countSlide + 1) - resizew * 0.6 &&
-      -toTranslate > resizew * countSlide - resizew * 0.4
-    ) {
-      setCountSlide((prev) => prev);
-      setToTranslate(-resizew * countSlide);
-    } else if (
-      countSlide === 0 &&
-      -toTranslate < resizew * countSlide - resizew * 0.4
-    ) {
-      setCountSlide(0);
-      setToTranslate(0);
-    } else if (
-      countSlide === liste.length - 1 &&
-      -toTranslate > resizew * (countSlide + 1) - resizew * 0.6
-    ) {
-      setCountSlide(liste.length - 1);
-      setToTranslate(-resizew * countSlide);
-    }
   }, [isDragging]);
 
   useEffect(() => {
     setToTranslate(-resizew * countSlide);
   }, [countSlide]);
-
-  useEffect(() => {
-    if (!liste[0]) {
-      return;
-    } else {
-      const getWeatherListNow = async (name, nx, ny) => {
-        let temporary = [];
-        let urlWeatherList = `${weatherUrlNow}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
-        try {
-          const response = await fetch(urlWeatherList, {
-            headers: {
-              Accept: "application / json",
-            },
-          });
-          if (!response.ok) {
-            throw new Error("Pas de météo pour toi");
-          }
-          const jsonResponse = await response.json();
-          window.console.log([
-            `List ${name[0]} ${name[1]}`,
-            jsonResponse.response.header["resultMsg"],
-          ]);
-          await jsonResponse.response.body.items.item.forEach((x, i) => {
-            let newData = {
-              Phase1: name[0],
-              Phase2: name[1],
-              Phase3: name[2],
-              category: x.category,
-              value: x.obsrValue,
-              time: x.baseTime,
-              nx: nx,
-              ny: ny,
-            };
-            temporary[i] = newData;
-          });
-          return temporary;
-        } catch (error) {
-          console.log(`Premier fetch error: ${error}`);
-          setIsLoaded(false);
-          return Promise.reject(error);
-        }
-      };
-      const getWeatherListForecast = async (name, nx, ny) => {
-        let temporary = [];
-        let urlWeatherForecast = `${weatherUrlForecast}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTimeForecast}&nx=${nx}&ny=${ny}`;
-        try {
-          const response = await fetch(urlWeatherForecast, {
-            headers: {
-              Accept: "application / json",
-            },
-          });
-          if (!response.ok) {
-            throw new Error("Pas de météo pour toi");
-          }
-          const jsonResponse = await response.json();
-          window.console.log([
-            `List Forecast ${name[0]} ${name[1]}`,
-            jsonResponse.response.header["resultMsg"],
-          ]);
-          await jsonResponse.response.body.items.item.forEach((x, i) => {
-            let newData = {
-              Phase1: name[0],
-              Phase2: name[1],
-              Phase3: name[2],
-              category: x.category,
-              time: x.fcstTime,
-              value: x.fcstValue,
-              baseTime: x.baseTime,
-              nx: x.nx,
-              ny: x.ny,
-            };
-            if (x.category === "PTY") {
-              temporary[i] = newData;
-            } else if (x.category === "T1H") {
-              temporary[i] = newData;
-            } else if (x.category === "SKY") {
-              temporary[i] = newData;
-            }
-          });
-          return temporary;
-        } catch (error) {
-          console.log(`Second fetch error: ${error}`);
-          setIsLoadedForecast(false);
-          return Promise.reject(error);
-        }
-      };
-      const getWeatherNextDays = async (name, nx, ny) => {
-        let temporary = [];
-        const getUrlWeatherNextDay = `${weatherNextDay}?serviceKey=${serviceKey}&numOfRows=800&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${futureTime}&nx=${nx}&ny=${ny}`;
-        try {
-          const response = await fetch(getUrlWeatherNextDay, {
-            headers: {
-              Accept: "application / json",
-            },
-          });
-          if (!response.ok) {
-            throw new Error("Pas de météo pour toi");
-          }
-          const jsonResponse = await response.json();
-          window.console.log([
-            `List next day ${name[0]} ${name[1]}`,
-            jsonResponse.response.header["resultMsg"],
-          ]);
-          await jsonResponse.response.body.items.item.forEach((x, i) => {
-            let newData = {
-              Phase1: name[0],
-              Phase2: name[1],
-              Phase3: name[2],
-              category: x.category,
-              date: x.fcstDate,
-              value: x.fcstValue,
-              time: x.fcstTime,
-              nx: nx,
-              ny: ny,
-            };
-            if (
-              (x.category === "TMN" || x.category === "TMX") &&
-              (x.fcstDate === tomorrowDate || x.fcstDate === afterTomorrowDate)
-            ) {
-              temporary[i] = newData;
-            } else if (
-              x.category === "TMP" &&
-              (x.fcstDate === baseDate ||
-                x.fcstDate === tomorrowDate ||
-                x.fcstDate === afterTomorrowDate)
-            ) {
-              temporary[i] = newData;
-            } else if (
-              x.category === "SKY" &&
-              (x.fcstDate === baseDate ||
-                x.fcstDate === tomorrowDate ||
-                x.fcstDate === afterTomorrowDate)
-            ) {
-              temporary[i] = newData;
-            } else if (
-              x.category === "PTY" &&
-              (x.fcstDate === baseDate ||
-                x.fcstDate === tomorrowDate ||
-                x.fcstDate === afterTomorrowDate)
-            ) {
-              temporary[i] = newData;
-            }
-          });
-          return temporary;
-        } catch (error) {
-          window.console.log(error);
-          setisForecasted(false);
-          return Promise.reject(error);
-        }
-      };
-      let saveDataNow = async () => {
-        try {
-          let resultsFirstFetch = await getWeatherListNow(
-            [
-              liste[listeCounter - 1]["Phase1"],
-              liste[listeCounter - 1]["Phase2"],
-              liste[listeCounter - 1]["Phase3"],
-            ],
-            liste[listeCounter - 1]["nx"],
-            liste[listeCounter - 1]["ny"],
-          );
-          setWeatherInfoNow((prev) => ({
-            ...prev,
-            [`${liste[listeCounter - 1]["Phase2"]} - ${
-              liste[listeCounter - 1]["Phase3"]
-            }`]: resultsFirstFetch ? resultsFirstFetch : [],
-          }));
-        } catch (error) {
-          window.console.log(error);
-          setIsLoaded(false);
-          return Promise.reject(error);
-        }
-      };
-      let saveDataForecast = async () => {
-        try {
-          let resultsFirstFetch = await getWeatherListForecast(
-            [
-              liste[listeCounter - 1]["Phase1"],
-              liste[listeCounter - 1]["Phase2"],
-              liste[listeCounter - 1]["Phase3"],
-            ],
-            liste[listeCounter - 1]["nx"],
-            liste[listeCounter - 1]["ny"],
-          );
-          setSkyForecast((prev) => ({
-            ...prev,
-            [`${liste[listeCounter - 1]["Phase2"]} - ${
-              liste[listeCounter - 1]["Phase3"]
-            }`]: resultsFirstFetch
-              ? resultsFirstFetch.filter((x) => x.category === "SKY")
-              : [],
-          }));
-          setWeatherForecast((prev) => ({
-            ...prev,
-            [`${liste[listeCounter - 1]["Phase2"]} - ${
-              liste[listeCounter - 1]["Phase3"]
-            }`]: resultsFirstFetch
-              ? resultsFirstFetch.filter((x) => x.category === "PTY")
-              : [],
-          }));
-          setTempForecast((prev) => ({
-            ...prev,
-            [`${liste[listeCounter - 1]["Phase2"]} - ${
-              liste[listeCounter - 1]["Phase3"]
-            }`]: resultsFirstFetch
-              ? resultsFirstFetch.filter((x) => x.category === "T1H")
-              : [],
-          }));
-        } catch (error) {
-          window.console.log(error);
-          setIsLoadedForecast(false);
-          return Promise.reject(error);
-        }
-      };
-      let saveDataNextDays = async () => {
-        try {
-          let resultsFirstFetch = await getWeatherNextDays(
-            [
-              liste[listeCounter - 1]["Phase1"],
-              liste[listeCounter - 1]["Phase2"],
-              liste[listeCounter - 1]["Phase3"],
-            ],
-            liste[listeCounter - 1]["nx"],
-            liste[listeCounter - 1]["ny"],
-          );
-          setHighestNextDays((prev) => ({
-            ...prev,
-            [`${liste[listeCounter - 1]["Phase2"]} - ${
-              liste[listeCounter - 1]["Phase3"]
-            }`]: resultsFirstFetch
-              ? resultsFirstFetch.filter(
-                  (x) => x.category === "TMN" || x.category === "TMX",
-                )
-              : [],
-          }));
-          setSkyNextDays((prev) => ({
-            ...prev,
-            [`${liste[listeCounter - 1]["Phase2"]} - ${
-              liste[listeCounter - 1]["Phase3"]
-            }`]: resultsFirstFetch
-              ? resultsFirstFetch.filter((x) => x.category === "SKY")
-              : [],
-          }));
-          setRainNextDays((prev) => ({
-            ...prev,
-            [`${liste[listeCounter - 1]["Phase2"]} - ${
-              liste[listeCounter - 1]["Phase3"]
-            }`]: resultsFirstFetch
-              ? resultsFirstFetch.filter((x) => x.category === "PTY")
-              : [],
-          }));
-          setTempNextDays((prev) => ({
-            ...prev,
-            [`${liste[listeCounter - 1]["Phase2"]} - ${
-              liste[listeCounter - 1]["Phase3"]
-            }`]: resultsFirstFetch
-              ? resultsFirstFetch.filter((x) => x.category === "TMP")
-              : [],
-          }));
-        } catch (error) {
-          window.console.log(error);
-          setisForecasted(false);
-          return Promise.reject(error);
-        }
-      };
-      Promise.all([(saveDataNow(), saveDataForecast(), saveDataNextDays())])
-        .then(() => {
-          window.console.log("New addition succes");
-          setIsFetch(true);
-          setIsLoaded(true);
-          setIsLoadedForecast(true);
-          setisForecasted(true);
-        })
-        .catch((e) => {
-          window.console.log(`New addition failed: ${e}`);
-        });
-    }
-    return () => {
-      setIsFetch(false);
-      setIsLoaded(false);
-      setIsLoadedForecast(false);
-      setisForecasted(false);
-    };
-  }, [listeCounter]);
-
-  useEffect(() => {
-    if (!liste[0]) {
-      return;
-    } else {
-      const getWeatherListNow = async (name, nx, ny) => {
-        let temporary = [];
-        let urlWeatherList = `${weatherUrlNow}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTime}&nx=${nx}&ny=${ny}`;
-        try {
-          const response = await fetch(urlWeatherList, {
-            headers: {
-              Accept: "application / json",
-            },
-          });
-          if (!response.ok) {
-            throw new Error("Pas de météo pour toi");
-          }
-          const jsonResponse = await response.json();
-          window.console.log([
-            `List ${name[0]} ${name[1]}`,
-            jsonResponse.response.header["resultMsg"],
-          ]);
-          await jsonResponse.response.body.items.item.forEach((x, i) => {
-            let newData = {
-              Phase1: name[0],
-              Phase2: name[1],
-              Phase3: name[2],
-              category: x.category,
-              value: x.obsrValue,
-              time: x.baseTime,
-              nx: nx,
-              ny: ny,
-            };
-            temporary[i] = newData;
-          });
-          return temporary;
-        } catch (error) {
-          window.console.log(`Premier fetch error: ${error}`);
-          setIsLoaded(false);
-          return Promise.reject(error);
-        }
-      };
-      const getWeatherListForecast = async (name, nx, ny) => {
-        let temporary = [];
-        let urlWeatherForecast = `${weatherUrlForecast}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTimeForecast}&nx=${nx}&ny=${ny}`;
-        try {
-          const response = await fetch(urlWeatherForecast, {
-            headers: {
-              Accept: "application / json",
-            },
-          });
-          if (!response.ok) {
-            throw new Error("Pas de météo pour toi");
-          }
-          const jsonResponse = await response.json();
-          window.console.log([
-            `List Forecast ${name[0]} ${name[1]}`,
-            jsonResponse.response.header["resultMsg"],
-          ]);
-          await jsonResponse.response.body.items.item.forEach((x, i) => {
-            let newData = {
-              Phase1: name[0],
-              Phase2: name[1],
-              Phase3: name[2],
-              category: x.category,
-              time: x.fcstTime,
-              value: x.fcstValue,
-              baseTime: x.baseTime,
-              nx: x.nx,
-              ny: x.ny,
-            };
-            if (x.category === "PTY") {
-              temporary[i] = newData;
-            } else if (x.category === "T1H") {
-              temporary[i] = newData;
-            } else if (x.category === "SKY") {
-              temporary[i] = newData;
-            }
-          });
-          return temporary;
-        } catch (error) {
-          window.console.log(`Second fetch error: ${error}`);
-          setIsLoadedForecast(false);
-          return Promise.reject(error);
-        }
-      };
-      const getWeatherNextDays = async (name, nx, ny) => {
-        let temporary = [];
-        const getUrlWeatherNextDay = `${weatherNextDay}?serviceKey=${serviceKey}&numOfRows=800&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${futureTime}&nx=${nx}&ny=${ny}`;
-        try {
-          const response = await fetch(getUrlWeatherNextDay, {
-            headers: {
-              Accept: "application / json",
-            },
-          });
-          if (!response.ok) {
-            throw new Error("Pas de météo pour toi");
-          }
-          const jsonResponse = await response.json();
-          window.console.log([
-            `List next day ${name[0]} ${name[1]}`,
-            jsonResponse.response.header["resultMsg"],
-          ]);
-          await jsonResponse.response.body.items.item.forEach((x, i) => {
-            let newData = {
-              Phase1: name[0],
-              Phase2: name[1],
-              Phase3: name[2],
-              category: x.category,
-              date: x.fcstDate,
-              value: x.fcstValue,
-              time: x.fcstTime,
-              nx: nx,
-              ny: ny,
-            };
-            if (
-              (x.category === "TMN" || x.category === "TMX") &&
-              (x.fcstDate === tomorrowDate || x.fcstDate === afterTomorrowDate)
-            ) {
-              temporary[i] = newData;
-            } else if (
-              x.category === "TMP" &&
-              (x.fcstDate === baseDate ||
-                x.fcstDate === tomorrowDate ||
-                x.fcstDate === afterTomorrowDate)
-            ) {
-              temporary[i] = newData;
-            } else if (
-              x.category === "SKY" &&
-              (x.fcstDate === baseDate ||
-                x.fcstDate === tomorrowDate ||
-                x.fcstDate === afterTomorrowDate)
-            ) {
-              temporary[i] = newData;
-            } else if (
-              x.category === "PTY" &&
-              (x.fcstDate === baseDate ||
-                x.fcstDate === tomorrowDate ||
-                x.fcstDate === afterTomorrowDate)
-            ) {
-              temporary[i] = newData;
-            }
-          });
-          return temporary;
-        } catch (error) {
-          window.console.log(error);
-          setisForecasted(false);
-          return Promise.reject(error);
-        }
-      };
-      let saveDataNow = async () => {
-        for (let i in liste) {
-          try {
-            let resultsFirstFetch = await getWeatherListNow(
-              [liste[i]["Phase1"], liste[i]["Phase2"], liste[i]["Phase3"]],
-              liste[i]["nx"],
-              liste[i]["ny"],
-            );
-            setWeatherInfoNow((prev) => ({
-              ...prev,
-              [`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]:
-                resultsFirstFetch ? resultsFirstFetch : [],
-            }));
-          } catch (error) {
-            window.console.log(error);
-            setIsLoaded(false);
-            return Promise.reject(error);
-          }
-        }
-      };
-      let saveDataForecast = async () => {
-        for (let i in liste) {
-          try {
-            let resultsFirstFetch = await getWeatherListForecast(
-              [liste[i]["Phase1"], liste[i]["Phase2"], liste[i]["Phase3"]],
-              liste[i]["nx"],
-              liste[i]["ny"],
-            );
-            setSkyForecast((prev) => ({
-              ...prev,
-              [`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]:
-                resultsFirstFetch
-                  ? resultsFirstFetch.filter((x) => x.category === "SKY")
-                  : [],
-            }));
-            setWeatherForecast((prev) => ({
-              ...prev,
-              [`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]:
-                resultsFirstFetch
-                  ? resultsFirstFetch.filter((x) => x.category === "PTY")
-                  : [],
-            }));
-            setTempForecast((prev) => ({
-              ...prev,
-              [`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]:
-                resultsFirstFetch
-                  ? resultsFirstFetch.filter((x) => x.category === "T1H")
-                  : [],
-            }));
-          } catch (error) {
-            window.console.log(error);
-            setIsLoadedForecast(false);
-            return Promise.reject(error);
-          }
-        }
-      };
-      let saveDataNextDays = async () => {
-        for (let i in liste) {
-          try {
-            let resultsFirstFetch = await getWeatherNextDays(
-              [liste[i]["Phase1"], liste[i]["Phase2"], liste[i]["Phase3"]],
-              liste[i]["nx"],
-              liste[i]["ny"],
-            );
-            setHighestNextDays((prev) => ({
-              ...prev,
-              [`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]:
-                resultsFirstFetch
-                  ? resultsFirstFetch.filter(
-                      (x) => x.category === "TMN" || x.category === "TMX",
-                    )
-                  : [],
-            }));
-            setSkyNextDays((prev) => ({
-              ...prev,
-              [`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]:
-                resultsFirstFetch
-                  ? resultsFirstFetch.filter((x) => x.category === "SKY")
-                  : [],
-            }));
-            setRainNextDays((prev) => ({
-              ...prev,
-              [`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]:
-                resultsFirstFetch
-                  ? resultsFirstFetch.filter((x) => x.category === "PTY")
-                  : [],
-            }));
-            setTempNextDays((prev) => ({
-              ...prev,
-              [`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]:
-                resultsFirstFetch
-                  ? resultsFirstFetch.filter((x) => x.category === "TMP")
-                  : [],
-            }));
-          } catch (error) {
-            window.console.log(error);
-            setisForecasted(false);
-            return Promise.reject(error);
-          }
-        }
-      };
-      Promise.all([saveDataNow(), saveDataForecast(), saveDataNextDays()])
-        .then(() => {
-          window.console.log("List recover sucess");
-          setIsFetch(true);
-          setIsLoaded(true);
-          setIsLoadedForecast(true);
-          setisForecasted(true);
-        })
-        .catch((e) => {
-          window.console.log(`List recover fail: ${e}`);
-        });
-    }
-    return () => {
-      setIsFetch(false);
-      setIsLoaded(false);
-      setIsLoadedForecast(false);
-      setisForecasted(false);
-    };
-  }, [listSaved]);
 
   useEffect(() => {
     document.getElementById("resetbutton").style.borderColor = "";
@@ -839,19 +292,9 @@ export default function WeatherCreateMyList(props) {
     }
   }, [isFetch, fetchFail]);
 
-  /*const handleCommand = () => {
-    window.console.log("MAP");
-    window.console.log(weatherInfoNow);
-    window.console.log("MAP2");
-    window.console.log(weatherForecast);
-    window.console.log(skyForecast);
-    window.console.log(tempForecast);
-    window.console.log(liste.length);
-  };*/
-
   return (
     <div
-      className={`mt-4 flex h-screen flex-shrink-0 flex-col flex-nowrap items-center justify-start bg-slate-100 scrollbar-hide sm:m-0 sm:w-full sm:flex-col sm:flex-nowrap md:m-0 md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-full lg:flex-row-reverse lg:flex-wrap `}
+      className={`mt-4 flex h-fit min-h-screen flex-shrink-0 flex-col flex-nowrap items-center justify-start bg-slate-100 scrollbar-hide sm:m-0 sm:w-full sm:flex-col sm:flex-nowrap md:m-0 md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-full lg:flex-row-reverse lg:flex-wrap`}
       onClick={() => (menuOn ? setMenuOn(false) : null)}
     >
       {lastSessionListe !== null && !displayWeatherList && (
@@ -967,9 +410,9 @@ export default function WeatherCreateMyList(props) {
             </li>
             <li>{countSlide}</li>
           </div>
-          <div className="hidden flex-col">
+          <div className=" flex-col">
             <li>{toTranslate.toFixed(2)}</li>
-            <li>{resizew.toFixed(2)}</li>
+            <li>{startX.toFixed(2)}</li>
           </div>
         </ul>
       )}

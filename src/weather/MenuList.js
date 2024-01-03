@@ -39,14 +39,6 @@ export default function MenuList(props) {
     document.getElementById("displaydescription").style.display = "none";
   };
 
-  useEffect(() => {
-    if (menuListOn) {
-      document.body.style.overflowY = "hidden";
-    } else {
-      document.body.style.overflowY = "";
-    }
-  }, [menuListOn]);
-
   return (
     <div
       className={`fixed left-[50%] top-[50%] z-50 flex -translate-x-[50%] flex-col items-center justify-center rounded-xl bg-slate-200 p-2 transition-all duration-500 sm:w-10/12 md:w-4/6 lg:w-[650px] ${
@@ -62,6 +54,15 @@ export default function MenuList(props) {
             onMouseLeave={mouseleave}
           >
             Add to my list
+          </button>
+          <button
+            className="m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
+            onClick={resetlist}
+            onMouseEnter={mouseenter}
+            onMouseLeave={mouseleave}
+            id="resetbutton"
+          >
+            Reset
           </button>
         </div>
         <div>
@@ -145,15 +146,6 @@ export default function MenuList(props) {
           >
             Need to fill the list before display
           </p>
-          <button
-            className="m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
-            onClick={resetlist}
-            onMouseEnter={mouseenter}
-            onMouseLeave={mouseleave}
-            id="resetbutton"
-          >
-            Reset
-          </button>
         </div>
       </div>
       <p className="mt-6">List of city to display:</p>
