@@ -575,7 +575,7 @@ export default function useFetchCreateList(liste) {
           setIsFetch(true);
           setIsLoaded(true);
           setIsLoadedForecast(true);
-          //setisForecasted(true);
+          setisForecasted(true);
         })
         .catch((e) => {
           window.console.log(`List recover fail: ${e}`);

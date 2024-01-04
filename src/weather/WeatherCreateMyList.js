@@ -183,11 +183,14 @@ export default function WeatherCreateMyList(props) {
     } else if (isRightSwipe && countSlide === 0) {
       setCountSlide(0);
       setToTranslate(0);
+      window.console.log("swipe 0");
     } else if (isLeftSwipe && countSlide === liste.length - 1) {
       setCountSlide(liste.length - 1);
       setToTranslate(-resizew * countSlide);
+      window.console.log("swipe last");
     } else if (!isLeftSwipe && !isRightSwipe) {
       setToTranslate(-resizew * countSlide);
+      window.console.log("no swipe");
     }
   };
 
@@ -215,8 +218,8 @@ export default function WeatherCreateMyList(props) {
   const handlePointerUpDocument = (e) => {
     if (isDragging) {
       setIsDragging(false);
+      handleOverallMove();
     }
-    handleOverallMove();
   };
 
   const handleTouchStart = (e) => {
@@ -306,7 +309,7 @@ export default function WeatherCreateMyList(props) {
           style={{
             transform: `translate3d(${toTranslate}px, 0, 0)`,
           }}
-          className={`relative z-20 flex h-full w-full touch-pan-x justify-start ${
+          className={`relative z-20 mb-16 flex h-full w-full touch-pan-x justify-start ${
             !isDragging ? "transition-all" : ""
           } `}
           onPointerDown={handlePointerDown}
@@ -410,7 +413,7 @@ export default function WeatherCreateMyList(props) {
             </li>
             <li>{countSlide}</li>
           </div>
-          <div className=" flex-col">
+          <div className="hidden flex-col">
             <li>{toTranslate.toFixed(2)}</li>
             <li>{startX.toFixed(2)}</li>
           </div>
