@@ -70,7 +70,7 @@ export default function WeatherUID(props) {
 
   return (
     <div
-      className={`z-20 flex h-fit min-h-full select-none flex-col ${backgroundColoring} flex-nowrap duration-500 md:w-full lg:w-full lg:rounded-2xl ${
+      className={`z-20 flex h-fit min-h-full min-w-full select-none flex-col ${backgroundColoring} flex-nowrap duration-500 md:w-full lg:w-full lg:rounded-2xl ${
         showbutton ? "sm:w-full" : "sm:w-full sm:max-w-none"
       }`}
     >
@@ -96,7 +96,7 @@ export default function WeatherUID(props) {
         </button>
       </div>
       {loadstate && loadforecast && (
-        <div className="flex h-full flex-wrap content-start justify-around rounded-2xl bg-transparent sm:w-screen md:w-screen lg:w-full">
+        <div className="flex h-full flex-wrap content-start justify-around rounded-2xl bg-transparent sm:w-full md:w-full lg:w-full">
           <div
             className={`${
               showbutton ? "" : "py-5"

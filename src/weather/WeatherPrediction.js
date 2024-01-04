@@ -87,7 +87,7 @@ export default function WeatherPrediction(props) {
             </ul>
           ))}
         </div>
-        <div className="mx-10 h-16 w-10/12">
+        <div className="mx-10 hidden h-16 w-10/12">
           <Line style={styleChart} options={options} data={data} />
         </div>
         <div className="flex w-full flex-row flex-nowrap justify-between">

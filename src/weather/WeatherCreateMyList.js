@@ -183,14 +183,11 @@ export default function WeatherCreateMyList(props) {
     } else if (isRightSwipe && countSlide === 0) {
       setCountSlide(0);
       setToTranslate(0);
-      window.console.log("swipe 0");
     } else if (isLeftSwipe && countSlide === liste.length - 1) {
       setCountSlide(liste.length - 1);
       setToTranslate(-resizew * countSlide);
-      window.console.log("swipe last");
     } else if (!isLeftSwipe && !isRightSwipe) {
       setToTranslate(-resizew * countSlide);
-      window.console.log("no swipe");
     }
   };
 
@@ -218,8 +215,8 @@ export default function WeatherCreateMyList(props) {
   const handlePointerUpDocument = (e) => {
     if (isDragging) {
       setIsDragging(false);
-      handleOverallMove();
     }
+    handleOverallMove();
   };
 
   const handleTouchStart = (e) => {
@@ -297,7 +294,7 @@ export default function WeatherCreateMyList(props) {
 
   return (
     <div
-      className={`mt-4 flex h-fit min-h-screen flex-shrink-0 flex-col flex-nowrap items-center justify-start bg-slate-100 scrollbar-hide sm:m-0 sm:w-full sm:flex-col sm:flex-nowrap md:m-0 md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-full lg:flex-row-reverse lg:flex-wrap`}
+      className={`full mt-4 flex h-fit min-h-screen flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden bg-slate-100 scrollbar-hide sm:m-0 sm:w-full sm:flex-col sm:flex-nowrap md:m-0 md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-full lg:flex-row-reverse lg:flex-wrap`}
       onClick={() => (menuOn ? setMenuOn(false) : null)}
     >
       {lastSessionListe !== null && !displayWeatherList && (
@@ -309,7 +306,7 @@ export default function WeatherCreateMyList(props) {
           style={{
             transform: `translate3d(${toTranslate}px, 0, 0)`,
           }}
-          className={`relative z-20 mb-16 flex h-full w-full touch-pan-x justify-start ${
+          className={`relative z-20 flex h-full w-full touch-pan-x justify-start ${
             !isDragging ? "transition-all" : ""
           } `}
           onPointerDown={handlePointerDown}
@@ -319,72 +316,67 @@ export default function WeatherCreateMyList(props) {
           onTouchEnd={handleTouchEnd}
         >
           {liste.map((x, i) => (
-            <li key={i}>
-              <WeatherUID
-                loadstate={isLoaded}
-                loadforecast={isLoadedForecast}
-                raincond={
-                  weatherInfoNow[
-                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                  ][0]
-                }
-                humidity={
-                  weatherInfoNow[
-                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                  ][1]
-                }
-                hourrain={
-                  weatherInfoNow[
-                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                  ][2]
-                }
-                temp={
-                  weatherInfoNow[
-                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                  ][3]
-                }
-                winddir={
-                  weatherInfoNow[
-                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                  ][5]
-                }
-                windspeed={
-                  weatherInfoNow[
-                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                  ][7]
-                }
-                tempforecast={
-                  tempForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
-                }
-                skyforecast={
-                  skyForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
-                }
-                rainforecast={
-                  weatherForecast[
-                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                  ]
-                }
-                highestnextday={
-                  highestNextDays[
-                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                  ]
-                }
-                tempnextdays={
-                  tempNextDays[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
-                }
-                skynextdays={
-                  skyNextDays[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
-                }
-                rainnextdays={
-                  rainNextDays[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
-                }
-                isforecasted={isForecasted}
-                showbutton={false}
-                titlename={true}
-                forlist={true}
-                resizew={resizew}
-              />
-            </li>
+            <WeatherUID
+              key={i}
+              loadstate={isLoaded}
+              loadforecast={isLoadedForecast}
+              raincond={
+                weatherInfoNow[
+                  `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                ][0]
+              }
+              humidity={
+                weatherInfoNow[
+                  `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                ][1]
+              }
+              hourrain={
+                weatherInfoNow[
+                  `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                ][2]
+              }
+              temp={
+                weatherInfoNow[
+                  `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                ][3]
+              }
+              winddir={
+                weatherInfoNow[
+                  `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                ][5]
+              }
+              windspeed={
+                weatherInfoNow[
+                  `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                ][7]
+              }
+              tempforecast={
+                tempForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
+              }
+              skyforecast={
+                skyForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
+              }
+              rainforecast={
+                weatherForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
+              }
+              highestnextday={
+                highestNextDays[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
+              }
+              tempnextdays={
+                tempNextDays[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
+              }
+              skynextdays={
+                skyNextDays[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
+              }
+              rainnextdays={
+                rainNextDays[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
+              }
+              isforecasted={isForecasted}
+              showbutton={false}
+              titlename={true}
+              forlist={true}
+              resizew={resizew}
+            />
           ))}
         </ul>
       )}
