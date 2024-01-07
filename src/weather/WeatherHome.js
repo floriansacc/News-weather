@@ -5,23 +5,7 @@ import { QueryContext } from "../App";
 
 export default function WeatherHome(props) {
   const { mouseenter, mouseleave, resizew } = props;
-  const {
-    dataimport,
-    activeTab,
-    setActiveTab,
-    menuOn,
-    setMenuOn,
-    menuListOn,
-    setMenuListOn,
-    lastSessionListe,
-    setLastSessionListe,
-    images,
-    updateDates,
-    serviceKey,
-    baseDate,
-    baseTime,
-    baseTimeForecast,
-  } = useContext(QueryContext);
+  const { menuOn, setMenuOn } = useContext(QueryContext);
   return (
     <div
       className="justify-aroun flex h-fit w-11/12 flex-row flex-wrap items-center  sm:w-full sm:flex-col sm:flex-nowrap sm:items-center md:w-full md:flex-col md:flex-nowrap lg:m-2 lg:h-fit"

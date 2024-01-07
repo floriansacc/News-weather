@@ -5,14 +5,8 @@ import { QueryContext } from "../App";
 
 export default function Navigator(props) {
   const { menu } = props;
-  const {
-    menuOn,
-    setMenuOn,
-    menuListOn,
-    setMenuListOn,
-    activeTab,
-    setActiveTab,
-  } = useContext(QueryContext);
+  const { menuOn, setMenuOn, menuListOn, activeTab, setActiveTab } =
+    useContext(QueryContext);
 
   const tabSelection = (e) => {
     menu.forEach((x, i) => {

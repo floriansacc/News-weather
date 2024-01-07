@@ -4,7 +4,7 @@ import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 
 export default function WeatherPrediction(props) {
-  const { raincond, skyforecast, tempforecast, rainforecast } = props;
+  const { skyforecast, tempforecast, rainforecast } = props;
   const { images } = useContext(QueryContext);
 
   const data = {
@@ -97,7 +97,7 @@ export default function WeatherPrediction(props) {
               key={`ulNo${i}`}
             >
               <li className="mb-1 text-base" key={`li2no${i}`}>
-                {x.time.slice(0, 2)}h
+                {x.time.slice(0, 2)}시
               </li>
             </ul>
           ))}

@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import WeatherUID from "./WeatherUID";
 import { QueryContext } from "../App";
 import useFetchLocation from "../fetch/useFetchLocation";
+import useFetchTestLocation from "../fetch/useFetchTestLocation";
 
 export default function WeatherLocalisation(props) {
   const { mouseenter, mouseleave } = props;
@@ -45,7 +46,7 @@ export default function WeatherLocalisation(props) {
     isForecasted,
     setisForecasted,
     canRefersh,
-  } = useFetchLocation(citySelector, isLocated, refreshFetch);
+  } = useFetchTestLocation(citySelector, isLocated, refreshFetch);
 
   const RE = 6371.00877; // Earth radius (km)
   const GRID = 5.0; // Grid interval (km)

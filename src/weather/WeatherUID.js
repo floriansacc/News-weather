@@ -70,7 +70,7 @@ export default function WeatherUID(props) {
 
   return (
     <div
-      className={`z-20 flex h-fit min-h-full min-w-full select-none flex-col ${backgroundColoring} flex-nowrap duration-500 md:w-full lg:w-full lg:rounded-2xl ${
+      className={`z-10 flex h-fit min-h-full min-w-full select-none flex-col ${backgroundColoring} flex-nowrap duration-500 md:w-full lg:w-full lg:rounded-2xl ${
         showbutton ? "sm:w-full" : "sm:w-full sm:max-w-none"
       }`}
     >
@@ -159,7 +159,7 @@ export default function WeatherUID(props) {
           <div className="mb-2 flex flex-col justify-center">
             <p className="mx-4 text-2xl font-semibold">{temp.value} °C</p>
             <p>
-              Humidity: <span className="font-semibold">{humidity.value}%</span>
+              습도: <span className="font-semibold">{humidity.value}%</span>
             </p>
             <p>
               {`${windspeed.value} m/s`}

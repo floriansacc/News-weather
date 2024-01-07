@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { QueryContext } from "../App";
 
-export default function useFetchLocation(city, isLocated, refreshFetch) {
+export default function useFetchTestLocation(city, isLocated, refreshFetch) {
   const {
     serviceKey,
     baseDate,
@@ -71,6 +71,28 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
         return Promise.reject(error);
       }
     };
+    if (isLocated) {
+      let fetchAll = async () => {
+        try {
+          await getWeather();
+          setIsLoaded(true);
+          setCanRefresh(true);
+        } catch (e) {
+          window.console.log(e);
+          setIsLoaded(false);
+          setCanRefresh(true);
+        }
+      };
+      fetchAll();
+    }
+    return () => {
+      setIsLoaded(false);
+      setIsLoadedForecast(false);
+      setCanRefresh(false);
+    };
+  }, [isLocated, refreshFetch]);
+
+  useEffect(() => {
     const getWeather2 = async () => {
       const getUrlWeatherForecast = `${weatherUrlForecast}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTimeForecast}&nx=${city[3]}&ny=${city[4]}`;
       try {
@@ -113,16 +135,11 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
     if (isLocated) {
       let fetchAll = async () => {
         try {
-          await getWeather();
           await getWeather2();
-          setIsLoaded(true);
           setIsLoadedForecast(true);
-          setCanRefresh(true);
         } catch (e) {
           window.console.log(e);
-          setIsLoaded(false);
           setIsLoadedForecast(false);
-          setCanRefresh(true);
         }
       };
       fetchAll();

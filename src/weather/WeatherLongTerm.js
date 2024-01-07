@@ -10,14 +10,15 @@ export default function WeatherLongTerm(props) {
     rainnextdays,
     isforecasted,
   } = props;
-  const { images, tomorrowDate, afterTomorrowDate } = useContext(QueryContext);
+  const { images } = useContext(QueryContext);
 
   //TMX: 최고기온
   //TMN: 최저기온
 
   const arrayToMap = [
     {
-      set: "tomorrow",
+      set: "내일",
+      color: "#218fff",
       highest: highestnextday.filter((y) => y.category === "TMX")[0],
       lowest: highestnextday.filter((y) => y.category === "TMN")[0],
       sky: [
@@ -34,7 +35,8 @@ export default function WeatherLongTerm(props) {
       ],
     },
     {
-      set: "D+2",
+      set: "모레",
+      color: "#974ee7",
       highest: highestnextday.filter((y) => y.category === "TMX")[1],
       lowest: highestnextday.filter((y) => y.category === "TMN")[1],
       sky: [
@@ -54,44 +56,44 @@ export default function WeatherLongTerm(props) {
 
   return (
     <div
-      className={`mx-2 flex w-full flex-col rounded-2xl border border-solid border-transparent bg-white bg-opacity-25 py-2`}
+      className={`m-2 flex h-fit w-full overflow-hidden rounded-2xl border border-solid border-transparent bg-white bg-opacity-25 p-2`}
     >
-      <div className="mx-2 flex">
-        {arrayToMap.map((x, i) => (
-          <ul className="mx-3 flex h-fit w-2/12 min-w-fit flex-col items-center justify-center rounded-2xl bg-white bg-opacity-10">
-            <li className="mb-0 self-start px-2">{x.set}</li>
-            <div className="flex w-full items-center justify-around p-1">
-              {x.rain.map((y, j) => (
-                <div className="flex flex-col items-center justify-center">
-                  <p>{j === 0 ? "am" : "pm"}</p>
-                  <img
-                    src={
-                      images[
-                        y.value === "1"
-                          ? 4
-                          : y.value === "2"
+      {arrayToMap.map((x, i) => (
+        <ul className="mx-1 flex h-fit w-2/12 min-w-fit flex-col items-center justify-center rounded-2xl bg-white bg-opacity-10">
+          <li className={`mb-0 self-start px-2 font-bold text-[${x.color}]`}>
+            {x.set}
+          </li>
+          <div className="flex w-full items-center justify-around p-1">
+            {x.rain.map((y, j) => (
+              <div className="flex flex-col items-center justify-center">
+                <p>{j === 0 ? "오전" : "오후"}</p>
+                <img
+                  src={
+                    images[
+                      y.value === "1"
+                        ? 4
+                        : y.value === "2"
+                          ? 5
+                          : y.value === "3"
                             ? 5
-                            : y.value === "3"
-                              ? 5
-                              : y.value === "5"
-                                ? 4
-                                : `${x.sky[j].value - 1}`
-                      ]
-                    }
-                    className="m-1 h-7 w-auto"
-                    key={`image${x.value}${i}`}
-                  ></img>
-                </div>
-              ))}
-            </div>
-            <div className="rounded-b-2x relative flex w-full items-center justify-center">
-              <li className="text-2xl  text-blue-700">{x.lowest.value}</li>
-              <li className="text-2xl  text-black">/</li>
-              <li className="text-2xl text-red-700">{x.highest.value}</li>
-            </div>
-          </ul>
-        ))}
-      </div>
+                            : y.value === "5"
+                              ? 4
+                              : `${x.sky[j].value - 1}`
+                    ]
+                  }
+                  className="m-1 h-6 w-auto"
+                  key={`image${x.value}${i}`}
+                ></img>
+              </div>
+            ))}
+          </div>
+          <div className="rounded-b-2x relative flex w-full items-center justify-center">
+            <li className="text-2xl  text-blue-700">{x.lowest.value}</li>
+            <li className="text-2xl  text-black">/</li>
+            <li className="text-2xl text-red-700">{x.highest.value}</li>
+          </div>
+        </ul>
+      ))}
       <WeatherPredictionNextDays
         isforecasted={isforecasted}
         tempnextdays={tempnextdays}

@@ -62,13 +62,7 @@ export default function WeatherCreateMyList(props) {
   } = useFetchCreateList(liste);
 
   const slider = document.getElementById("slider");
-
-  const weatherUrlNow =
-    "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
-  const weatherUrlForecast =
-    "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst";
-  const weatherNextDay =
-    "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
+  let homeDiv = document.getElementById("home3");
 
   const handleCitySelector = (e) => {
     if (e.target.name === "one") {
@@ -170,36 +164,40 @@ export default function WeatherCreateMyList(props) {
   };
 
   const handleOverallMove = (e) => {
-    let minDist = e === "touch" ? 50 : resizew / 3;
+    if (!touchStart || !touchEnd) return;
+    let minDist = e === "touch" ? 50 : resizew / 5;
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > minDist;
     const isRightSwipe = distance < -minDist;
     if (isLeftSwipe && countSlide !== liste.length - 1) {
       setCountSlide((prev) => prev + 1);
-      window.console.log("left swipe");
     } else if (isRightSwipe && countSlide !== 0) {
       setCountSlide((prev) => prev - 1);
-      window.console.log("right swipe");
     } else if (isRightSwipe && countSlide === 0) {
       setCountSlide(0);
       setToTranslate(0);
     } else if (isLeftSwipe && countSlide === liste.length - 1) {
       setCountSlide(liste.length - 1);
-      setToTranslate(-resizew * countSlide);
+      setToTranslate(-homeDiv.offsetWidth * countSlide);
     } else if (!isLeftSwipe && !isRightSwipe) {
-      setToTranslate(-resizew * countSlide);
+      setToTranslate(-homeDiv.offsetWidth * countSlide);
     }
   };
 
   const handlePointerDown = (e) => {
-    setIsDragging(true);
-    e.preventDefault();
-    setStartX(e.clientX - toTranslate);
-    setTouchStart(e.clientX);
-    setTouchEnd(null);
+    e.stopPropagation();
+    if (e.target === document.getElementById("next-day-graph")) {
+      window.console.log("Click on graph");
+    } else {
+      setIsDragging(true);
+      setStartX(e.clientX - toTranslate);
+      setTouchStart(e.clientX);
+      setTouchEnd(null);
+    }
   };
 
   const handlePointerMove = (e) => {
+    e.stopPropagation();
     if (isDragging && slider.offsetWidth - 100 < resizew) {
       const newTranslate = e.clientX - startX;
       setToTranslate(newTranslate);
@@ -208,18 +206,21 @@ export default function WeatherCreateMyList(props) {
   };
 
   const handlePointerUp = (e) => {
+    e.stopPropagation();
     setIsDragging(false);
     handleOverallMove();
   };
 
   const handlePointerUpDocument = (e) => {
+    e.stopPropagation();
     if (isDragging) {
       setIsDragging(false);
+      handleOverallMove();
     }
-    handleOverallMove();
   };
 
   const handleTouchStart = (e) => {
+    e.stopPropagation();
     setIsDragging(true);
     setStartX(e.touches[0].clientX - toTranslate);
     setTouchStart(e.targetTouches[0].clientX);
@@ -227,14 +228,16 @@ export default function WeatherCreateMyList(props) {
   };
 
   const handleTouchMove = (e) => {
+    e.stopPropagation();
     if (isDragging) {
       const newTranslate = e.touches[0].clientX - startX;
       setToTranslate(newTranslate);
+      setTouchEnd(e.targetTouches[0].clientX);
     }
-    setTouchEnd(e.targetTouches[0].clientX);
   };
 
   const handleTouchEnd = (e) => {
+    e.stopPropagation();
     setIsDragging(false);
     handleOverallMove("touch");
   };
@@ -249,7 +252,8 @@ export default function WeatherCreateMyList(props) {
   }, [isDragging]);
 
   useEffect(() => {
-    setToTranslate(-resizew * countSlide);
+    if (!homeDiv) return;
+    setToTranslate(-homeDiv.offsetWidth * countSlide);
   }, [countSlide]);
 
   useEffect(() => {
@@ -270,6 +274,7 @@ export default function WeatherCreateMyList(props) {
       setListe(lastSessionListe);
       setListSaved(true);
     }
+    homeDiv = document.getElementById("home3");
   }, []);
 
   useEffect(() => {
@@ -294,8 +299,9 @@ export default function WeatherCreateMyList(props) {
 
   return (
     <div
-      className={`full mt-4 flex h-fit min-h-screen flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden bg-slate-100 scrollbar-hide sm:m-0 sm:w-full sm:flex-col sm:flex-nowrap md:m-0 md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-full lg:flex-row-reverse lg:flex-wrap`}
+      className={`mt-4 flex h-full min-h-screen flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden bg-slate-100 scrollbar-hide sm:m-0 sm:w-full sm:flex-col sm:flex-nowrap md:m-0 md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-full lg:flex-row-reverse lg:flex-wrap`}
       onClick={() => (menuOn ? setMenuOn(false) : null)}
+      id="home3"
     >
       {lastSessionListe !== null && !displayWeatherList && (
         <p className="p-10 text-2xl">Retrieving last list</p>
@@ -306,7 +312,7 @@ export default function WeatherCreateMyList(props) {
           style={{
             transform: `translate3d(${toTranslate}px, 0, 0)`,
           }}
-          className={`relative z-20 flex h-full w-full touch-pan-x justify-start ${
+          className={`relative z-20 flex h-full w-full justify-start ${
             !isDragging ? "transition-all" : ""
           } `}
           onPointerDown={handlePointerDown}
@@ -381,7 +387,7 @@ export default function WeatherCreateMyList(props) {
         </ul>
       )}
       {displayWeatherList && (
-        <ul className="absolute bottom-0 left-0 z-50 flex h-8 w-4/6 list-none items-center justify-center self-start rounded-2xl px-4 pb-7">
+        <ul className="fixed bottom-0 left-0 z-50 mb-2 flex h-fit w-[60%] list-none items-center justify-center self-start rounded-2xl px-3">
           {liste.map((e, i) => (
             <li
               onClick={handleBullet}
