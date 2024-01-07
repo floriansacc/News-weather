@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { QueryContext } from "../App";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
@@ -149,7 +149,7 @@ export default function WeatherPredictionNextDays(props) {
 
   return (
     <div
-      className="relative z-20 m-2 mt-1 w-full self-center overflow-auto rounded-2xl border-2 border-solid border-red-500 border-transparent bg-white bg-opacity-25 scrollbar-hide"
+      className="relative z-20 mt-1 w-full self-center overflow-auto rounded-2xl border-2 border-solid border-red-500 border-transparent bg-white bg-opacity-25 scrollbar-hide"
       id="ref-width"
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}

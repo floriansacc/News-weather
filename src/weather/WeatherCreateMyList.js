@@ -4,6 +4,9 @@ import MenuList from "./MenuList";
 import ButtonOpenClose from "./ButtonOpenClose";
 import { QueryContext } from "../App";
 import useFetchCreateList from "../fetch/useFetchCreateList";
+import WeatherPrediction from "./WeatherPrediction";
+import WeatherNow from "./WeatherNow";
+import WeatherLongTerm from "./WeatherLongTerm";
 
 export default function WeatherCreateMyList(props) {
   const { mouseenter, mouseleave, resizew } = props;
@@ -29,6 +32,8 @@ export default function WeatherCreateMyList(props) {
   const [startX, setStartX] = useState(0);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
+
+  const [previousBg, setPreviousBg] = useState(null);
 
   const {
     listeCounter,
@@ -60,6 +65,8 @@ export default function WeatherCreateMyList(props) {
     isForecasted,
     setisForecasted,
   } = useFetchCreateList(liste);
+
+  let bgSet;
 
   const slider = document.getElementById("slider");
   let homeDiv = document.getElementById("home3");
@@ -198,7 +205,7 @@ export default function WeatherCreateMyList(props) {
 
   const handlePointerMove = (e) => {
     e.stopPropagation();
-    if (isDragging && slider.offsetWidth - 100 < resizew) {
+    if (isDragging) {
       const newTranslate = e.clientX - startX;
       setToTranslate(newTranslate);
     }
@@ -209,14 +216,6 @@ export default function WeatherCreateMyList(props) {
     e.stopPropagation();
     setIsDragging(false);
     handleOverallMove();
-  };
-
-  const handlePointerUpDocument = (e) => {
-    e.stopPropagation();
-    if (isDragging) {
-      setIsDragging(false);
-      handleOverallMove();
-    }
   };
 
   const handleTouchStart = (e) => {
@@ -242,18 +241,41 @@ export default function WeatherCreateMyList(props) {
     handleOverallMove("touch");
   };
 
-  useEffect(() => {
-    document.addEventListener("pointerup", handlePointerUpDocument);
-    document.addEventListener("pointermove", handlePointerMove);
-    return () => {
-      document.removeEventListener("pointerup", handlePointerUpDocument);
-      document.removeEventListener("pointermove", handlePointerMove);
-    };
-  }, [isDragging]);
+  function bgFunction(i) {
+    if (!weatherInfoNow || !skyForecast || !isLoaded || !isLoadedForecast) {
+      if (previousBg) {
+        bgSet = previousBg;
+        return bgSet;
+      }
+      bgSet = "bg-yellow-100";
+      return bgSet;
+    } else {
+      bgSet =
+        weatherInfoNow[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`][0]
+          .value === "1"
+          ? "bg-perso1"
+          : weatherInfoNow[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`][0]
+                .value === "3"
+            ? "bg-perso2"
+            : skyForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`][0]
+                  .value === "4"
+              ? "bg-perso3"
+              : skyForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`][0]
+                    .value === "3"
+                ? "bg-perso4"
+                : skyForecast[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ][0].value === "1"
+                  ? "bg-perso5"
+                  : "bg-red-100";
+      return bgSet;
+    }
+  }
 
   useEffect(() => {
     if (!homeDiv) return;
     setToTranslate(-homeDiv.offsetWidth * countSlide);
+    setPreviousBg(bgFunction(countSlide));
   }, [countSlide]);
 
   useEffect(() => {
@@ -282,7 +304,6 @@ export default function WeatherCreateMyList(props) {
       document.getElementById("resetbutton").style.background = "#d45950";
       document.getElementById("resetbutton").style.color = "white";
       document.getElementById("resetbutton").innerHTML = "Fail, click to reset";
-      window.console.log("Fetch fail");
     }
     if (isFetch && !displayWeatherList) {
       setToTranslate(0);
@@ -299,7 +320,7 @@ export default function WeatherCreateMyList(props) {
 
   return (
     <div
-      className={`mt-4 flex h-full min-h-screen flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden bg-slate-100 scrollbar-hide sm:m-0 sm:w-full sm:flex-col sm:flex-nowrap md:m-0 md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-full lg:flex-row-reverse lg:flex-wrap`}
+      className={`${previousBg} mt-4 flex min-h-full flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden scrollbar-hide sm:m-0 sm:w-full sm:flex-col sm:flex-nowrap md:m-0 md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-full lg:flex-row-reverse lg:flex-wrap`}
       onClick={() => (menuOn ? setMenuOn(false) : null)}
       id="home3"
     >
@@ -316,73 +337,104 @@ export default function WeatherCreateMyList(props) {
             !isDragging ? "transition-all" : ""
           } `}
           onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
           {liste.map((x, i) => (
-            <WeatherUID
-              key={i}
-              loadstate={isLoaded}
-              loadforecast={isLoadedForecast}
-              raincond={
-                weatherInfoNow[
-                  `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                ][0]
-              }
-              humidity={
-                weatherInfoNow[
-                  `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                ][1]
-              }
-              hourrain={
-                weatherInfoNow[
-                  `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                ][2]
-              }
-              temp={
-                weatherInfoNow[
-                  `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                ][3]
-              }
-              winddir={
-                weatherInfoNow[
-                  `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                ][5]
-              }
-              windspeed={
-                weatherInfoNow[
-                  `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                ][7]
-              }
-              tempforecast={
-                tempForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
-              }
-              skyforecast={
-                skyForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
-              }
-              rainforecast={
-                weatherForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
-              }
-              highestnextday={
-                highestNextDays[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
-              }
-              tempnextdays={
-                tempNextDays[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
-              }
-              skynextdays={
-                skyNextDays[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
-              }
-              rainnextdays={
-                rainNextDays[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
-              }
-              isforecasted={isForecasted}
-              showbutton={false}
-              titlename={true}
-              forlist={true}
-              resizew={resizew}
-            />
+            <div
+              className={`z-10 m-0 box-border flex h-full min-h-full w-fit min-w-full select-none flex-col flex-nowrap items-center justify-start duration-500 sm:w-full md:w-full lg:w-[45%] lg:rounded-2xl`}
+            >
+              {isLoaded && isLoadedForecast && (
+                <>
+                  <WeatherNow
+                    handlecityselector={handleCitySelector}
+                    loadstate={isLoaded}
+                    loadforecast={isLoadedForecast}
+                    raincond={
+                      weatherInfoNow[
+                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                      ][0]
+                    }
+                    humidity={
+                      weatherInfoNow[
+                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                      ][1]
+                    }
+                    hourrain={
+                      weatherInfoNow[
+                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                      ][2]
+                    }
+                    temp={
+                      weatherInfoNow[
+                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                      ][3]
+                    }
+                    winddir={
+                      weatherInfoNow[
+                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                      ][5]
+                    }
+                    windspeed={
+                      weatherInfoNow[
+                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                      ][7]
+                    }
+                    skyforecast={
+                      skyForecast[
+                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                      ]
+                    }
+                    mouseenter={mouseenter}
+                    mouseleave={mouseleave}
+                    titlename={true}
+                  />
+                  <WeatherPrediction
+                    tempforecast={
+                      tempForecast[
+                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                      ]
+                    }
+                    skyforecast={
+                      skyForecast[
+                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                      ]
+                    }
+                    rainforecast={
+                      weatherForecast[
+                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                      ]
+                    }
+                  />
+                </>
+              )}
+              {isForecasted && (
+                <WeatherLongTerm
+                  highestnextdays={
+                    highestNextDays[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ]
+                  }
+                  tempnextdays={
+                    tempNextDays[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ]
+                  }
+                  skynextdays={
+                    skyNextDays[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
+                  }
+                  rainnextdays={
+                    rainNextDays[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ]
+                  }
+                  isforecasted={isForecasted}
+                />
+              )}
+            </div>
           ))}
         </ul>
       )}
@@ -407,9 +459,15 @@ export default function WeatherCreateMyList(props) {
                 isDragging === true ? "bg-green-500" : "bg-red-500"
               }`}
             >
-              {isDragging ? "OUI" : "NON"}
+              {touchStart ? "OUI" : "NON"}
             </li>
-            <li>{countSlide}</li>
+            <li
+              className={`${
+                isDragging === true ? "bg-green-500" : "bg-red-500"
+              }`}
+            >
+              {touchEnd ? "OUI" : "NON"}
+            </li>
           </div>
           <div className="hidden flex-col">
             <li>{toTranslate.toFixed(2)}</li>

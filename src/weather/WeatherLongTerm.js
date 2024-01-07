@@ -4,7 +4,7 @@ import WeatherPredictionNextDays from "./WeatherPredictionNextDays";
 
 export default function WeatherLongTerm(props) {
   const {
-    highestnextday,
+    highestnextdays,
     tempnextdays,
     skynextdays,
     rainnextdays,
@@ -19,8 +19,8 @@ export default function WeatherLongTerm(props) {
     {
       set: "내일",
       color: "#218fff",
-      highest: highestnextday.filter((y) => y.category === "TMX")[0],
-      lowest: highestnextday.filter((y) => y.category === "TMN")[0],
+      highest: highestnextdays.filter((y) => y.category === "TMX")[0],
+      lowest: highestnextdays.filter((y) => y.category === "TMN")[0],
       sky: [
         skynextdays.filter((y) => y.category === "SKY" && y.time === "0600")[0],
         skynextdays.filter((y) => y.category === "SKY" && y.time === "1500")[0],
@@ -37,8 +37,8 @@ export default function WeatherLongTerm(props) {
     {
       set: "모레",
       color: "#974ee7",
-      highest: highestnextday.filter((y) => y.category === "TMX")[1],
-      lowest: highestnextday.filter((y) => y.category === "TMN")[1],
+      highest: highestnextdays.filter((y) => y.category === "TMX")[1],
+      lowest: highestnextdays.filter((y) => y.category === "TMN")[1],
       sky: [
         skynextdays.filter((y) => y.category === "SKY" && y.time === "0600")[1],
         skynextdays.filter((y) => y.category === "SKY" && y.time === "1500")[1],
@@ -55,12 +55,13 @@ export default function WeatherLongTerm(props) {
   ];
 
   return (
-    <div
-      className={`m-2 flex h-fit w-full overflow-hidden rounded-2xl border border-solid border-transparent bg-white bg-opacity-25 p-2`}
-    >
+    <div className="m-2 flex h-fit w-full flex-wrap self-center rounded-2xl border-2 border-solid border-transparent bg-white bg-opacity-25 p-2">
       {arrayToMap.map((x, i) => (
         <ul className="mx-1 flex h-fit w-2/12 min-w-fit flex-col items-center justify-center rounded-2xl bg-white bg-opacity-10">
-          <li className={`mb-0 self-start px-2 font-bold text-[${x.color}]`}>
+          <li
+            style={{ color: `${x.color}` }}
+            className={`mb-0 self-start px-2 font-bold`}
+          >
             {x.set}
           </li>
           <div className="flex w-full items-center justify-around p-1">

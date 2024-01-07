@@ -3,6 +3,9 @@ import WeatherUID from "./WeatherUID";
 import { QueryContext } from "../App";
 import useFetchLocation from "../fetch/useFetchLocation";
 import useFetchTestLocation from "../fetch/useFetchTestLocation";
+import WeatherNow from "./WeatherNow";
+import WeatherLongTerm from "./WeatherLongTerm";
+import WeatherPrediction from "./WeatherPrediction";
 
 export default function WeatherLocalisation(props) {
   const { mouseenter, mouseleave } = props;
@@ -21,6 +24,7 @@ export default function WeatherLocalisation(props) {
   ]);
   const [refreshGeoloc, setRefreshGeoloc] = useState(0);
   const [refreshFetch, setRefreshFetch] = useState(0);
+  const [previousBg, setPreviousBg] = useState(null);
 
   const {
     weatherInfoNow,
@@ -47,6 +51,9 @@ export default function WeatherLocalisation(props) {
     setisForecasted,
     canRefersh,
   } = useFetchTestLocation(citySelector, isLocated, refreshFetch);
+
+  let bgSet;
+  const backgroundColoring = bgFunction();
 
   const RE = 6371.00877; // Earth radius (km)
   const GRID = 5.0; // Grid interval (km)
@@ -224,9 +231,38 @@ export default function WeatherLocalisation(props) {
     window.console.log("Unable to retrieve your location");
   };
 
+  function bgFunction() {
+    if (!weatherInfoNow[0] || !skyForecast || !isLoaded || !isLoadedForecast) {
+      if (previousBg) {
+        bgSet = previousBg;
+        return bgSet;
+      }
+      bgSet = "bg-yellow-100";
+      return bgSet;
+    } else {
+      bgSet =
+        weatherInfoNow[0].value === "1"
+          ? "bg-perso1"
+          : weatherInfoNow[0].value === "3"
+            ? "bg-perso2"
+            : skyForecast[0].value === "4"
+              ? "bg-perso3"
+              : skyForecast[0].value === "3"
+                ? "bg-perso4"
+                : skyForecast[0].value === "1"
+                  ? "bg-perso5"
+                  : "bg-red-100";
+      return bgSet;
+    }
+  }
+
   useEffect(() => {
     updateDates();
   }, [updateDates]);
+
+  useEffect(() => {
+    setPreviousBg(bgSet);
+  }, [bgSet]);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(succesLocation, errorLocation);
@@ -240,54 +276,59 @@ export default function WeatherLocalisation(props) {
     <div
       className={`${
         activeTab === 1 ? "" : "mb-20"
-      } m-0 h-screen w-fit flex-row items-start justify-around bg-slate-100 sm:w-full md:w-full md:flex-wrap lg:w-[45%] `}
+      } ${backgroundColoring} z-10 m-0 box-border flex h-full min-h-full w-fit min-w-full select-none flex-col flex-nowrap items-center justify-start duration-500 sm:w-full md:w-full lg:w-[45%] lg:rounded-2xl `}
       onClick={() => (menuOn ? setMenuOn(false) : null)}
     >
-      <div className="right-0 top-1 hidden">
+      <div className=" m-1 mb-2 flex items-end justify-end self-end">
         <button
-          className="bg-red-200 p-2"
-          onClick={() => {
-            window.console.log(tempNextDays);
-            window.console.log(skyNextDays);
-            window.console.log(rainNextDays);
-          }}
+          className={`m-1.5 mb-0 flex h-8 w-fit items-center rounded-full border-2 border-solid border-gray-400 p-1.5 ${
+            canRefersh
+              ? "pointer-events-auto bg-gradient-to-r from-gray-300/25 to-gray-700/25"
+              : "pointer-events-none bg-gradient-to-r from-red-300/75 to-red-700/75"
+          }`}
+          onClick={handleRefresh}
+          onMouseEnter={mouseenter}
+          onMouseLeave={mouseleave}
+          id="refresh-button"
         >
-          OUI
+          Refresh location
         </button>
-        <h1>
-          X {citySelector[3]}, Y {citySelector[4]}
-        </h1>
-        <h1>lat {gps.lat}</h1>
-        <h1>long {gps.long}</h1>
-        <h1>isLocated: {isLocated ? "true" : "false"}</h1>
       </div>
-      <WeatherUID
-        handlecityselector={handleCitySelector}
-        cityselector={citySelector}
-        loadstate={isLoaded}
-        loadforecast={isLoadedForecast}
-        refresh={handleRefresh}
-        raincond={weatherInfoNow[0]}
-        humidity={weatherInfoNow[1]}
-        hourrain={weatherInfoNow[2]}
-        temp={weatherInfoNow[3]}
-        winddir={weatherInfoNow[5]}
-        windspeed={weatherInfoNow[7]}
-        tempforecast={tempForecast}
-        skyforecast={skyForecast}
-        rainforecast={weatherForecast}
-        mouseenter={mouseenter}
-        mouseleave={mouseleave}
-        showbutton={true}
-        titlename={false}
-        islocated={isLocated}
-        highestnextday={highestNextDays}
-        tempnextdays={tempNextDays}
-        skynextdays={skyNextDays}
-        rainnextdays={rainNextDays}
-        isforecasted={isForecasted}
-        canRefersh={canRefersh}
-      />
+      {isLoaded && isLoadedForecast && (
+        <>
+          <WeatherNow
+            handlecityselector={handleCitySelector}
+            cityselector={citySelector}
+            loadstate={isLoaded}
+            loadforecast={isLoadedForecast}
+            raincond={weatherInfoNow[0]}
+            humidity={weatherInfoNow[1]}
+            hourrain={weatherInfoNow[2]}
+            temp={weatherInfoNow[3]}
+            winddir={weatherInfoNow[5]}
+            windspeed={weatherInfoNow[7]}
+            skyforecast={skyForecast}
+            mouseenter={mouseenter}
+            mouseleave={mouseleave}
+            showbutton={true}
+            titlename={false}
+          />
+          <WeatherPrediction
+            tempforecast={tempForecast}
+            skyforecast={skyForecast}
+            rainforecast={weatherForecast}
+          />
+        </>
+      )}
+      {isForecasted && (
+        <WeatherLongTerm
+          highestnextdays={highestNextDays}
+          tempnextdays={tempNextDays}
+          skynextdays={skyNextDays}
+          rainnextdays={rainNextDays}
+          isforecasted={isForecasted}
+        />
+      )}
     </div>
   );
 }

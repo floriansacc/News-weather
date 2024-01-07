@@ -25,7 +25,7 @@ export default function WeatherUID(props) {
     showbutton,
     titlename,
     islocated,
-    highestnextday,
+    highestnextdays,
     tempnextdays,
     skynextdays,
     rainnextdays,
@@ -183,7 +183,7 @@ export default function WeatherUID(props) {
           {isforecasted && (
             <>
               <WeatherLongTerm
-                highestnextday={highestnextday}
+                highestnextdays={highestnextdays}
                 isforecasted={isforecasted}
                 tempnextdays={tempnextdays}
                 skyforecast={skyforecast}
