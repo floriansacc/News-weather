@@ -216,7 +216,6 @@ export default function useFetchTestLocation(city, isLocated, refreshFetch) {
       let fetchAll = async () => {
         try {
           await getWeather3();
-          setIsLoaded(true);
           setisForecasted(true);
           setCanRefresh(true);
         } catch (e) {

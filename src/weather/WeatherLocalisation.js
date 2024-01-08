@@ -5,6 +5,7 @@ import useFetchLocation from "../fetch/useFetchLocation";
 import useFetchTestLocation from "../fetch/useFetchTestLocation";
 import WeatherNow from "./WeatherNow";
 import WeatherLongTerm from "./WeatherLongTerm";
+import WeatherPrediction24 from "./WeatherPrediction24";
 import WeatherPrediction from "./WeatherPrediction";
 
 export default function WeatherLocalisation(props) {
@@ -279,6 +280,9 @@ export default function WeatherLocalisation(props) {
       } ${backgroundColoring} z-10 m-0 box-border flex h-full min-h-full w-fit min-w-full select-none flex-col flex-nowrap items-center justify-start duration-500 sm:w-full md:w-full lg:w-[45%] lg:rounded-2xl `}
       onClick={() => (menuOn ? setMenuOn(false) : null)}
     >
+      {(!isLoaded || !isLoadedForecast || !isForecasted) && (
+        <div className={`h-screen w-screen ${backgroundColoring}`}></div>
+      )}
       <div className=" m-1 mb-2 flex items-end justify-end self-end">
         <button
           className={`m-1.5 mb-0 flex h-8 w-fit items-center rounded-full border-2 border-solid border-gray-400 p-1.5 ${
@@ -313,21 +317,30 @@ export default function WeatherLocalisation(props) {
             showbutton={true}
             titlename={false}
           />
-          <WeatherPrediction
-            tempforecast={tempForecast}
-            skyforecast={skyForecast}
-            rainforecast={weatherForecast}
-          />
         </>
       )}
       {isForecasted && (
-        <WeatherLongTerm
-          highestnextdays={highestNextDays}
-          tempnextdays={tempNextDays}
-          skynextdays={skyNextDays}
-          rainnextdays={rainNextDays}
-          isforecasted={isForecasted}
-        />
+        <>
+          <div className="m-2 mb-0 w-full p-2 pb-6">
+            <WeatherPrediction24
+              tempforecast={tempForecast}
+              skyforecast={skyForecast}
+              rainforecast={weatherForecast}
+              highestnextdays={highestNextDays}
+              tempnextdays={tempNextDays}
+              skynextdays={skyNextDays}
+              rainnextdays={rainNextDays}
+              isforecasted={isForecasted}
+            />
+          </div>
+          <WeatherLongTerm
+            highestnextdays={highestNextDays}
+            tempnextdays={tempNextDays}
+            skynextdays={skyNextDays}
+            rainnextdays={rainNextDays}
+            isforecasted={isForecasted}
+          />
+        </>
       )}
     </div>
   );

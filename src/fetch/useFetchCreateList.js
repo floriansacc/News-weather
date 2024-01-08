@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { QueryContext } from "../App";
 
-export default function useFetchCreateList(liste) {
+export default function useFetchCreateList(liste, refreshFetch) {
   const {
     serviceKey,
     baseDate,
@@ -15,6 +15,7 @@ export default function useFetchCreateList(liste) {
   const [listeCounter, setListeCounter] = useState(0);
   const [listSaved, setListSaved] = useState(false);
   const [isFetch, setIsFetch] = useState(false);
+  const [canRefersh, setCanRefresh] = useState(null);
 
   const [weatherInfoNow, setWeatherInfoNow] = useState({});
   const [weatherForecast, setWeatherForecast] = useState({});
@@ -36,7 +37,8 @@ export default function useFetchCreateList(liste) {
     "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
 
   useEffect(() => {
-    if (!liste[0]) {
+    if (!liste[0] && !listSaved) {
+      window.console.log("no first fetch");
       return;
     } else {
       const getWeatherListNow = async (name, nx, ny) => {
@@ -306,9 +308,11 @@ export default function useFetchCreateList(liste) {
           setIsLoaded(true);
           setIsLoadedForecast(true);
           setisForecasted(true);
+          setCanRefresh(true);
         })
         .catch((e) => {
           window.console.log(`New addition failed: ${e}`);
+          setCanRefresh(true);
         });
     }
     return () => {
@@ -316,6 +320,7 @@ export default function useFetchCreateList(liste) {
       setIsLoaded(false);
       setIsLoadedForecast(false);
       setisForecasted(false);
+      setCanRefresh(false);
     };
   }, [listeCounter]);
 
@@ -337,7 +342,7 @@ export default function useFetchCreateList(liste) {
           }
           const jsonResponse = await response.json();
           window.console.log([
-            `List ${name[0]} ${name[1]}`,
+            `Saved list ${name[0]} ${name[1]}`,
             jsonResponse.response.header["resultMsg"],
           ]);
           await jsonResponse.response.body.items.item.forEach((x, i) => {
@@ -374,7 +379,7 @@ export default function useFetchCreateList(liste) {
           }
           const jsonResponse = await response.json();
           window.console.log([
-            `List Forecast ${name[0]} ${name[1]}`,
+            `Saved list Forecast ${name[0]} ${name[1]}`,
             jsonResponse.response.header["resultMsg"],
           ]);
           await jsonResponse.response.body.items.item.forEach((x, i) => {
@@ -418,7 +423,7 @@ export default function useFetchCreateList(liste) {
           }
           const jsonResponse = await response.json();
           window.console.log([
-            `List next day ${name[0]} ${name[1]}`,
+            `Saved list next day ${name[0]} ${name[1]}`,
             jsonResponse.response.header["resultMsg"],
           ]);
           await jsonResponse.response.body.items.item.forEach((x, i) => {
@@ -576,9 +581,11 @@ export default function useFetchCreateList(liste) {
           setIsLoaded(true);
           setIsLoadedForecast(true);
           setisForecasted(true);
+          setCanRefresh(true);
         })
         .catch((e) => {
           window.console.log(`List recover fail: ${e}`);
+          setCanRefresh(true);
         });
     }
     return () => {
@@ -586,8 +593,9 @@ export default function useFetchCreateList(liste) {
       setIsLoaded(false);
       setIsLoadedForecast(false);
       setisForecasted(false);
+      setCanRefresh(false);
     };
-  }, [listSaved]);
+  }, [listSaved, refreshFetch]);
 
   return {
     listeCounter,
@@ -618,5 +626,6 @@ export default function useFetchCreateList(liste) {
     setIsLoadedForecast,
     isForecasted,
     setisForecasted,
+    canRefersh,
   };
 }

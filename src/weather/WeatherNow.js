@@ -11,13 +11,10 @@ export default function WeatherNow(props) {
     hourrain,
     temp,
     windspeed,
-    loadstate,
-    loadforecast,
     skyforecast,
     mouseenter,
     mouseleave,
     showbutton,
-    titlename,
   } = props;
   const { images } = useContext(QueryContext);
   return (
@@ -40,15 +37,13 @@ export default function WeatherNow(props) {
           />
         )}
       </div>
-      {(cityselector || titlename) && (
-        <div className="flex w-full flex-nowrap items-center justify-center whitespace-nowrap py-4 text-right ">
-          <p className="w-fit p-px pb-1 text-xl font-semibold">
-            {raincond.Phase1}
-          </p>
-          <p className="p-px">{` - ${raincond.Phase2} -`}</p>
-          <p className="p-px">{raincond.Phase3}</p>
-        </div>
-      )}
+      <div className="flex w-full flex-nowrap items-center justify-center whitespace-nowrap py-4 text-right ">
+        <p className="w-fit p-px pb-1 text-xl font-semibold">
+          {raincond.Phase1}
+        </p>
+        <p className="p-px">{` - ${raincond.Phase2} -`}</p>
+        <p className="p-px">{raincond.Phase3}</p>
+      </div>
       <div className="mt-2 flex w-5/12 flex-col items-center">
         <img
           alt="mainimg"

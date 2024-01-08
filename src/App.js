@@ -4,7 +4,7 @@ import Navigator from "./weather/Navigator";
 import WeatherHome from "./weather/WeatherHome";
 import WeatherLocalisation from "./weather/WeatherLocalisation";
 import WeatherCreateMyList from "./weather/WeatherCreateMyList";
-import dataimport from "./weather/dataimport.json";
+import dataimport from "./fetch/dataimport.json";
 
 import sunny from "./images/sunny logo.png";
 import pCloudy from "./images/partial cloudy logo.png";
@@ -210,7 +210,7 @@ export default function App() {
           futureTime,
         }}
       >
-        <div className="h-dvh w-fullflex-row flex items-start justify-start overflow-x-hidden lg:h-screen">
+        <div className="h-dvh flex w-full flex-row items-start justify-start overflow-x-hidden lg:h-screen">
           <Navigator menu={menu} />
           <Routes>
             <Route

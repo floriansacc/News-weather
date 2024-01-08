@@ -56,7 +56,7 @@ export default function WeatherPrediction(props) {
   };
 
   return (
-    <div className="border-1 m-2 mt-1 w-full rounded-2xl border-solid border-transparent bg-white bg-opacity-25 p-2">
+    <div className="border-1 w-full rounded-2xl border-solid border-transparent bg-white bg-opacity-25">
       <div className="flex flex-col items-center justify-center">
         <div className="flex w-full flex-row flex-nowrap justify-between">
           {tempforecast.slice(1, 6).map((x, i) => (

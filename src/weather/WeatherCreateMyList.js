@@ -23,6 +23,7 @@ export default function WeatherCreateMyList(props) {
   const [liste, setListe] = useState([]);
   const [elem, setElem] = useState([]);
 
+  const [refreshFetch, setRefreshFetch] = useState(0);
   const [fetchFail, setFetchFail] = useState(false);
   const [displayWeatherList, setDisplayWeatherList] = useState(false);
   const [countSlide, setCountSlide] = useState(0);
@@ -64,7 +65,8 @@ export default function WeatherCreateMyList(props) {
     setIsLoadedForecast,
     isForecasted,
     setisForecasted,
-  } = useFetchCreateList(liste);
+    canRefersh,
+  } = useFetchCreateList(liste, refreshFetch);
 
   let bgSet;
 
@@ -164,6 +166,10 @@ export default function WeatherCreateMyList(props) {
   const handleSaveList = (e) => {
     sessionStorage.setItem("lastValue", JSON.stringify(liste));
     setLastSessionListe(liste);
+  };
+
+  const handleRefresh = (e) => {
+    setRefreshFetch((prev) => prev + 1);
   };
 
   const handleBullet = (e) => {
@@ -320,10 +326,25 @@ export default function WeatherCreateMyList(props) {
 
   return (
     <div
-      className={`${previousBg} mt-4 flex min-h-full flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden scrollbar-hide sm:m-0 sm:w-full sm:flex-col sm:flex-nowrap md:m-0 md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-full lg:flex-row-reverse lg:flex-wrap`}
+      className={`${previousBg} mt-4 flex min-h-full flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden transition-all duration-300 ease-in scrollbar-hide sm:m-0 sm:w-full sm:flex-col sm:flex-nowrap md:m-0 md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-full lg:flex-row-reverse lg:flex-wrap`}
       onClick={() => (menuOn ? setMenuOn(false) : null)}
       id="home3"
     >
+      {(!isLoaded || !isForecasted || !isLoadedForecast) && (
+        <button
+          className={`m-1.5 mb-0 flex h-8 w-fit items-center self-end rounded-full border-2 border-solid border-gray-400 p-1.5 ${
+            canRefersh
+              ? "pointer-events-auto bg-gradient-to-r from-gray-300/25 to-gray-700/25"
+              : "pointer-events-none bg-gradient-to-r from-red-300/75 to-red-700/75"
+          }`}
+          onClick={handleRefresh}
+          onMouseEnter={mouseenter}
+          onMouseLeave={mouseleave}
+          id="refresh-button"
+        >
+          Refresh fetch
+        </button>
+      )}
       {lastSessionListe !== null && !displayWeatherList && (
         <p className="p-10 text-2xl">Retrieving last list</p>
       )}
@@ -336,12 +357,6 @@ export default function WeatherCreateMyList(props) {
           className={`relative z-20 flex h-full w-full justify-start ${
             !isDragging ? "transition-all" : ""
           } `}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
         >
           {liste.map((x, i) => (
             <div
@@ -349,66 +364,85 @@ export default function WeatherCreateMyList(props) {
             >
               {isLoaded && isLoadedForecast && (
                 <>
-                  <WeatherNow
-                    handlecityselector={handleCitySelector}
-                    loadstate={isLoaded}
-                    loadforecast={isLoadedForecast}
-                    raincond={
-                      weatherInfoNow[
-                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                      ][0]
-                    }
-                    humidity={
-                      weatherInfoNow[
-                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                      ][1]
-                    }
-                    hourrain={
-                      weatherInfoNow[
-                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                      ][2]
-                    }
-                    temp={
-                      weatherInfoNow[
-                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                      ][3]
-                    }
-                    winddir={
-                      weatherInfoNow[
-                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                      ][5]
-                    }
-                    windspeed={
-                      weatherInfoNow[
-                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                      ][7]
-                    }
-                    skyforecast={
-                      skyForecast[
-                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                      ]
-                    }
-                    mouseenter={mouseenter}
-                    mouseleave={mouseleave}
-                    titlename={true}
-                  />
-                  <WeatherPrediction
-                    tempforecast={
-                      tempForecast[
-                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                      ]
-                    }
-                    skyforecast={
-                      skyForecast[
-                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                      ]
-                    }
-                    rainforecast={
-                      weatherForecast[
-                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                      ]
-                    }
-                  />
+                  <div
+                    onPointerDown={handlePointerDown}
+                    onPointerMove={handlePointerMove}
+                    onPointerUp={handlePointerUp}
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
+                  >
+                    <WeatherNow
+                      handlecityselector={handleCitySelector}
+                      loadstate={isLoaded}
+                      loadforecast={isLoadedForecast}
+                      raincond={
+                        weatherInfoNow[
+                          `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                        ][0]
+                      }
+                      humidity={
+                        weatherInfoNow[
+                          `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                        ][1]
+                      }
+                      hourrain={
+                        weatherInfoNow[
+                          `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                        ][2]
+                      }
+                      temp={
+                        weatherInfoNow[
+                          `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                        ][3]
+                      }
+                      winddir={
+                        weatherInfoNow[
+                          `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                        ][5]
+                      }
+                      windspeed={
+                        weatherInfoNow[
+                          `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                        ][7]
+                      }
+                      skyforecast={
+                        skyForecast[
+                          `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                        ]
+                      }
+                      mouseenter={mouseenter}
+                      mouseleave={mouseleave}
+                      titlename={true}
+                    />
+                  </div>
+                  <div
+                    className="m-2 mb-0 w-full p-2 pb-6"
+                    onPointerDown={handlePointerDown}
+                    onPointerMove={handlePointerMove}
+                    onPointerUp={handlePointerUp}
+                    onTouchStart={handleTouchStart}
+                    onTouchMove={handleTouchMove}
+                    onTouchEnd={handleTouchEnd}
+                  >
+                    <WeatherPrediction
+                      tempforecast={
+                        tempForecast[
+                          `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                        ]
+                      }
+                      skyforecast={
+                        skyForecast[
+                          `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                        ]
+                      }
+                      rainforecast={
+                        weatherForecast[
+                          `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                        ]
+                      }
+                    />
+                  </div>
                 </>
               )}
               {isForecasted && (

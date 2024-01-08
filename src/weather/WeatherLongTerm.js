@@ -55,7 +55,7 @@ export default function WeatherLongTerm(props) {
   ];
 
   return (
-    <div className="m-2 flex h-fit w-full flex-wrap self-center rounded-2xl border-2 border-solid border-transparent bg-white bg-opacity-25 p-2">
+    <div className="m-2 mt-0 flex h-fit w-full flex-wrap self-center rounded-2xl border-2 border-solid border-transparent bg-white bg-opacity-25 p-2">
       {arrayToMap.map((x, i) => (
         <ul className="mx-1 flex h-fit w-2/12 min-w-fit flex-col items-center justify-center rounded-2xl bg-white bg-opacity-10">
           <li
