@@ -59,6 +59,10 @@ export default function WeatherCreateMyList(props) {
     setSkyNextDays,
     rainNextDays,
     setRainNextDays,
+    accuRain,
+    setAccuRain,
+    accuSnow,
+    setAccuSnow,
     isLoaded,
     setIsLoaded,
     isLoadedForecast,
@@ -139,6 +143,8 @@ export default function WeatherCreateMyList(props) {
     setWeatherForecast({});
     setTempForecast({});
     setSkyForecast({});
+    setAccuRain({});
+    setAccuSnow({});
     setListeCounter(0);
     setCountSlide(0);
     sessionStorage.setItem("lastValue", null);

@@ -44,6 +44,10 @@ export default function WeatherLocalisation(props) {
     setSkyNextDays,
     rainNextDays,
     setRainNextDays,
+    accuRain,
+    setAccuRain,
+    accuSnow,
+    setAccuSnow,
     isLoaded,
     setIsLoaded,
     isLoadedForecast,
@@ -140,6 +144,8 @@ export default function WeatherLocalisation(props) {
     setTempNextDays([]);
     setSkyNextDays([]);
     setRainNextDays([]);
+    setAccuRain([]);
+    setAccuSnow([]);
     setIsLoaded(false);
     setIsLoadedForecast(false);
     setRefreshGeoloc((prev) => prev + 1);
@@ -174,6 +180,8 @@ export default function WeatherLocalisation(props) {
       setTempNextDays([]);
       setSkyNextDays([]);
       setRainNextDays([]);
+      setAccuRain([]);
+      setAccuSnow([]);
       setIsLoaded(false);
       setIsLoadedForecast(false);
       setisForecasted(false);
@@ -281,7 +289,9 @@ export default function WeatherLocalisation(props) {
       onClick={() => (menuOn ? setMenuOn(false) : null)}
     >
       {(!isLoaded || !isLoadedForecast || !isForecasted) && (
-        <div className={`h-screen w-screen ${backgroundColoring}`}></div>
+        <div
+          className={`absolute left-0 top-0 -z-20 h-screen w-screen ${backgroundColoring}`}
+        ></div>
       )}
       <div className=" m-1 mb-2 flex items-end justify-end self-end">
         <button
@@ -319,7 +329,7 @@ export default function WeatherLocalisation(props) {
           />
         </>
       )}
-      {isForecasted && (
+      {isLoadedForecast && isForecasted && (
         <>
           <div className="m-2 mb-0 w-full p-2 pb-6">
             <WeatherPrediction24

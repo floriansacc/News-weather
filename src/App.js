@@ -210,7 +210,7 @@ export default function App() {
           futureTime,
         }}
       >
-        <div className="h-dvh flex w-full flex-row items-start justify-start overflow-x-hidden lg:h-screen">
+        <div className="h-[100dhv] flex w-full flex-row items-start justify-start overflow-x-hidden lg:h-screen">
           <Navigator menu={menu} />
           <Routes>
             <Route

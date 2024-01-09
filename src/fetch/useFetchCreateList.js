@@ -25,6 +25,9 @@ export default function useFetchCreateList(liste, refreshFetch) {
   const [tempNextDays, setTempNextDays] = useState({});
   const [skyNextDays, setSkyNextDays] = useState({});
   const [rainNextDays, setRainNextDays] = useState({});
+  const [accuRain, setAccuRain] = useState({});
+  const [accuSnow, setAccuSnow] = useState({});
+
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoadedForecast, setIsLoadedForecast] = useState(false);
   const [isForecasted, setisForecasted] = useState(false);
@@ -177,6 +180,20 @@ export default function useFetchCreateList(liste, refreshFetch) {
                 x.fcstDate === afterTomorrowDate)
             ) {
               temporary[i] = newData;
+            } else if (
+              x.category === "PCP" &&
+              (x.fcstDate === baseDate ||
+                x.fcstDate === tomorrowDate ||
+                x.fcstDate === afterTomorrowDate)
+            ) {
+              temporary[i] = newData;
+            } else if (
+              x.category === "SNO" &&
+              (x.fcstDate === baseDate ||
+                x.fcstDate === tomorrowDate ||
+                x.fcstDate === afterTomorrowDate)
+            ) {
+              temporary[i] = newData;
             }
           });
           return temporary;
@@ -293,6 +310,22 @@ export default function useFetchCreateList(liste, refreshFetch) {
               liste[listeCounter - 1]["Phase3"]
             }`]: resultsFirstFetch
               ? resultsFirstFetch.filter((x) => x.category === "TMP")
+              : [],
+          }));
+          setAccuRain((prev) => ({
+            ...prev,
+            [`${liste[listeCounter - 1]["Phase2"]} - ${
+              liste[listeCounter - 1]["Phase3"]
+            }`]: resultsFirstFetch
+              ? resultsFirstFetch.filter((x) => x.category === "PCP")
+              : [],
+          }));
+          setAccuSnow((prev) => ({
+            ...prev,
+            [`${liste[listeCounter - 1]["Phase2"]} - ${
+              liste[listeCounter - 1]["Phase3"]
+            }`]: resultsFirstFetch
+              ? resultsFirstFetch.filter((x) => x.category === "SNO")
               : [],
           }));
         } catch (error) {
@@ -464,6 +497,20 @@ export default function useFetchCreateList(liste, refreshFetch) {
                 x.fcstDate === afterTomorrowDate)
             ) {
               temporary[i] = newData;
+            } else if (
+              x.category === "PCP" &&
+              (x.fcstDate === baseDate ||
+                x.fcstDate === tomorrowDate ||
+                x.fcstDate === afterTomorrowDate)
+            ) {
+              temporary[i] = newData;
+            } else if (
+              x.category === "SNO" &&
+              (x.fcstDate === baseDate ||
+                x.fcstDate === tomorrowDate ||
+                x.fcstDate === afterTomorrowDate)
+            ) {
+              temporary[i] = newData;
             }
           });
           return temporary;
@@ -567,6 +614,20 @@ export default function useFetchCreateList(liste, refreshFetch) {
                   ? resultsFirstFetch.filter((x) => x.category === "TMP")
                   : [],
             }));
+            setAccuRain((prev) => ({
+              ...prev,
+              [`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]:
+                resultsFirstFetch
+                  ? resultsFirstFetch.filter((x) => x.category === "PCP")
+                  : [],
+            }));
+            setAccuSnow((prev) => ({
+              ...prev,
+              [`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]:
+                resultsFirstFetch
+                  ? resultsFirstFetch.filter((x) => x.category === "SNO")
+                  : [],
+            }));
           } catch (error) {
             window.console.log(error);
             setisForecasted(false);
@@ -620,6 +681,10 @@ export default function useFetchCreateList(liste, refreshFetch) {
     setSkyNextDays,
     rainNextDays,
     setRainNextDays,
+    accuRain,
+    setAccuRain,
+    accuSnow,
+    setAccuSnow,
     isLoaded,
     setIsLoaded,
     isLoadedForecast,

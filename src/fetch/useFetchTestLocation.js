@@ -20,6 +20,8 @@ export default function useFetchTestLocation(city, isLocated, refreshFetch) {
   const [tempNextDays, setTempNextDays] = useState([]);
   const [skyNextDays, setSkyNextDays] = useState([]);
   const [rainNextDays, setRainNextDays] = useState([]);
+  const [accuRain, setAccuRain] = useState([]);
+  const [accuSnow, setAccuSnow] = useState([]);
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoadedForecast, setIsLoadedForecast] = useState(false);
@@ -204,6 +206,20 @@ export default function useFetchTestLocation(city, isLocated, refreshFetch) {
               x.fcstDate === afterTomorrowDate)
           ) {
             setRainNextDays((prev) => [...prev, newData]);
+          } else if (
+            x.category === "PCP" &&
+            (x.fcstDate === baseDate ||
+              x.fcstDate === tomorrowDate ||
+              x.fcstDate === afterTomorrowDate)
+          ) {
+            setAccuRain((prev) => [...prev, newData]);
+          } else if (
+            x.category === "SNO" &&
+            (x.fcstDate === baseDate ||
+              x.fcstDate === tomorrowDate ||
+              x.fcstDate === afterTomorrowDate)
+          ) {
+            setAccuSnow((prev) => [...prev, newData]);
           }
         });
       } catch (error) {
@@ -249,6 +265,10 @@ export default function useFetchTestLocation(city, isLocated, refreshFetch) {
     setSkyNextDays,
     rainNextDays,
     setRainNextDays,
+    accuRain,
+    setAccuRain,
+    accuSnow,
+    setAccuSnow,
     isLoaded,
     setIsLoaded,
     isLoadedForecast,
