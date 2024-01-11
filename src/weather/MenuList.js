@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import ButtonOpenClose from "./ButtonOpenClose";
 import { QueryContext } from "../App";
+import { IoCloseCircleOutline } from "react-icons/io5";
 
 export default function MenuList(props) {
   const {
@@ -10,11 +11,13 @@ export default function MenuList(props) {
     fetchcheck,
     elem,
     liste,
+    setliste,
     cityselector,
     resetlist,
     weatherslide,
     savelist,
     displayon,
+    counter,
   } = props;
   const { dataimport, menuListOn, setMenuListOn } = useContext(QueryContext);
 
@@ -37,6 +40,11 @@ export default function MenuList(props) {
 
   const handleDisplayMouseLeave = (e) => {
     document.getElementById("displaydescription").style.display = "none";
+  };
+
+  const handleDeleteElem = (index) => {
+    setliste((prev) => prev.filter((_, i) => i !== index));
+    window.console.log(counter);
   };
 
   return (
@@ -148,28 +156,7 @@ export default function MenuList(props) {
           </p>
         </div>
       </div>
-      <p className="mt-6">List of city to display:</p>
-      <div
-        className={`my-4 grid w-full auto-rows-t1 grid-cols-3 justify-items-center rounded-xl border border-solid border-black`}
-      >
-        <p className="my-1 font-semibold">1단계</p>
-        <p className="my-1 font-semibold">2단계</p>
-        <p className="my-1 font-semibold">3단계</p>
-        {liste.map((x, i) => (
-          <>
-            <p className="min-w-33 text-center" key={`p1${i}`}>
-              {x.Phase1}
-            </p>
-            <p className="min-w-33 text-center" key={`p2${i}`}>
-              {x.Phase2}
-            </p>
-            <p className="w-fit min-w-25 text-center" key={`p3${i}`}>
-              {x.Phase3}
-            </p>
-          </>
-        ))}
-      </div>
-      <div className="flex items-center justify-center">
+      <div className="mt-1 flex items-center justify-center">
         <button
           className={`m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5
         ${fetchcheck[0] ? "brightness-100" : "brightness-75"}`}
@@ -190,6 +177,35 @@ export default function MenuList(props) {
           Save list
         </button>
       </div>
+      <p className="mt-3">List of city to display:</p>
+      <div
+        className={`relative my-4 grid w-full auto-rows-t1 grid-cols-3 justify-items-center rounded-xl border border-solid border-black`}
+      >
+        <p className="my-1 font-semibold">1단계</p>
+        <p className="my-1 font-semibold">2단계</p>
+        <p className="my-1 font-semibold">3단계</p>
+        {liste.map((x, i) => (
+          <>
+            <p className="min-w-33 text-center" key={`p1${i}`}>
+              {x.Phase1}
+            </p>
+            <p className="min-w-33 text-center" key={`p2${i}`}>
+              {x.Phase2}
+            </p>
+            <p className="relative w-fit min-w-25 text-center" key={`p3${i}`}>
+              {x.Phase3}
+              <span
+                class="absolute -top-2 right-0 h-4 w-4"
+                onClick={() => handleDeleteElem(i)}
+              >
+                <IoCloseCircleOutline class="absolute z-10 inline-flex h-full w-full rounded-full opacity-75 hover:animate-ping hover:bg-sky-500" />
+                <IoCloseCircleOutline class="absolute inline-flex h-4 w-4 rounded-full bg-transparent" />
+              </span>
+            </p>
+          </>
+        ))}
+      </div>
+
       <ButtonOpenClose
         menuListOn={menuListOn}
         setMenuListOn={setMenuListOn}

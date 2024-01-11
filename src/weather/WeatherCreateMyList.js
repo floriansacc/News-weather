@@ -7,6 +7,7 @@ import useFetchCreateList from "../fetch/useFetchCreateList";
 import WeatherPrediction from "./WeatherPrediction";
 import WeatherNow from "./WeatherNow";
 import WeatherLongTerm from "./WeatherLongTerm";
+import WeatherPrediction24 from "./WeatherPrediction24";
 
 export default function WeatherCreateMyList(props) {
   const { mouseenter, mouseleave, resizew } = props;
@@ -291,6 +292,10 @@ export default function WeatherCreateMyList(props) {
   }, [countSlide]);
 
   useEffect(() => {
+    setPreviousBg(bgFunction(countSlide));
+  }, [displayWeatherList]);
+
+  useEffect(() => {
     document.getElementById("resetbutton").style.borderColor = "";
     document.getElementById("resetbutton").style.background = "";
     document.getElementById("resetbutton").innerHTML = "Reset";
@@ -332,7 +337,7 @@ export default function WeatherCreateMyList(props) {
 
   return (
     <div
-      className={`${previousBg} mt-4 flex min-h-full flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden transition-all duration-300 ease-in scrollbar-hide sm:m-0 sm:w-full sm:flex-col sm:flex-nowrap md:m-0 md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-full lg:flex-row-reverse lg:flex-wrap`}
+      className={`${previousBg} mt-4 flex min-h-full flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden transition-colors duration-300 ease-in scrollbar-hide sm:m-0 sm:w-full sm:flex-col sm:flex-nowrap md:m-0 md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-full lg:flex-row-reverse lg:flex-wrap`}
       onClick={() => (menuOn ? setMenuOn(false) : null)}
       id="home3"
     >
@@ -422,16 +427,13 @@ export default function WeatherCreateMyList(props) {
                       titlename={true}
                     />
                   </div>
-                  <div
-                    className="m-2 mb-0 w-full p-2 pb-6"
-                    onPointerDown={handlePointerDown}
-                    onPointerMove={handlePointerMove}
-                    onPointerUp={handlePointerUp}
-                    onTouchStart={handleTouchStart}
-                    onTouchMove={handleTouchMove}
-                    onTouchEnd={handleTouchEnd}
-                  >
-                    <WeatherPrediction
+                  <div className="m-2 mb-0 w-full p-2 pb-6"></div>
+                </>
+              )}
+              {isLoadedForecast && isForecasted && (
+                <>
+                  <div className="m-2 mb-0 w-full p-2 pb-6">
+                    <WeatherPrediction24
                       tempforecast={
                         tempForecast[
                           `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
@@ -447,32 +449,59 @@ export default function WeatherCreateMyList(props) {
                           `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
                         ]
                       }
+                      highestnextdays={
+                        highestNextDays[
+                          `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                        ]
+                      }
+                      tempnextdays={
+                        tempNextDays[
+                          `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                        ]
+                      }
+                      skynextdays={
+                        skyNextDays[
+                          `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                        ]
+                      }
+                      rainnextdays={
+                        rainNextDays[
+                          `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                        ]
+                      }
+                      isforecasted={isForecasted}
+                      onPointerDown={handlePointerDown}
+                      onPointerMove={handlePointerMove}
+                      onPointerUp={handlePointerUp}
+                      onTouchStart={handleTouchStart}
+                      onTouchMove={handleTouchMove}
+                      onTouchEnd={handleTouchEnd}
                     />
                   </div>
+                  <WeatherLongTerm
+                    highestnextdays={
+                      highestNextDays[
+                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                      ]
+                    }
+                    tempnextdays={
+                      tempNextDays[
+                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                      ]
+                    }
+                    skynextdays={
+                      skyNextDays[
+                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                      ]
+                    }
+                    rainnextdays={
+                      rainNextDays[
+                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                      ]
+                    }
+                    isforecasted={isForecasted}
+                  />
                 </>
-              )}
-              {isForecasted && (
-                <WeatherLongTerm
-                  highestnextdays={
-                    highestNextDays[
-                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ]
-                  }
-                  tempnextdays={
-                    tempNextDays[
-                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ]
-                  }
-                  skynextdays={
-                    skyNextDays[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`]
-                  }
-                  rainnextdays={
-                    rainNextDays[
-                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ]
-                  }
-                  isforecasted={isForecasted}
-                />
               )}
             </div>
           ))}
@@ -522,11 +551,13 @@ export default function WeatherCreateMyList(props) {
         fetchcheck={[isFetch, fetchFail]}
         elem={elem}
         liste={liste}
+        setliste={setListe}
         cityselector={handleCitySelector}
         resetlist={handleResetListe}
         weatherslide={handleDisplayWeatherSlide}
         displayon={displayWeatherList}
         savelist={handleSaveList}
+        counter={listeCounter}
       />
       <ButtonOpenClose
         menuListOn={menuListOn}

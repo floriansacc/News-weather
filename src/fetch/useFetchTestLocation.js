@@ -29,20 +29,23 @@ export default function useFetchTestLocation(city, isLocated, refreshFetch) {
   const [canRefersh, setCanRefresh] = useState(null);
 
   const weatherUrlNow =
-    "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
+    "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
   const weatherUrlForecast =
-    "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst";
+    "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst";
   const weatherNextDay =
-    "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
+    "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
 
   useEffect(() => {
+    const abortController = new AbortController();
     const getWeather = async () => {
       const getUrlWeatherNow = `${weatherUrlNow}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTime}&nx=${city[3]}&ny=${city[4]}`;
       try {
         const response = await fetch(getUrlWeatherNow, {
+          signal: abortController.signal,
           headers: {
             Accept: "application / json",
           },
+          method: "GET",
         });
         if (!response.ok) {
           throw new Error("Pas de météo pour toi");
@@ -88,6 +91,7 @@ export default function useFetchTestLocation(city, isLocated, refreshFetch) {
       fetchAll();
     }
     return () => {
+      abortController.abort();
       setIsLoaded(false);
       setIsLoadedForecast(false);
       setCanRefresh(false);
@@ -95,13 +99,16 @@ export default function useFetchTestLocation(city, isLocated, refreshFetch) {
   }, [isLocated, refreshFetch]);
 
   useEffect(() => {
+    const abortController = new AbortController();
     const getWeather2 = async () => {
       const getUrlWeatherForecast = `${weatherUrlForecast}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTimeForecast}&nx=${city[3]}&ny=${city[4]}`;
       try {
         const response = await fetch(getUrlWeatherForecast, {
+          signal: abortController.signal,
           headers: {
             Accept: "application / json",
           },
+          method: "GET",
         });
         if (!response.ok) {
           throw new Error("Pas de météo pour toi");
@@ -147,6 +154,7 @@ export default function useFetchTestLocation(city, isLocated, refreshFetch) {
       fetchAll();
     }
     return () => {
+      abortController.abort();
       setIsLoaded(false);
       setIsLoadedForecast(false);
       setCanRefresh(false);
@@ -154,13 +162,16 @@ export default function useFetchTestLocation(city, isLocated, refreshFetch) {
   }, [isLocated, refreshFetch]);
 
   useEffect(() => {
+    const abortController = new AbortController();
     const getWeather3 = async () => {
       const getUrlWeatherNextDay = `${weatherNextDay}?serviceKey=${serviceKey}&numOfRows=800&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${futureTime}&nx=${city[3]}&ny=${city[4]}`;
       try {
         const response = await fetch(getUrlWeatherNextDay, {
+          signal: abortController.signal,
           headers: {
             Accept: "application / json",
           },
+          method: "GET",
         });
         if (!response.ok) {
           throw new Error("Pas de météo pour toi");
@@ -243,6 +254,7 @@ export default function useFetchTestLocation(city, isLocated, refreshFetch) {
       fetchAll();
     }
     return () => {
+      abortController.abort();
       setisForecasted(false);
       setCanRefresh(false);
     };

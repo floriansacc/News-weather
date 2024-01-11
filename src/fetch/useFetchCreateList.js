@@ -33,11 +33,11 @@ export default function useFetchCreateList(liste, refreshFetch) {
   const [isForecasted, setisForecasted] = useState(false);
 
   const weatherUrlNow =
-    "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
+    "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";
   const weatherUrlForecast =
-    "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst";
+    "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst";
   const weatherNextDay =
-    "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
+    "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
 
   useEffect(() => {
     if (!liste[0] && !listSaved) {
@@ -52,6 +52,7 @@ export default function useFetchCreateList(liste, refreshFetch) {
             headers: {
               Accept: "application / json",
             },
+            method: "GET",
           });
           if (!response.ok) {
             throw new Error("Pas de météo pour toi");
@@ -89,6 +90,7 @@ export default function useFetchCreateList(liste, refreshFetch) {
             headers: {
               Accept: "application / json",
             },
+            method: "GET",
           });
           if (!response.ok) {
             throw new Error("Pas de météo pour toi");
@@ -133,6 +135,7 @@ export default function useFetchCreateList(liste, refreshFetch) {
             headers: {
               Accept: "application / json",
             },
+            method: "GET",
           });
           if (!response.ok) {
             throw new Error("Pas de météo pour toi");
@@ -369,6 +372,7 @@ export default function useFetchCreateList(liste, refreshFetch) {
             headers: {
               Accept: "application / json",
             },
+            method: "GET",
           });
           if (!response.ok) {
             throw new Error("Pas de météo pour toi");
@@ -406,6 +410,7 @@ export default function useFetchCreateList(liste, refreshFetch) {
             headers: {
               Accept: "application / json",
             },
+            method: "GET",
           });
           if (!response.ok) {
             throw new Error("Pas de météo pour toi");
@@ -450,6 +455,7 @@ export default function useFetchCreateList(liste, refreshFetch) {
             headers: {
               Accept: "application / json",
             },
+            method: "GET",
           });
           if (!response.ok) {
             throw new Error("Pas de météo pour toi");
@@ -635,19 +641,24 @@ export default function useFetchCreateList(liste, refreshFetch) {
           }
         }
       };
-      Promise.all([saveDataNow(), saveDataForecast(), saveDataNextDays()])
-        .then(() => {
+      let fetchAll = async () => {
+        try {
+          await saveDataNow();
+          await saveDataForecast();
+          await saveDataNextDays();
           window.console.log("List recover sucess");
           setIsFetch(true);
           setIsLoaded(true);
           setIsLoadedForecast(true);
           setisForecasted(true);
           setCanRefresh(true);
-        })
-        .catch((e) => {
+        } catch (e) {
           window.console.log(`List recover fail: ${e}`);
           setCanRefresh(true);
-        });
+          setIsFetch(false);
+        }
+      };
+      fetchAll();
     }
     return () => {
       setIsFetch(false);

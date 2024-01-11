@@ -1,12 +1,9 @@
 import { useState, useEffect, useContext } from "react";
-import WeatherUID from "./WeatherUID";
 import { QueryContext } from "../App";
-import useFetchLocation from "../fetch/useFetchLocation";
 import useFetchTestLocation from "../fetch/useFetchTestLocation";
 import WeatherNow from "./WeatherNow";
 import WeatherLongTerm from "./WeatherLongTerm";
 import WeatherPrediction24 from "./WeatherPrediction24";
-import WeatherPrediction from "./WeatherPrediction";
 
 export default function WeatherLocalisation(props) {
   const { mouseenter, mouseleave } = props;
