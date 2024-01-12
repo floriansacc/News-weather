@@ -5,6 +5,7 @@ export default function useFetchCreateList(liste, refreshFetch) {
   const {
     serviceKey,
     baseDate,
+    baseDateFuture,
     tomorrowDate,
     afterTomorrowDate,
     baseTime,
@@ -129,7 +130,7 @@ export default function useFetchCreateList(liste, refreshFetch) {
       };
       const getWeatherNextDays = async (name, nx, ny) => {
         let temporary = [];
-        const getUrlWeatherNextDay = `${weatherNextDay}?serviceKey=${serviceKey}&numOfRows=800&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${futureTime}&nx=${nx}&ny=${ny}`;
+        const getUrlWeatherNextDay = `${weatherNextDay}?serviceKey=${serviceKey}&numOfRows=800&dataType=JSON&pageNo=1&base_date=${baseDateFuture}&base_time=${futureTime}&nx=${nx}&ny=${ny}`;
         try {
           const response = await fetch(getUrlWeatherNextDay, {
             headers: {
@@ -449,7 +450,7 @@ export default function useFetchCreateList(liste, refreshFetch) {
       };
       const getWeatherNextDays = async (name, nx, ny) => {
         let temporary = [];
-        const getUrlWeatherNextDay = `${weatherNextDay}?serviceKey=${serviceKey}&numOfRows=800&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${futureTime}&nx=${nx}&ny=${ny}`;
+        const getUrlWeatherNextDay = `${weatherNextDay}?serviceKey=${serviceKey}&numOfRows=800&dataType=JSON&pageNo=1&base_date=${baseDateFuture}&base_time=${futureTime}&nx=${nx}&ny=${ny}`;
         try {
           const response = await fetch(getUrlWeatherNextDay, {
             headers: {

@@ -18,7 +18,7 @@ export default function WeatherNow(props) {
   } = props;
   const { images } = useContext(QueryContext);
   return (
-    <div className="flex h-full flex-wrap content-start justify-around rounded-2xl bg-transparent sm:w-full md:w-full lg:w-full">
+    <div className="flex h-full select-none flex-wrap content-start justify-around rounded-2xl bg-transparent sm:w-full md:w-full lg:w-full">
       <div
         className={`${
           showbutton ? "" : "py-5"

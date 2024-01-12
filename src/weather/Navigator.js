@@ -30,7 +30,7 @@ export default function Navigator(props) {
       />
 
       <div
-        className={`bg-perso6 fixed left-0 top-0 z-30 flex h-full w-40 flex-col items-center overflow-hidden bg-opacity-80 transition-transform duration-300 ease-out lg:relative ${
+        className={`fixed left-0 top-0 z-30 flex h-full w-40 flex-col items-center overflow-hidden bg-opacity-80 bg-perso6 transition-transform duration-300 ease-out lg:relative ${
           menuOn ? `shadow-dim` : `sm:-translate-x-48 md:-translate-x-48`
         }`}
       >
@@ -40,7 +40,9 @@ export default function Navigator(props) {
               to={`${i === 0 ? "/" : item}`}
               onClick={tabSelection}
               className={`relative my-5 w-full rounded-sm p-3 transition-colors duration-75 ease-in  ${
-                activeTab === i ? "bg-green-200" : "hover:bg-[#a3ffb1]"
+                activeTab === i
+                  ? "bg-blue-300/50 text-white"
+                  : "0 hover:bg-white hover:bg-opacity-60"
               }`}
             >
               {item}

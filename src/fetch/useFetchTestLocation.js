@@ -5,6 +5,7 @@ export default function useFetchTestLocation(city, isLocated, refreshFetch) {
   const {
     serviceKey,
     baseDate,
+    baseDateFuture,
     tomorrowDate,
     afterTomorrowDate,
     baseTime,
@@ -164,7 +165,7 @@ export default function useFetchTestLocation(city, isLocated, refreshFetch) {
   useEffect(() => {
     const abortController = new AbortController();
     const getWeather3 = async () => {
-      const getUrlWeatherNextDay = `${weatherNextDay}?serviceKey=${serviceKey}&numOfRows=800&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${futureTime}&nx=${city[3]}&ny=${city[4]}`;
+      const getUrlWeatherNextDay = `${weatherNextDay}?serviceKey=${serviceKey}&numOfRows=800&dataType=JSON&pageNo=1&base_date=${baseDateFuture}&base_time=${futureTime}&nx=${city[3]}&ny=${city[4]}`;
       try {
         const response = await fetch(getUrlWeatherNextDay, {
           signal: abortController.signal,

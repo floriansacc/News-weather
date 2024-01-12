@@ -26,7 +26,7 @@ export default function WeatherPrediction24(props) {
   };
 
   const data = {
-    labels: tempnextdays.slice(1, 24).map((x, i) => `${x.time.slice(0, 2)}h`),
+    labels: tempnextdays.slice(1, 24).map((x, i) => `${x.time.slice(0, 2)}`),
     datasets: [
       {
         label: "today",
@@ -59,8 +59,13 @@ export default function WeatherPrediction24(props) {
           color: "#000",
         },
         grid: {
-          display: false,
+          display: true,
           drawBorder: true,
+          drawTicks: true,
+          color: ({ tick }) =>
+            tick.label === "00"
+              ? "rgba(144, 195, 245, 0.8)"
+              : "rgba(0, 0, 0, 0)",
         },
         border: {
           display: false,

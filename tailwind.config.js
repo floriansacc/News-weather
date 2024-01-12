@@ -56,7 +56,7 @@ module.exports = {
       transitionProperty: {
         shadowbox: "box-shadow",
         translate: "translateX",
-        bgground: "background",
+        bgground: "background-color",
       },
       backgroundImage: {
         perso1: "linear-gradient(300deg,#c5e2f7 2%,#92bad2 20%,#53789e 70%)",

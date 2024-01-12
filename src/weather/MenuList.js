@@ -44,7 +44,6 @@ export default function MenuList(props) {
 
   const handleDeleteElem = (index) => {
     setliste((prev) => prev.filter((_, i) => i !== index));
-    window.console.log(counter);
   };
 
   return (

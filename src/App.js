@@ -35,7 +35,7 @@ export default function App() {
   let year = currentDate.getFullYear();
   let month = currentDate.getMonth() + 1;
   let day = currentDate.getDate();
-  let hours = currentDate.getHours();
+  let hourNow = currentDate.getHours();
   let minutes = currentDate.getMinutes();
 
   let todayYear = currentDate.getFullYear();
@@ -63,76 +63,73 @@ export default function App() {
   );
   let afterTomorrowDate = `${afterTomorrowYear}${afterTomorrowMonth}${afterTomorrowDaytoChange}`;
 
-  const baseDate =
-    hours === 0 && minutes < 30 ? formattedToday - 1 : formattedToday;
-
   const baseTimeCalcNow = () => {
-    if (hours < 10 && hours !== 0) {
+    if (hourNow < 10 && hourNow !== 0) {
       if (minutes < 30) {
-        return `0${hours - 1}00`;
+        return `0${hourNow - 1}00`;
       } else {
-        return `0${hours}00`;
+        return `0${hourNow}00`;
       }
-    } else if (hours === 10) {
+    } else if (hourNow === 10) {
       if (minutes < 30) {
-        return `0${hours - 1}00`;
+        return `0${hourNow - 1}00`;
       } else {
-        return `${hours}00`;
+        return `${hourNow}00`;
       }
-    } else if (hours === 0 && minutes < 30) {
+    } else if (hourNow === 0 && minutes < 30) {
       return `2300`;
-    } else if (hours === 0 && minutes > 30) {
+    } else if (hourNow === 0 && minutes > 30) {
       return "0000";
     } else {
       if (minutes < 30) {
-        return `${hours - 1}00`;
+        return `${hourNow - 1}00`;
       } else {
-        return `${hours}00`;
+        return `${hourNow}00`;
       }
     }
   };
   const baseTimeCalcForecast = () => {
-    if (hours < 10 && hours !== 0) {
+    if (hourNow < 10 && hourNow !== 0) {
       if (minutes < 30) {
-        return `0${hours - 1}30`;
+        return `0${hourNow - 1}30`;
       } else {
-        return `0${hours}30`;
+        return `0${hourNow}30`;
       }
-    } else if (hours === 10) {
+    } else if (hourNow === 10) {
       if (minutes < 30) {
-        return `0${hours - 1}30`;
+        return `0${hourNow - 1}30`;
       } else {
-        return `${hours}30`;
+        return `${hourNow}30`;
       }
-    } else if (hours === 0 && minutes < 30) {
+    } else if (hourNow === 0 && minutes < 30) {
       return `2330`;
-    } else if (hours === 0 && minutes > 30) {
+    } else if (hourNow === 0 && minutes > 30) {
       return "0030";
     } else {
       if (minutes < 30) {
-        return `${hours - 1}30`;
+        return `${hourNow - 1}30`;
       } else {
-        return `${hours}30`;
+        return `${hourNow}30`;
       }
     }
   };
 
   const baseTimeCalcFuture = () => {
-    if (hours <= 2) {
+    if (hourNow <= 2) {
       return `2300`;
-    } else if (hours <= 4) {
+    } else if (hourNow <= 4) {
       return "0200";
-    } else if (hours <= 7) {
+    } else if (hourNow <= 7) {
       return `0500`;
-    } else if (hours <= 10) {
+    } else if (hourNow <= 10) {
       return `0800`;
-    } else if (hours <= 13) {
+    } else if (hourNow <= 13) {
       return `1100`;
-    } else if (hours <= 16) {
+    } else if (hourNow <= 16) {
       return `1400`;
-    } else if (hours <= 19) {
+    } else if (hourNow <= 19) {
       return `1700`;
-    } else if (hours <= 22) {
+    } else if (hourNow <= 22) {
       return `2000`;
     } else {
       return `2300`;
@@ -143,10 +140,18 @@ export default function App() {
   const baseTimeForecast = baseTimeCalcForecast();
   const futureTime = baseTimeCalcFuture();
 
+  const baseDate =
+    hourNow === 0 && minutes < 30 ? formattedToday - 1 : formattedToday;
+
+  const baseDateFuture =
+    futureTime === "2300" && (hourNow === 0 || hourNow === 1)
+      ? formattedToday - 1
+      : formattedToday;
+
   const updateDates = () => {
-    hours = currentDate.getHours();
+    hourNow = currentDate.getHours();
     minutes = currentDate.getMinutes();
-    if (hours === 0 && minutes < 30) {
+    if (hourNow === 0 && minutes < 30) {
       day = currentDate.getDate() - 1;
     } else {
       day = currentDate.getDate();
@@ -203,6 +208,7 @@ export default function App() {
           updateDates,
           serviceKey,
           baseDate,
+          baseDateFuture,
           baseTime,
           baseTimeForecast,
           tomorrowDate,
@@ -210,7 +216,7 @@ export default function App() {
           futureTime,
         }}
       >
-        <div className="h-[100dhv] flex w-full flex-row items-start justify-start overflow-x-hidden lg:h-screen">
+        <div className="flex h-[100dhv] w-full flex-row items-start justify-start overflow-x-hidden lg:h-screen">
           <Navigator menu={menu} />
           <Routes>
             <Route

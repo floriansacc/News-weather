@@ -8,12 +8,12 @@ export default function ButtonOpenClose(props) {
 
   return (
     <div
-      className={`z-40 inline-flex h-fit w-fit select-none items-center justify-center rounded-xl p-1 ${
+      className={`z-40 inline-flex h-fit w-fit select-none items-center justify-center rounded-xl p-1 transition-colors duration-150 ease-in ${
         foropen
-          ? "relative mt-4 bg-red-200"
+          ? "relative mt-4 bg-red-200 hover:bg-red-100"
           : menuListOn && !foropen
-            ? " hidden"
-            : "fixed bottom-2 right-2 bg-green-600 bg-opacity-80"
+            ? "fixed bottom-2 right-2 opacity-0"
+            : "fixed bottom-2 right-2 bg-green-600 bg-opacity-80 hover:bg-green-500"
       } `}
       onClick={() => setMenuListOn(!menuListOn)}
     >
