@@ -337,7 +337,7 @@ export default function WeatherCreateMyList(props) {
 
   return (
     <div
-      className={`${previousBg} mt-4 flex min-h-full flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden transition-bgground duration-500 ease-in scrollbar-hide sm:m-0 sm:w-full sm:flex-col sm:flex-nowrap md:m-0 md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-full lg:flex-row-reverse lg:flex-wrap`}
+      className={`${previousBg} mt-4 flex min-h-full flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden transition-bgground duration-500 ease-in scrollbar-hide sm:m-0 sm:w-full sm:flex-col sm:flex-nowrap md:m-0 md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-[45%] lg:min-w-0 lg:flex-row-reverse lg:flex-wrap lg:rounded-2xl`}
       onClick={() => (menuOn ? setMenuOn(false) : null)}
       onDragStart={(e) => e.preventDefault()}
       id="home3"

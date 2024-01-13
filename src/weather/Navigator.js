@@ -21,7 +21,7 @@ export default function Navigator(props) {
   };
 
   return (
-    <div className="fixed left-0 top-0 z-50 h-screen select-none lg:sticky lg:mr-6">
+    <div className="fixed left-0 top-0 z-50 h-screen w-fit select-none lg:sticky lg:w-[250px] lg:pr-6">
       <AiOutlineMenu
         className={`absolute left-7 top-5 z-40 h-10 w-10 rounded-xl border border-solid bg-slate-200 p-2 transition-all duration-300 hover:animate-pulse  hover:bg-slate-300 lg:hidden ${
           menuOn ? "-rotate-180" : ""
@@ -30,7 +30,7 @@ export default function Navigator(props) {
       />
 
       <div
-        className={`fixed left-0 top-0 z-30 flex h-full w-40 flex-col items-center overflow-hidden bg-opacity-80 bg-perso6 transition-transform duration-300 ease-out lg:relative ${
+        className={`fixed left-0 top-0 z-30 flex h-full w-40 flex-col items-center overflow-hidden bg-opacity-80 bg-perso6 transition-transform duration-300 ease-out ${
           menuOn ? `shadow-dim` : `sm:-translate-x-48 md:-translate-x-48`
         }`}
       >
@@ -42,7 +42,7 @@ export default function Navigator(props) {
               className={`relative my-5 w-full rounded-sm p-3 transition-colors duration-75 ease-in  ${
                 activeTab === i
                   ? "bg-blue-300/50 text-white"
-                  : "0 hover:bg-white hover:bg-opacity-60"
+                  : "hover:bg-white hover:bg-opacity-60"
               }`}
             >
               {item}

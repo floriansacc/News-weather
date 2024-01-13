@@ -282,12 +282,12 @@ export default function WeatherLocalisation(props) {
     <div
       className={`${
         activeTab === 1 ? "" : "mb-20"
-      } ${backgroundColoring} z-10 m-0 box-border flex h-full min-h-full w-fit min-w-full select-none flex-col flex-nowrap items-center justify-start duration-500 sm:w-full md:w-full lg:w-[45%] lg:rounded-2xl `}
+      } ${backgroundColoring} z-10 m-0 box-border flex h-full min-h-full w-fit min-w-full select-none flex-col flex-nowrap items-center justify-start overflow-hidden duration-500 sm:w-full md:w-full lg:h-fit lg:w-full lg:min-w-0 lg:rounded-2xl`}
       onClick={() => (menuOn ? setMenuOn(false) : null)}
     >
       {(!isLoaded || !isLoadedForecast || !isForecasted) && (
         <div
-          className={`absolute left-0 top-0 -z-20 h-screen w-screen ${backgroundColoring}`}
+          className={`absolute left-0 top-0 -z-20 sm:h-screen sm:w-screen md:h-screen md:w-screen lg:h-0 lg:w-0 ${backgroundColoring}`}
         ></div>
       )}
       <div className=" m-1 mb-2 flex items-end justify-end self-end">

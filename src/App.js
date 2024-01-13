@@ -216,41 +216,47 @@ export default function App() {
           futureTime,
         }}
       >
-        <div className="flex h-[100dhv] w-full flex-row items-start justify-start overflow-x-hidden lg:h-screen">
+        <div className="flex h-[100dhv] w-full flex-row items-start justify-start overflow-x-hidden ">
           <Navigator menu={menu} />
-          <Routes>
-            <Route
-              exact
-              path="/"
-              element={
-                <WeatherHome
-                  mouseenter={handleButtonEnter}
-                  mouseleave={handleButtonLeave}
-                  resizew={resizeWidth}
-                />
-              }
-            ></Route>
-            <Route
-              path="/Location"
-              element={
-                <WeatherLocalisation
-                  mouseenter={handleButtonEnter}
-                  mouseleave={handleButtonLeave}
-                  size="screen"
-                />
-              }
-            ></Route>
-            <Route
-              path={`/${menu[2]}`}
-              element={
-                <WeatherCreateMyList
-                  mouseenter={handleButtonEnter}
-                  mouseleave={handleButtonLeave}
-                  resizew={resizeWidth}
-                />
-              }
-            ></Route>
-          </Routes>
+          <div className="flex w-full flex-col lg:w-[calc(100%-250px)]">
+            <Routes>
+              <Route
+                exact
+                path="/"
+                element={
+                  <WeatherHome
+                    mouseenter={handleButtonEnter}
+                    mouseleave={handleButtonLeave}
+                    resizew={resizeWidth}
+                  />
+                }
+              ></Route>
+              <Route
+                path="/Location"
+                element={
+                  <WeatherLocalisation
+                    mouseenter={handleButtonEnter}
+                    mouseleave={handleButtonLeave}
+                    size="screen"
+                  />
+                }
+              ></Route>
+              <Route
+                path={`/${menu[2]}`}
+                element={
+                  <WeatherCreateMyList
+                    mouseenter={handleButtonEnter}
+                    mouseleave={handleButtonLeave}
+                    resizew={resizeWidth}
+                  />
+                }
+              ></Route>
+            </Routes>
+            <div className="flex h-10 w-full flex-col self-end bg-inherit pr-10 text-right">
+              <span className="text-sm font-bold">데이터 제공</span>
+              <span className="text-sm">기상청 (단기예보 조회서비스)</span>
+            </div>
+          </div>
         </div>
       </QueryContext.Provider>
     </Router>
