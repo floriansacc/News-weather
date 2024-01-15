@@ -3,7 +3,8 @@ import { QueryContext } from "../App";
 
 export default function WeatherCitySelector(props) {
   const { cityselector, handlecityselector } = props;
-  const { dataimport } = useContext(QueryContext);
+  const { dataimport, isDarkTheme } = useContext(QueryContext);
+
   return (
     <label className="flex h-fit w-fit flex-col flex-nowrap items-end justify-start">
       <select
@@ -12,10 +13,21 @@ export default function WeatherCitySelector(props) {
         value={cityselector[0]}
         onChange={handlecityselector}
       >
-        <option name="one" value="선택" label="선택"></option>
+        <option
+          className={`${isDarkTheme ? "bg-[#202639]" : ""}`}
+          name="one"
+          value="선택"
+          label="선택"
+        ></option>
         {Array.from(new Set(dataimport.map((obj) => obj.Part1))).map((x, i) => {
           return (
-            <option name="one" value={x} label={x} key={`option1${i}`}></option>
+            <option
+              className={`${isDarkTheme ? "bg-[#202639]" : ""}`}
+              name="one"
+              value={x}
+              label={x}
+              key={`option1${i}`}
+            ></option>
           );
         })}
       </select>
@@ -35,6 +47,7 @@ export default function WeatherCitySelector(props) {
           ).map((x, i) => {
             return (
               <option
+                className={`${isDarkTheme ? "bg-[#202639]" : ""}`}
                 name="two"
                 value={x}
                 label={x}
@@ -62,6 +75,7 @@ export default function WeatherCitySelector(props) {
           ).map((x, i) => {
             return (
               <option
+                className={`${isDarkTheme ? "bg-[#202639]" : ""}`}
                 name="three"
                 value={x.Part3}
                 label={x.Part3}

@@ -19,7 +19,8 @@ export default function MenuList(props) {
     displayon,
     counter,
   } = props;
-  const { dataimport, menuListOn, setMenuListOn } = useContext(QueryContext);
+  const { dataimport, menuListOn, setMenuListOn, setLastSessionListe } =
+    useContext(QueryContext);
 
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
@@ -44,24 +45,18 @@ export default function MenuList(props) {
 
   const handleDeleteElem = (index) => {
     setliste((prev) => prev.filter((_, i) => i !== index));
+    sessionStorage.setItem("lastValue", JSON.stringify(liste));
+    setLastSessionListe(liste);
   };
 
   return (
     <div
-      className={`fixed left-[50%] top-[50%] z-50 flex -translate-x-[50%] flex-col items-center justify-center rounded-xl bg-slate-200 p-2 transition-all duration-500 sm:w-10/12 md:w-4/6 lg:w-[650px] ${
+      className={`text-dark fixed left-[50%] top-[50%] z-50 flex -translate-x-[50%] flex-col items-center justify-center rounded-xl bg-slate-200 p-2 transition-all duration-500 sm:w-10/12 md:w-4/6 lg:w-[650px] ${
         menuListOn ? "-translate-y-[50%]  shadow-dim" : "-translate-y-[-60vh]"
       }`}
     >
       <div className="flex w-full flex-row flex-nowrap items-center justify-center rounded-xl border border-black">
-        <div className="m-1 flex flex-col flex-nowrap items-center">
-          <button
-            className="m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
-            onClick={addtolist}
-            onMouseEnter={mouseenter}
-            onMouseLeave={mouseleave}
-          >
-            Add to my list
-          </button>
+        <div className="m-1 flex flex-col flex-nowrap items-end">
           <button
             className="m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
             onClick={resetlist}
@@ -70,6 +65,14 @@ export default function MenuList(props) {
             id="resetbutton"
           >
             Reset
+          </button>
+          <button
+            className="m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
+            onClick={addtolist}
+            onMouseEnter={mouseenter}
+            onMouseLeave={mouseleave}
+          >
+            Add to my list
           </button>
         </div>
         <div>

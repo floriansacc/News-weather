@@ -57,7 +57,7 @@ export default function WeatherLongTerm(props) {
   return (
     <div className="m-2 mt-0 flex h-fit w-full flex-wrap self-center rounded-2xl border-2 border-solid border-transparent bg-white bg-opacity-25 p-2">
       {arrayToMap.map((x, i) => (
-        <ul className="mx-1 flex h-fit w-2/12 min-w-fit flex-col items-center justify-center rounded-2xl bg-white bg-opacity-10">
+        <ul className="mx-1 flex h-fit w-fit min-w-fit flex-col items-center justify-center rounded-2xl bg-white bg-opacity-10">
           <li
             style={{ color: `${x.color}` }}
             className={`mb-0 self-start px-2 font-bold`}
@@ -88,9 +88,9 @@ export default function WeatherLongTerm(props) {
               </div>
             ))}
           </div>
-          <div className="rounded-b-2x relative flex w-full items-center justify-center">
-            <li className="text-2xl  text-blue-700">{x.lowest.value}</li>
-            <li className="text-2xl  text-black">/</li>
+          <div className="rounded-b-2x relative flex w-full items-center justify-center px-2">
+            <li className="text-2xl text-blue-700">{x.lowest.value}</li>
+            <li className="text-2xl text-black">/</li>
             <li className="text-2xl text-red-700">{x.highest.value}</li>
           </div>
         </ul>

@@ -11,9 +11,11 @@ import pCloudy from "./images/partial cloudy logo.png";
 import cloudy from "./images/cloudy logo.png";
 import rainy from "./images/rainy logo.png";
 import snowy from "./images/snow logo.png";
+import night from "./images/night logo.png";
+import { useTheme } from "./hook/useTheme";
 
 const menu = ["Home", "Location", "My list"];
-const images = [sunny, "", pCloudy, cloudy, rainy, snowy];
+const images = [sunny, "", pCloudy, cloudy, rainy, snowy, night];
 
 export const QueryContext = React.createContext();
 
@@ -24,6 +26,8 @@ export default function App() {
   const [menuOn, setMenuOn] = useState(false);
   const [menuListOn, setMenuListOn] = useState(false);
   const [resizeWidth, setResizeWidth] = useState(null);
+
+  const { toggleTheme, isDarkTheme } = useTheme();
 
   const [lastSessionListe, setLastSessionListe] = useState(
     JSON.parse(sessionStorage.getItem("lastValue")),
@@ -214,9 +218,15 @@ export default function App() {
           tomorrowDate,
           afterTomorrowDate,
           futureTime,
+          toggleTheme,
+          isDarkTheme,
         }}
       >
-        <div className="flex h-[100dhv] w-full flex-row items-start justify-start overflow-x-hidden ">
+        <div
+          className={`flex h-[100dhv] w-full flex-row items-start justify-start overflow-x-hidden ${
+            isDarkTheme ? "bg-perso6" : ""
+          }`}
+        >
           <Navigator menu={menu} />
           <div className="flex w-full flex-col lg:w-[calc(100%-250px)]">
             <Routes>
@@ -252,7 +262,11 @@ export default function App() {
                 }
               ></Route>
             </Routes>
-            <div className="flex h-10 w-full flex-col self-end bg-inherit pr-10 text-right">
+            <div
+              className={` ${
+                isDarkTheme ? "text-light " : "text-dark"
+              } flex h-10 w-full flex-col self-end bg-inherit pr-10 text-right`}
+            >
               <span className="text-sm font-bold">데이터 제공</span>
               <span className="text-sm">기상청 (단기예보 조회서비스)</span>
             </div>

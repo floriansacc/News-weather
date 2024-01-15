@@ -2,10 +2,11 @@ import { useContext, useEffect, useRef } from "react";
 import { QueryContext } from "../App";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
+import { Tooltip } from "react-tooltip";
 
 export default function WeatherPrediction24(props) {
   const { tempnextdays, skynextdays, rainnextdays } = props;
-  const { baseDate, images } = useContext(QueryContext);
+  const { baseDate, images, isDarkTheme } = useContext(QueryContext);
 
   const chartRef = useRef(null);
 
@@ -32,7 +33,7 @@ export default function WeatherPrediction24(props) {
         label: "today",
         data: tempnextdays.slice(1, 24).map((x, i) => x.value),
         backgroundColor: "#974ee7",
-        borderColor: "#218fff",
+        borderColor: isDarkTheme ? "#381e72" : "#218fff",
         tension: 0.3,
       },
     ],
@@ -56,7 +57,7 @@ export default function WeatherPrediction24(props) {
           font: {
             size: 16,
           },
-          color: "#000",
+          color: "#fff",
         },
         grid: {
           display: true,
@@ -101,17 +102,30 @@ export default function WeatherPrediction24(props) {
     },
   };
 
-  useEffect(() => {
-    const chart = chartRef.current;
+  const skyStatus = (i) => {
+    let x =
+      rainnextdays[i + 1].value === "1" ||
+      rainnextdays[i + 1].value === "5" ||
+      rainnextdays[i + 1].value === "6"
+        ? { value: 4, name: "snowy" }
+        : rainnextdays[i + 1].value === "2" || rainnextdays[i + 1].value === "3"
+          ? { value: 5, name: "rainy" }
+          : skynextdays[i + 1].value === "4"
+            ? { value: 3, name: "cloudy" }
+            : skynextdays[i + 1].value === "3"
+              ? { value: 2, name: "partially cloudy" }
+              : skynextdays[i + 1].time.slice(0, 2) > 21 ||
+                  skynextdays[i + 1].time.slice(0, 2) < 7
+                ? { value: 6, name: "clear night" }
+                : { value: `${skynextdays[i + 1].value - 1}`, name: "sunny" };
 
-    /*if (chart) {
-      console.log("CanvasRenderingContext2D", chart.ctx);
-      console.log("HTMLCanvasElement", chart.canvas);
-    }*/
-  }, []);
+    return x;
+  };
 
   return (
-    <div className="border-1 w-full items-center justify-center overflow-auto rounded-2xl border-solid border-transparent bg-white bg-opacity-25 scrollbar-hide">
+    <div
+      className={`border-1 w-full items-center justify-center overflow-auto rounded-2xl border-solid border-transparent bg-white bg-opacity-25 scrollbar-hide`}
+    >
       <div className="mx-4 flex w-fit flex-col items-center justify-center overflow-x-scroll scrollbar-hide">
         <div className="flex w-full flex-row flex-nowrap justify-between">
           {tempnextdays.slice(1, 24).map((x, i) => (
@@ -120,19 +134,10 @@ export default function WeatherPrediction24(props) {
               key={`ulNo${i}`}
             >
               <img
-                src={
-                  images[
-                    rainnextdays[i + 1].value === "1"
-                      ? 4
-                      : rainnextdays[i + 1].value === "2"
-                        ? 5
-                        : rainnextdays[i + 1].value === "3"
-                          ? 5
-                          : rainnextdays[i + 1].value === "5"
-                            ? 4
-                            : `${skynextdays[i + 1].value - 1}`
-                  ]
-                }
+                data-tooltip-id="image24-tooltip"
+                data-tooltip-content={skyStatus(i).name}
+                data-data-tooltip-place="top"
+                src={images[skyStatus(i).value]}
                 className="h-7 w-auto"
                 key={`image${x.value}${i}`}
               ></img>
@@ -152,7 +157,9 @@ export default function WeatherPrediction24(props) {
               key={`ulNo${i}`}
             >
               <li
-                className="mb-1 whitespace-nowrap text-base"
+                className={`mb-1 whitespace-nowrap text-base ${
+                  x.time.slice(0, 2) === "00" ? "font-bold" : ""
+                }`}
                 key={`li2no${i}`}
               >
                 {x.time.slice(0, 2)}시
@@ -161,6 +168,7 @@ export default function WeatherPrediction24(props) {
           ))}
         </div>
       </div>
+      <Tooltip id="image24-tooltip" />
     </div>
   );
 }

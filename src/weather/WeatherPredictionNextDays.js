@@ -5,7 +5,8 @@ import Chart from "chart.js/auto";
 
 export default function WeatherPredictionNextDays(props) {
   const { tempnextdays } = props;
-  const { tomorrowDate, afterTomorrowDate } = useContext(QueryContext);
+  const { tomorrowDate, afterTomorrowDate, isDarkTheme } =
+    useContext(QueryContext);
   const [startX, setStartX] = useState(null);
   const [toTranslate, setToTranslate] = useState(null);
   const [isDragging, setIsDragging] = useState(null);
@@ -45,7 +46,7 @@ export default function WeatherPredictionNextDays(props) {
           .filter((y) => y.date === tomorrowDate)
           .map((x, i) => x.value),
         backgroundColor: "#218fff",
-        borderColor: "#218fff",
+        borderColor: isDarkTheme ? "#002a77" : "#218fff",
         tension: 0.2,
       },
       {
@@ -54,7 +55,7 @@ export default function WeatherPredictionNextDays(props) {
           .filter((y) => y.date === afterTomorrowDate)
           .map((x, i) => x.value),
         backgroundColor: "#974ee7",
-        borderColor: "#974ee7",
+        borderColor: isDarkTheme ? "#381e72" : "#974ee7",
         tension: 0.2,
       },
     ],
@@ -92,7 +93,7 @@ export default function WeatherPredictionNextDays(props) {
         ticks: {
           display: true,
           padding: 0,
-          color: "#000",
+          color: isDarkTheme ? "#f1f1f1" : "1d1b1e",
           stepSize: 2,
           precision: true,
           autoSkip: false,
@@ -106,7 +107,11 @@ export default function WeatherPredictionNextDays(props) {
           display: true,
           drawTicks: true,
           color: ({ tick }) =>
-            tick.value === 0 ? "rgba(0, 0, 0, 0.8)" : "rgba(0, 0, 0, 0.1)",
+            tick.value !== 0
+              ? "rgba(0, 0, 0, 0.1)"
+              : isDarkTheme
+                ? "rgba(255, 255, 255, 0.8)"
+                : "rgba(0, 0, 0, 0.8)",
         },
         border: {
           display: false,
@@ -149,7 +154,7 @@ export default function WeatherPredictionNextDays(props) {
 
   return (
     <div
-      className="relative z-20 mt-1 w-full self-center overflow-auto rounded-2xl border-2 border-solid border-red-500 border-transparent bg-white bg-opacity-25 scrollbar-hide"
+      className={`relative z-20 mt-1 w-full self-center overflow-auto rounded-2xl border-2 border-solid border-red-500 border-transparent bg-white bg-opacity-25 scrollbar-hide`}
       id="ref-width"
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}

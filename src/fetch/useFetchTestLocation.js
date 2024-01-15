@@ -99,7 +99,6 @@ export default function useFetchTestLocation(city, isLocated, refreshFetch) {
     };
   }, [isLocated, refreshFetch]);
 
-
   useEffect(() => {
     const abortController = new AbortController();
     const getWeather2 = async () => {

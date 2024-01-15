@@ -9,6 +9,10 @@ module.exports = {
       lg: { min: "1100px", max: "3000px" },
     },
     extend: {
+      textColor: {
+        light: "#f1f1f1",
+        dark: "#1d1b1e",
+      },
       margin: {
         "1px": "1px",
       },
@@ -56,15 +60,15 @@ module.exports = {
       transitionProperty: {
         shadowbox: "box-shadow",
         translate: "translateX",
-        bgground: "background-color",
+        bgground: "background",
       },
       backgroundImage: {
-        perso1: "linear-gradient(300deg,#c5e2f7 2%,#92bad2 20%,#53789e 70%)",
-        perso2: "linear-gradient(13deg, #cce5ec, #fffafa 50%, #93e7fb 100%)",
-        perso3: "linear-gradient(45deg, #d8d2cf, #d4e6ed 80%)",
-        perso4: "linear-gradient(45deg, #d8d2cf, #d4e6ed 60%, #ffcc00 110%)",
-        perso5: "linear-gradient(225deg, #ffcc00, #e5d075 30%, #f5e0b0 70%)",
-        perso6: "linear-gradient(-30deg,#77afd9 10%,#92bad2 50%,#53789e 70%)",
+        perso1: "linear-gradient(300deg,#c5e2f7 2%,#92bad2 20%,#53789e 70%)", // rainy
+        perso2: "linear-gradient(13deg, #cce5ec, #fffafa 50%, #93e7fb 100%)", // snowy
+        perso3: "linear-gradient(45deg, #d8d2cf, #d4e6ed 80%)", // cloudy
+        perso4: "linear-gradient(45deg, #d8d2cf, #d4e6ed 60%, #ffcc00 110%)", //partially cloudy
+        perso5: "linear-gradient(225deg, #ffcc00, #e5d075 30%, #f5e0b0 70%)", // sunny
+        perso6: "linear-gradient(112.1deg, #202639 11.4%, #3f4c77 70.2%)", // night
       },
     },
   },

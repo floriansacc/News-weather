@@ -1,6 +1,8 @@
 import { useContext } from "react";
 import { QueryContext } from "../App";
 import WeatherCitySelector from "./WeatherCitySelector";
+import { IoPlaySkipForwardOutline } from "react-icons/io5";
+import { Tooltip } from "react-tooltip";
 
 export default function WeatherNow(props) {
   const {
@@ -16,9 +18,28 @@ export default function WeatherNow(props) {
     mouseleave,
     showbutton,
   } = props;
-  const { images } = useContext(QueryContext);
+
+  const { images, isDarkTheme } = useContext(QueryContext);
+
+  const skyStatus =
+    raincond.value === "1"
+      ? "Rain"
+      : raincond.value === "3"
+        ? "Snow"
+        : skyforecast[0].value === "4"
+          ? "Cloudy"
+          : skyforecast[0].value === "3"
+            ? "Partly cloudy"
+            : skyforecast[0].value === "1"
+              ? "Sunny"
+              : skyforecast[0].value === "5"
+                ? "Clear night"
+                : "No information";
+
   return (
-    <div className="flex h-full select-none flex-wrap content-start justify-around rounded-2xl bg-transparent sm:w-full md:w-full lg:w-full">
+    <div
+      className={`flex h-full select-none flex-wrap content-start justify-around rounded-2xl bg-transparent sm:w-full md:w-full lg:w-full `}
+    >
       <div
         className={`${
           showbutton ? "" : "py-5"
@@ -47,30 +68,30 @@ export default function WeatherNow(props) {
       <div className="mt-2 flex w-5/12 flex-col items-center">
         <img
           alt="mainimg"
-          className="h-28 w-28"
+          className="tooltip_element h-28 w-28"
+          data-tooltip-id="image-tooltip"
+          data-tooltip-content={skyStatus}
+          data-data-tooltip-place="top"
           src={
             images[
-              raincond.value === "1"
+              raincond.value === "1" ||
+              raincond.value === "5" ||
+              raincond.value === "6"
                 ? 4
-                : raincond.value === "3"
+                : raincond.value === "2" || raincond.value === "3"
                   ? 5
-                  : `${skyforecast[0].value - 1}`
+                  : skyforecast[0].value === "4"
+                    ? 3
+                    : skyforecast[0].value === "3"
+                      ? 2
+                      : skyforecast[0].time.slice(0, 2) > 22 ||
+                          skyforecast[0].time.slice(0, 2) < 7
+                        ? 6
+                        : `${skyforecast[0].value - 1}`
             ]
           }
         />
-        <p>
-          {raincond.value === "1"
-            ? "Rain"
-            : raincond.value === "3"
-              ? "Snow"
-              : skyforecast[0].value === "4"
-                ? "Cloudy"
-                : skyforecast[0].value === "3"
-                  ? "Partly cloudy"
-                  : skyforecast[0].value === "1"
-                    ? "Sunny"
-                    : "No information"}
-        </p>
+        <p>{skyStatus}</p>
         <p className="text-sm">
           {raincond.value === "1" ? `Rain hour: ${hourrain.value} mm` : ""}
         </p>
@@ -90,6 +111,7 @@ export default function WeatherNow(props) {
               : " (Very strong)"}
         </p>
       </div>
+      <Tooltip id="image-tooltip" />
     </div>
   );
 }

@@ -8,8 +8,15 @@ import WeatherPrediction24 from "./WeatherPrediction24";
 export default function WeatherLocalisation(props) {
   const { mouseenter, mouseleave } = props;
 
-  const { dataimport, activeTab, menuOn, setMenuOn, updateDates } =
-    useContext(QueryContext);
+  const {
+    dataimport,
+    activeTab,
+    menuOn,
+    setMenuOn,
+    updateDates,
+    toggleTheme,
+    isDarkTheme,
+  } = useContext(QueryContext);
 
   const [gps, setGps] = useState({ lat: 0, long: 0 });
   const [isLocated, setIsLocated] = useState(false);
@@ -247,17 +254,25 @@ export default function WeatherLocalisation(props) {
       return bgSet;
     } else {
       bgSet =
-        weatherInfoNow[0].value === "1"
+        weatherInfoNow[0].value === "1" ||
+        weatherInfoNow[0].value === "5" ||
+        weatherInfoNow[0].value === "6"
           ? "bg-perso1"
-          : weatherInfoNow[0].value === "3"
+          : weatherInfoNow[0].value === "2" || weatherInfoNow[0].value === "3"
             ? "bg-perso2"
             : skyForecast[0].value === "4"
               ? "bg-perso3"
               : skyForecast[0].value === "3"
                 ? "bg-perso4"
-                : skyForecast[0].value === "1"
-                  ? "bg-perso5"
-                  : "bg-red-100";
+                : skyForecast[0].time.slice(0, 2) > 22 ||
+                    skyForecast[0].time.slice(0, 2) < 7
+                  ? "bg-perso6"
+                  : skyForecast[0].value === "1"
+                    ? "bg-perso5"
+                    : "bg-red-100";
+      bgSet === ("bg-perso6" || "bg-perso1")
+        ? toggleTheme("dark")
+        : toggleTheme("light");
       return bgSet;
     }
   }
@@ -280,9 +295,9 @@ export default function WeatherLocalisation(props) {
 
   return (
     <div
-      className={`${
-        activeTab === 1 ? "" : "mb-20"
-      } ${backgroundColoring} z-10 m-0 box-border flex h-full min-h-full w-fit min-w-full select-none flex-col flex-nowrap items-center justify-start overflow-hidden duration-500 sm:w-full md:w-full lg:h-fit lg:w-full lg:min-w-0 lg:rounded-2xl`}
+      className={`${activeTab === 1 ? "" : "mb-20"} ${backgroundColoring} ${
+        isDarkTheme ? "text-light" : "text-dark"
+      } z-10 m-0 box-border flex h-full min-h-full w-fit min-w-full select-none flex-col flex-nowrap items-center justify-start overflow-hidden duration-500 sm:w-full md:w-full lg:h-fit lg:w-full lg:min-w-0 lg:rounded-2xl`}
       onClick={() => (menuOn ? setMenuOn(false) : null)}
     >
       {(!isLoaded || !isLoadedForecast || !isForecasted) && (

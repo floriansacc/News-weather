@@ -338,19 +338,24 @@ export default function useFetchCreateList(liste, refreshFetch) {
           return Promise.reject(error);
         }
       };
-      Promise.all([(saveDataNow(), saveDataForecast(), saveDataNextDays())])
-        .then(() => {
-          window.console.log("New addition succes");
+      let fetchAll = async () => {
+        try {
+          await saveDataNow();
+          await saveDataForecast();
+          await saveDataNextDays();
+          window.console.log("List sucess");
           setIsFetch(true);
           setIsLoaded(true);
           setIsLoadedForecast(true);
           setisForecasted(true);
           setCanRefresh(true);
-        })
-        .catch((e) => {
-          window.console.log(`New addition failed: ${e}`);
+        } catch (e) {
+          window.console.log(`List fail: ${e}`);
           setCanRefresh(true);
-        });
+          setIsFetch(false);
+        }
+      };
+      fetchAll();
     }
     return () => {
       setIsFetch(false);

@@ -6,3 +6,10 @@
   margin: 0;
   padding: 0;
 }
+
+:root {
+  --font-color: #000;
+}
+
+body {
+}
