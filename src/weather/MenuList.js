@@ -17,7 +17,8 @@ export default function MenuList(props) {
     weatherslide,
     savelist,
     displayon,
-    counter,
+    countslide,
+    setcountslide,
   } = props;
   const { dataimport, menuListOn, setMenuListOn, setLastSessionListe } =
     useContext(QueryContext);
@@ -43,15 +44,22 @@ export default function MenuList(props) {
     document.getElementById("displaydescription").style.display = "none";
   };
 
-  const handleDeleteElem = (index) => {
+  const handleDeleteElem = async (index) => {
     setliste((prev) => prev.filter((_, i) => i !== index));
     sessionStorage.setItem("lastValue", JSON.stringify(liste));
     setLastSessionListe(liste);
+    console.log(countslide);
+    console.log(liste.length);
+    if (countslide >= liste.length - 1) {
+      await setcountslide(liste.length - 2);
+    } else {
+      setcountslide(0);
+    }
   };
 
   return (
     <div
-      className={`text-dark fixed left-[50%] top-[50%] z-50 flex -translate-x-[50%] flex-col items-center justify-center rounded-xl bg-slate-200 p-2 transition-all duration-500 sm:w-10/12 md:w-4/6 lg:w-[650px] ${
+      className={`fixed left-[50%] top-[50%] z-50 flex -translate-x-[50%] flex-col items-center justify-center rounded-xl bg-slate-200 p-2 text-dark transition-all duration-500 sm:w-10/12 md:w-4/6 lg:w-[650px] ${
         menuListOn ? "-translate-y-[50%]  shadow-dim" : "-translate-y-[-60vh]"
       }`}
     >
@@ -197,11 +205,11 @@ export default function MenuList(props) {
             <p className="relative w-fit min-w-25 text-center" key={`p3${i}`}>
               {x.Phase3}
               <span
-                class="absolute -top-2 right-0 h-4 w-4"
+                class="absolute -top-2 right-1 h-4 w-4"
                 onClick={() => handleDeleteElem(i)}
               >
                 <IoCloseCircleOutline class="absolute z-10 inline-flex h-full w-full rounded-full opacity-75 hover:animate-ping hover:bg-sky-500" />
-                <IoCloseCircleOutline class="absolute inline-flex h-4 w-4 rounded-full bg-transparent" />
+                <IoCloseCircleOutline class="absolute inline-flex h-4 w-4 rounded-full bg-slate-100" />
               </span>
             </p>
           </>

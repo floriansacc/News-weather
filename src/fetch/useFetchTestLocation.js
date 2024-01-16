@@ -3,7 +3,7 @@ import { QueryContext } from "../App";
 
 export default function useFetchTestLocation(city, isLocated, refreshFetch) {
   const {
-    serviceKey,
+    
     baseDate,
     baseDateFuture,
     tomorrowDate,
@@ -28,6 +28,8 @@ export default function useFetchTestLocation(city, isLocated, refreshFetch) {
   const [isLoadedForecast, setIsLoadedForecast] = useState(false);
   const [isForecasted, setisForecasted] = useState(false);
   const [canRefersh, setCanRefresh] = useState(null);
+
+  const serviceKey = process.env.REACT_APP_WEATHER_KEY;
 
   const weatherUrlNow =
     "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";

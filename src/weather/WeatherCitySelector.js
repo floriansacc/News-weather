@@ -6,9 +6,9 @@ export default function WeatherCitySelector(props) {
   const { dataimport, isDarkTheme } = useContext(QueryContext);
 
   return (
-    <label className="flex h-fit w-fit flex-col flex-nowrap items-end justify-start">
+    <label className="flex h-fit w-fit flex-1 flex-col flex-nowrap items-end justify-start border border-red-200">
       <select
-        className="m-1 w-48 rounded-2xl bg-sky-100 bg-opacity-40 p-1"
+        className="m-1 flex w-[75%] min-w-[6rem] max-w-[14rem] flex-1 rounded-2xl bg-sky-100 bg-opacity-40 p-1"
         name="one"
         value={cityselector[0]}
         onChange={handlecityselector}
@@ -31,9 +31,9 @@ export default function WeatherCitySelector(props) {
           );
         })}
       </select>
-      <div className="flex flex-nowrap">
+      <div className="flex w-full flex-1 flex-nowrap justify-end">
         <select
-          className="m-1 w-32 rounded-2xl bg-sky-100 bg-opacity-40 p-1"
+          className="m-1 flex min-w-[3rem] max-w-[8rem] flex-1 rounded-2xl bg-sky-100 bg-opacity-40 p-1"
           name="two"
           value={cityselector[1]}
           onChange={handlecityselector}
@@ -57,7 +57,7 @@ export default function WeatherCitySelector(props) {
           })}
         </select>
         <select
-          className="m-1 w-32 rounded-2xl bg-sky-100 bg-opacity-40 p-1"
+          className="m-1 flex min-w-[3rem] max-w-[8rem] flex-1 rounded-2xl bg-sky-100 bg-opacity-40 p-1"
           name="three"
           value={cityselector[2]}
           onChange={handlecityselector}

@@ -257,12 +257,18 @@ export default function WeatherCreateMyList(props) {
   };
 
   function bgFunction(i) {
-    if (!weatherInfoNow || !skyForecast || !isLoaded || !isLoadedForecast) {
+    if (
+      !weatherInfoNow ||
+      !skyForecast ||
+      !isLoaded ||
+      !isLoadedForecast ||
+      !liste[0]
+    ) {
       if (previousBg) {
         bgSet = previousBg;
         return bgSet;
       }
-      bgSet = "bg-yellow-100";
+      bgSet = "bg-slate-700";
       return bgSet;
     } else {
       bgSet =
@@ -555,7 +561,8 @@ export default function WeatherCreateMyList(props) {
         weatherslide={handleDisplayWeatherSlide}
         displayon={displayWeatherList}
         savelist={handleSaveList}
-        counter={listeCounter}
+        countslide={countSlide}
+        setcountslide={setCountSlide}
       />
       <ButtonOpenClose
         menuListOn={menuListOn}

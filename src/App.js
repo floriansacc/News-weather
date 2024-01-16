@@ -33,8 +33,6 @@ export default function App() {
     JSON.parse(sessionStorage.getItem("lastValue")),
   );
 
-  const serviceKey = process.env.REACT_APP_WEATHER_KEY;
-
   let currentDate = new Date();
   let year = currentDate.getFullYear();
   let month = currentDate.getMonth() + 1;
@@ -210,7 +208,7 @@ export default function App() {
           setLastSessionListe,
           images,
           updateDates,
-          serviceKey,
+
           baseDate,
           baseDateFuture,
           baseTime,

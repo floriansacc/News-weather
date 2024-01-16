@@ -3,7 +3,6 @@ import { QueryContext } from "../App";
 
 export default function useFetchCreateList(liste, refreshFetch) {
   const {
-    serviceKey,
     baseDate,
     baseDateFuture,
     tomorrowDate,
@@ -32,6 +31,8 @@ export default function useFetchCreateList(liste, refreshFetch) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoadedForecast, setIsLoadedForecast] = useState(false);
   const [isForecasted, setisForecasted] = useState(false);
+
+  const serviceKey = process.env.REACT_APP_WEATHER_KEY;
 
   const weatherUrlNow =
     "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst";

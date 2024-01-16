@@ -5,6 +5,7 @@ import WeatherNow from "./WeatherNow";
 import WeatherLongTerm from "./WeatherLongTerm";
 import WeatherPrediction24 from "./WeatherPrediction24";
 import WeatherCitySelector from "./WeatherCitySelector";
+import useFetchDust from "../fetch/useFetchDust";
 
 export default function WeatherLocalisation(props) {
   const { mouseenter, mouseleave } = props;
@@ -61,6 +62,8 @@ export default function WeatherLocalisation(props) {
     setisForecasted,
     canRefersh,
   } = useFetchTestLocation(citySelector, isLocated, refreshFetch);
+
+  //const { x } = useFetchDust();
 
   let bgSet;
   const backgroundColoring = bgFunction();
