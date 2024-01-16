@@ -4,6 +4,7 @@ import useFetchTestLocation from "../fetch/useFetchTestLocation";
 import WeatherNow from "./WeatherNow";
 import WeatherLongTerm from "./WeatherLongTerm";
 import WeatherPrediction24 from "./WeatherPrediction24";
+import WeatherCitySelector from "./WeatherCitySelector";
 
 export default function WeatherLocalisation(props) {
   const { mouseenter, mouseleave } = props;
@@ -320,10 +321,27 @@ export default function WeatherLocalisation(props) {
           Refresh location
         </button>
       </div>
+      <div
+        className={` my-2 flex h-fit w-full items-center justify-around rounded-2xl border-y border-solid border-white`}
+      >
+        <div className="ml-2 flex flex-col flex-nowrap justify-start">
+          <p className="block text-xl font-bold">Weather</p>
+          <p className="text-sm">
+            (Base time:{" "}
+            {isLoaded ? `${weatherInfoNow[3].time.slice(0, 2)}:30` : "00:00"})
+          </p>
+        </div>
+
+        <WeatherCitySelector
+          cityselector={citySelector}
+          handlecityselector={handleCitySelector}
+          mouseenter={mouseenter}
+          mouseleave={mouseleave}
+        />
+      </div>
+
       {isLoaded && isLoadedForecast && (
         <WeatherNow
-          handlecityselector={handleCitySelector}
-          cityselector={citySelector}
           loadstate={isLoaded}
           loadforecast={isLoadedForecast}
           raincond={weatherInfoNow[0]}
@@ -333,9 +351,6 @@ export default function WeatherLocalisation(props) {
           winddir={weatherInfoNow[5]}
           windspeed={weatherInfoNow[7]}
           skyforecast={skyForecast}
-          mouseenter={mouseenter}
-          mouseleave={mouseleave}
-          showbutton={true}
           titlename={false}
         />
       )}

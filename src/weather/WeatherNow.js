@@ -5,19 +5,7 @@ import { IoPlaySkipForwardOutline } from "react-icons/io5";
 import { Tooltip } from "react-tooltip";
 
 export default function WeatherNow(props) {
-  const {
-    handlecityselector,
-    cityselector,
-    raincond,
-    humidity,
-    hourrain,
-    temp,
-    windspeed,
-    skyforecast,
-    mouseenter,
-    mouseleave,
-    showbutton,
-  } = props;
+  const { raincond, humidity, hourrain, temp, windspeed, skyforecast } = props;
 
   const { images, isDarkTheme } = useContext(QueryContext);
 
@@ -40,24 +28,6 @@ export default function WeatherNow(props) {
     <div
       className={`flex h-full select-none flex-wrap content-start justify-around rounded-2xl bg-transparent sm:w-full md:w-full lg:w-full `}
     >
-      <div
-        className={`${
-          showbutton ? "" : "py-5"
-        } my-2 flex h-fit w-full items-center justify-around rounded-2xl border-y border-solid border-white`}
-      >
-        <div className="ml-2 flex flex-col flex-nowrap justify-start">
-          <p className="block text-xl font-bold">Weather</p>
-          <p className="text-sm">(Base time: {temp.time.slice(0, 2)}:30)</p>
-        </div>
-        {showbutton && (
-          <WeatherCitySelector
-            cityselector={cityselector}
-            handlecityselector={handlecityselector}
-            mouseenter={mouseenter}
-            mouseleave={mouseleave}
-          />
-        )}
-      </div>
       <div className="flex w-full flex-nowrap items-center justify-center whitespace-nowrap py-4 text-right ">
         <p className="w-fit p-px pb-1 text-xl font-semibold">
           {raincond.Phase1}

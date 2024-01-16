@@ -404,7 +404,6 @@ export default function WeatherCreateMyList(props) {
                   onTouchEnd={handleTouchEnd}
                 >
                   <WeatherNow
-                    handlecityselector={handleCitySelector}
                     loadstate={isLoaded}
                     loadforecast={isLoadedForecast}
                     raincond={
@@ -442,9 +441,6 @@ export default function WeatherCreateMyList(props) {
                         `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
                       ]
                     }
-                    mouseenter={mouseenter}
-                    mouseleave={mouseleave}
-                    titlename={true}
                   />
                 </div>
               )}
