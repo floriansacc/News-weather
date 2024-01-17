@@ -6,7 +6,7 @@ export default function WeatherCitySelector(props) {
   const { dataimport, isDarkTheme } = useContext(QueryContext);
 
   return (
-    <label className="flex h-fit w-fit flex-1 flex-col flex-nowrap items-end justify-start border border-red-200">
+    <label className="flex h-fit w-fit flex-1 flex-col flex-nowrap items-end justify-start">
       <select
         className="m-1 flex w-[75%] min-w-[6rem] max-w-[14rem] flex-1 rounded-2xl bg-sky-100 bg-opacity-40 p-1"
         name="one"

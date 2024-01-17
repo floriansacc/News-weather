@@ -63,7 +63,17 @@ export default function WeatherLocalisation(props) {
     canRefersh,
   } = useFetchTestLocation(citySelector, isLocated, refreshFetch);
 
-  //const { x } = useFetchDust();
+  /*const {
+    pm10,
+    setPm10,
+    pm25,
+    setPm25,
+    globalIndex,
+    setGlobalIndex,
+    isDusted,
+    setIsDusted,
+  } = useFetchDust(citySelector, isLocated, refreshFetch);
+  */
 
   let bgSet;
   const backgroundColoring = bgFunction();
@@ -154,6 +164,9 @@ export default function WeatherLocalisation(props) {
     setRainNextDays([]);
     setAccuRain([]);
     setAccuSnow([]);
+    //setPm10({});
+    //setPm25({});
+    //setGlobalIndex({});
     setIsLoaded(false);
     setIsLoadedForecast(false);
     setRefreshGeoloc((prev) => prev + 1);
@@ -190,6 +203,9 @@ export default function WeatherLocalisation(props) {
       setRainNextDays([]);
       setAccuRain([]);
       setAccuSnow([]);
+      //setPm10({});
+      //setPm25({});
+      //setGlobalIndex({});
       setIsLoaded(false);
       setIsLoadedForecast(false);
       setisForecasted(false);

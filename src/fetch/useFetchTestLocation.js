@@ -3,7 +3,6 @@ import { QueryContext } from "../App";
 
 export default function useFetchTestLocation(city, isLocated, refreshFetch) {
   const {
-    
     baseDate,
     baseDateFuture,
     tomorrowDate,
