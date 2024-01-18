@@ -18,6 +18,8 @@ export default function WeatherLocalisation(props) {
     updateDates,
     toggleTheme,
     isDarkTheme,
+    previousBg,
+    setPreviousBg,
   } = useContext(QueryContext);
 
   const [gps, setGps] = useState({ lat: 0, long: 0 });
@@ -31,7 +33,6 @@ export default function WeatherLocalisation(props) {
   ]);
   const [refreshGeoloc, setRefreshGeoloc] = useState(0);
   const [refreshFetch, setRefreshFetch] = useState(0);
-  const [previousBg, setPreviousBg] = useState(null);
 
   const {
     weatherInfoNow,
@@ -320,14 +321,14 @@ export default function WeatherLocalisation(props) {
       } z-10 m-0 box-border flex h-full min-h-full w-fit min-w-full select-none flex-col flex-nowrap items-center justify-start overflow-hidden duration-500 sm:w-full md:w-full lg:h-fit lg:w-full lg:min-w-0 lg:rounded-2xl`}
       onClick={() => (menuOn ? setMenuOn(false) : null)}
     >
-      {(!isLoaded || !isLoadedForecast || !isForecasted) && (
+      {!isLoaded && (
         <div
-          className={`absolute left-0 top-0 -z-20 sm:h-screen sm:w-screen md:h-screen md:w-screen lg:h-0 lg:w-0 ${backgroundColoring}`}
+          className={`fixed left-0 top-0 -z-50 sm:h-full sm:w-screen md:h-full md:w-screen lg:h-0 lg:w-0 ${backgroundColoring}`}
         ></div>
       )}
       <div className=" m-1 mb-2 flex items-end justify-end self-end">
         <button
-          className={`m-1.5 mb-0 flex h-8 w-fit items-center rounded-full border-2 border-solid border-gray-400 p-1.5 ${
+          className={`m-1.5 mb-0 flex h-8 w-fit items-center rounded-full border border-solid border-white/50 p-1.5 ${
             canRefersh
               ? "pointer-events-auto bg-gradient-to-r from-gray-300/25 to-gray-700/25"
               : "pointer-events-none bg-gradient-to-r from-red-300/75 to-red-700/75"

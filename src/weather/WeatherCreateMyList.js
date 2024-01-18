@@ -268,7 +268,7 @@ export default function WeatherCreateMyList(props) {
         bgSet = previousBg;
         return bgSet;
       }
-      bgSet = "bg-slate-700";
+      bgSet = "bg-yellow-100";
       return bgSet;
     } else {
       bgSet =
@@ -370,7 +370,7 @@ export default function WeatherCreateMyList(props) {
     >
       {(!isLoaded || !isForecasted || !isLoadedForecast) && (
         <button
-          className={`m-1.5 mb-0 flex h-8 w-fit items-center self-end rounded-full border-2 border-solid border-gray-400 p-1.5 ${
+          className={`m-1.5 mb-0 flex h-8 w-fit items-center self-end rounded-full border border-solid border-white/50 p-1.5 ${
             canRefersh
               ? "pointer-events-auto bg-gradient-to-r from-gray-300/25 to-gray-700/25"
               : "pointer-events-none bg-gradient-to-r from-red-300/75 to-red-700/75"

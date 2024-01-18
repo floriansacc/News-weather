@@ -66,7 +66,7 @@ export default function MenuList(props) {
       <div className="flex w-full flex-row flex-nowrap items-center justify-center rounded-xl border border-black">
         <div className="m-1 flex flex-col flex-nowrap items-end">
           <button
-            className="m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
+            className="m-1.5 flex h-fit items-center rounded-full border border-solid border-white/50 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
             onClick={resetlist}
             onMouseEnter={mouseenter}
             onMouseLeave={mouseleave}
@@ -75,7 +75,7 @@ export default function MenuList(props) {
             Reset
           </button>
           <button
-            className="m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
+            className="m-1.5 flex h-fit items-center rounded-full border border-solid border-white/50 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
             onClick={addtolist}
             onMouseEnter={mouseenter}
             onMouseLeave={mouseleave}
@@ -168,7 +168,7 @@ export default function MenuList(props) {
       </div>
       <div className="mt-1 flex items-center justify-center">
         <button
-          className={`m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5
+          className={`m-1.5 flex h-fit items-center rounded-full border border-solid border-white/50 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5
         ${fetchcheck[0] ? "brightness-100" : "brightness-75"}`}
           onMouseEnter={fetchcheck[0] ? mouseenter : null}
           onMouseLeave={fetchcheck[0] ? mouseleave : handleDisplayMouseLeave}
@@ -179,7 +179,7 @@ export default function MenuList(props) {
           Display {displayon ? "on" : "off"}
         </button>
         <button
-          className="m-1.5 flex h-fit items-center rounded-full border-2 border-gray-400 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
+          className="m-1.5 flex h-fit items-center rounded-full border border-solid border-white/50 bg-gradient-to-r from-gray-300 to-gray-400 p-1.5"
           onMouseEnter={mouseenter}
           onMouseLeave={mouseleave}
           onClick={savelist}

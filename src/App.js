@@ -26,6 +26,7 @@ export default function App() {
   const [menuOn, setMenuOn] = useState(false);
   const [menuListOn, setMenuListOn] = useState(false);
   const [resizeWidth, setResizeWidth] = useState(null);
+  const [previousBg, setPreviousBg] = useState(null);
 
   const { toggleTheme, isDarkTheme } = useTheme();
 
@@ -208,7 +209,6 @@ export default function App() {
           setLastSessionListe,
           images,
           updateDates,
-
           baseDate,
           baseDateFuture,
           baseTime,
@@ -218,10 +218,12 @@ export default function App() {
           futureTime,
           toggleTheme,
           isDarkTheme,
+          previousBg,
+          setPreviousBg,
         }}
       >
         <div
-          className={`flex h-[100dhv] w-full flex-row items-start justify-start overflow-x-hidden ${
+          className={`${previousBg} flex h-screen w-full flex-row items-start justify-start overflow-x-hidden ${
             isDarkTheme ? "bg-perso6" : ""
           }`}
         >
@@ -262,11 +264,27 @@ export default function App() {
             </Routes>
             <div
               className={` ${
-                isDarkTheme ? "text-light " : "text-dark"
-              } flex h-10 w-full flex-col self-end bg-inherit pr-10 text-right`}
+                isDarkTheme ? "text-light" : "text-gray-600"
+              } mt-2 flex h-10 w-full flex-col self-end bg-inherit pr-10 text-right`}
             >
-              <span className="text-sm font-bold">데이터 제공</span>
-              <span className="text-sm">기상청 (단기예보 조회서비스)</span>
+              <span className="text-xs">
+                데이터는 실시간 관측된 자료이며 측정소 현지 사정이나
+              </span>
+              <span className="text-xs">
+                예기치 않은 문제 등으로 오류가 있을 수 있습니다
+              </span>
+              <div className="flex flex-row justify-end">
+                <span className="whitespace-pre text-xs font-bold">
+                  데이터 출처:{" "}
+                </span>
+
+                <div className="flex flex-col items-start justify-end">
+                  <span className="text-xs">
+                    - 기상청 (단기예보 조회서비스)
+                  </span>
+                  <span className="text-xs">- 한국환경공단 (디개오염정보)</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
