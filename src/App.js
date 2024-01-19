@@ -223,7 +223,7 @@ export default function App() {
         }}
       >
         <div
-          className={`${previousBg} flex h-screen w-full flex-row items-start justify-start overflow-x-hidden ${
+          className={`${previousBg} flex h-fit w-full flex-row items-start justify-start overflow-x-hidden ${
             isDarkTheme ? "bg-perso6" : ""
           }`}
         >
@@ -265,14 +265,13 @@ export default function App() {
             <div
               className={` ${
                 isDarkTheme ? "text-light" : "text-gray-600"
-              } mt-2 flex h-10 w-full flex-col self-end bg-inherit pr-10 text-right`}
+              } mt-2 flex h-fit w-9/12 flex-col self-end bg-inherit pr-10 text-right`}
             >
-              <span className="text-xs">
-                데이터는 실시간 관측된 자료이며 측정소 현지 사정이나
+              <span className="whitespace-pre-line text-xs">
+                데이터는 실시간 관측된 자료이며 측정소 현지 사정이나 예기치 않은
+                문제 등으로 오류가 있을 수 있습니다
               </span>
-              <span className="text-xs">
-                예기치 않은 문제 등으로 오류가 있을 수 있습니다
-              </span>
+              <span className="text-xs"></span>
               <div className="flex flex-row justify-end">
                 <span className="whitespace-pre text-xs font-bold">
                   데이터 출처:{" "}

@@ -22,6 +22,8 @@ export default function WeatherCreateMyList(props) {
     setLastSessionListe,
     toggleTheme,
     isDarkTheme,
+    previousBg,
+    setPreviousBg,
   } = useContext(QueryContext);
   const [liste, setListe] = useState([]);
   const [elem, setElem] = useState([]);
@@ -36,8 +38,6 @@ export default function WeatherCreateMyList(props) {
   const [startX, setStartX] = useState(0);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
-
-  const [previousBg, setPreviousBg] = useState(null);
 
   const {
     listeCounter,
@@ -272,34 +272,69 @@ export default function WeatherCreateMyList(props) {
       return bgSet;
     } else {
       bgSet =
-        weatherInfoNow[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`][0]
-          .value === "1" ||
-        weatherInfoNow[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`][0]
-          .value === "5" ||
-        weatherInfoNow[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`][0]
-          .value === "6"
-          ? "bg-perso1"
-          : weatherInfoNow[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`][0]
-                .value === "2" ||
-              weatherInfoNow[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`][0]
-                .value === "3"
-            ? "bg-perso2"
-            : skyForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`][0]
-                  .value === "4"
-              ? "bg-perso3"
+        skyForecast[
+          `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+        ][0].time.slice(0, 2) > 22 ||
+        skyForecast[
+          `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+        ][0].time.slice(0, 2) < 7
+          ? "bg-perso6"
+          : (weatherInfoNow[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`][0]
+                .value === "1" ||
+                weatherInfoNow[
+                  `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                ][0].value === "5" ||
+                weatherInfoNow[
+                  `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                ][0].value === "6") &&
+              (!skyForecast[
+                `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+              ][0].time.slice(0, 2) > 22 ||
+                !skyForecast[
+                  `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                ][0].time.slice(0, 2) < 7)
+            ? "bg-perso1"
+            : (weatherInfoNow[
+                  `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                ][0].value === "2" ||
+                  weatherInfoNow[
+                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                  ][0].value === "3") &&
+                (!skyForecast[
+                  `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                ][0].time.slice(0, 2) > 22 ||
+                  !skyForecast[
+                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                  ][0].time.slice(0, 2) < 7)
+              ? "bg-perso2"
               : skyForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`][0]
-                    .value === "3"
-                ? "bg-perso4"
+                    .value === "4" &&
+                  (!skyForecast[
+                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                  ][0].time.slice(0, 2) > 22 ||
+                    !skyForecast[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ][0].time.slice(0, 2) < 7)
+                ? "bg-perso3"
                 : skyForecast[
                       `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ][0].time.slice(0, 2) > 22 ||
-                    skyForecast[
+                    ][0].value === "3" &&
+                    (!skyForecast[
                       `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ][0].time.slice(0, 2) < 7
-                  ? "bg-perso6"
+                    ][0].time.slice(0, 2) > 22 ||
+                      !skyForecast[
+                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                      ][0].time.slice(0, 2) < 7)
+                  ? "bg-perso4"
                   : skyForecast[
                         `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                      ][0].value === "1"
+                      ][0].value === "1" &&
+                      (!skyForecast[
+                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                      ][0].time.slice(0, 2) > 22 ||
+                        !skyForecast[
+                          `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                        ][0].time.slice(0, 2) < 7)
                     ? "bg-perso5"
                     : "bg-red-100";
       bgSet === ("bg-perso6" || "bg-perso1")
@@ -392,13 +427,13 @@ export default function WeatherCreateMyList(props) {
           style={{
             transform: `translate3d(${toTranslate}px, 0, 0)`,
           }}
-          className={`relative z-20 flex h-full w-full justify-start ${
+          className={`relative z-20 flex h-fit w-full justify-start ${
             !isDragging ? "transition-all" : ""
           } `}
         >
           {liste.map((x, i) => (
             <div
-              className={`z-10 m-0 box-border flex h-full min-h-full w-fit min-w-full select-none flex-col flex-nowrap items-center justify-start duration-500 sm:w-full md:w-full lg:w-[45%] lg:rounded-2xl`}
+              className={`z-10 m-0 box-border flex h-fit w-fit min-w-full select-none flex-col flex-nowrap items-center justify-start duration-500 sm:w-full md:w-full lg:w-[45%] lg:rounded-2xl`}
             >
               {isLoaded && isLoadedForecast && (
                 <div

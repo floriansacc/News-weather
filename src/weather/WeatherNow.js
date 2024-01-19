@@ -18,15 +18,15 @@ export default function WeatherNow(props) {
           ? "Cloudy"
           : skyforecast[0].value === "3"
             ? "Partly cloudy"
-            : skyforecast[0].value === "1"
-              ? "Sunny"
-              : skyforecast[0].value === "5"
-                ? "Clear night"
-                : "No information";
+            : (skyforecast[0].value === "1") &
+                (skyforecast[0].time.slice(0, 2) > 22 ||
+                  skyforecast[0].time.slice(0, 2) < 7)
+              ? "Clear night"
+              : "Sunny";
 
   return (
     <div
-      className={`flex h-full select-none flex-wrap content-start justify-around rounded-2xl bg-transparent sm:w-full md:w-full lg:w-full `}
+      className={`flex h-fit select-none flex-wrap content-start justify-around rounded-2xl bg-transparent sm:w-full md:w-full lg:w-full `}
     >
       <div className="flex w-full flex-nowrap items-center justify-center whitespace-nowrap py-4 text-right ">
         <p className="w-fit p-px pb-1 text-xl font-semibold">

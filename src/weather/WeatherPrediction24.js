@@ -124,7 +124,7 @@ export default function WeatherPrediction24(props) {
 
   return (
     <div
-      className={`border-1 w-full items-center justify-center overflow-auto rounded-2xl border-solid border-transparent bg-white bg-opacity-25 scrollbar-hide`}
+      className={`border-1 h-fit w-full items-center justify-center overflow-auto rounded-2xl border-solid border-transparent bg-white bg-opacity-25 scrollbar-hide`}
     >
       <div className="mx-4 flex w-fit flex-col items-center justify-center overflow-x-scroll scrollbar-hide">
         <div className="flex w-full flex-row flex-nowrap justify-between">
