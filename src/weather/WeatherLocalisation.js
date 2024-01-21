@@ -281,22 +281,30 @@ export default function WeatherLocalisation(props) {
           : (weatherInfoNow[0].value === "1" ||
                 weatherInfoNow[0].value === "5" ||
                 weatherInfoNow[0].value === "6") &&
-              (!skyForecast[0].time.slice(0, 2) > 22 ||
-                skyForecast[0].time.slice(0, 2) < 7)
+              !(
+                skyForecast[0].time.slice(0, 2) > 22 ||
+                skyForecast[0].time.slice(0, 2) < 7
+              )
             ? "bg-perso1"
             : weatherInfoNow[0].value === "2" || weatherInfoNow[0].value === "3"
               ? "bg-perso2"
               : skyForecast[0].value === "4" &&
-                  (!skyForecast[0].time.slice(0, 2) > 22 ||
-                    skyForecast[0].time.slice(0, 2) < 7)
+                  !(
+                    skyForecast[0].time.slice(0, 2) > 22 ||
+                    skyForecast[0].time.slice(0, 2) < 7
+                  )
                 ? "bg-perso3"
                 : skyForecast[0].value === "3" &&
-                    (!skyForecast[0].time.slice(0, 2) > 22 ||
-                      skyForecast[0].time.slice(0, 2) < 7)
+                    !(
+                      skyForecast[0].time.slice(0, 2) > 22 ||
+                      skyForecast[0].time.slice(0, 2) < 7
+                    )
                   ? "bg-perso4"
                   : skyForecast[0].value === "1" &&
-                      (!skyForecast[0].time.slice(0, 2) > 22 ||
-                        skyForecast[0].time.slice(0, 2) < 7)
+                      !(
+                        skyForecast[0].time.slice(0, 2) > 22 ||
+                        skyForecast[0].time.slice(0, 2) < 7
+                      )
                     ? "bg-perso5"
                     : "bg-red-100";
       bgSet === ("bg-perso6" || "bg-perso1")

@@ -17,7 +17,7 @@ export default function ButtonOpenClose(props) {
       } `}
       onClick={() => setMenuListOn(!menuListOn)}
     >
-      <p className="px-2">{`${foropen ? "Close" : "Open"}`} list</p>
+      {foropen && <p className="px-2">Close list</p>}
       <IoIosAddCircleOutline
         className={`h-10 w-10 transition-all duration-300 ${
           menuListOn ? "rotate-[135deg]" : ""

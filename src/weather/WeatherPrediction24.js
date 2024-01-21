@@ -26,18 +26,22 @@ export default function WeatherPrediction24(props) {
     return { min, max };
   };
 
-  const data = {
-    labels: tempnextdays.slice(1, 24).map((x, i) => `${x.time.slice(0, 2)}`),
-    datasets: [
-      {
-        label: "today",
-        data: tempnextdays.slice(1, 24).map((x, i) => x.value),
-        backgroundColor: "#974ee7",
-        borderColor: isDarkTheme ? "#381e72" : "#218fff",
-        tension: 0.3,
-      },
-    ],
-  };
+  const data = !tempnextdays
+    ? null
+    : {
+        labels: tempnextdays
+          .slice(1, 24)
+          .map((x, i) => `${x.time.slice(0, 2)}`),
+        datasets: [
+          {
+            label: "today",
+            data: tempnextdays.slice(1, 24).map((x, i) => x.value),
+            backgroundColor: "#974ee7",
+            borderColor: isDarkTheme ? "#381e72" : "#218fff",
+            tension: 0.3,
+          },
+        ],
+      };
 
   const options = {
     responsive: true,

@@ -287,12 +287,14 @@ export default function WeatherCreateMyList(props) {
                 weatherInfoNow[
                   `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
                 ][0].value === "6") &&
-              (!skyForecast[
-                `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-              ][0].time.slice(0, 2) > 22 ||
-                !skyForecast[
+              !(
+                skyForecast[
                   `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                ][0].time.slice(0, 2) < 7)
+                ][0].time.slice(0, 2) > 22 ||
+                skyForecast[
+                  `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                ][0].time.slice(0, 2) < 7
+              )
             ? "bg-perso1"
             : (weatherInfoNow[
                   `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
@@ -300,41 +302,49 @@ export default function WeatherCreateMyList(props) {
                   weatherInfoNow[
                     `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
                   ][0].value === "3") &&
-                (!skyForecast[
-                  `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                ][0].time.slice(0, 2) > 22 ||
-                  !skyForecast[
+                !(
+                  skyForecast[
                     `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                  ][0].time.slice(0, 2) < 7)
+                  ][0].time.slice(0, 2) > 22 ||
+                  skyForecast[
+                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                  ][0].time.slice(0, 2) < 7
+                )
               ? "bg-perso2"
               : skyForecast[`${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`][0]
                     .value === "4" &&
-                  (!skyForecast[
-                    `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                  ][0].time.slice(0, 2) > 22 ||
-                    !skyForecast[
+                  !(
+                    skyForecast[
                       `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ][0].time.slice(0, 2) < 7)
+                    ][0].time.slice(0, 2) > 22 ||
+                    skyForecast[
+                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                    ][0].time.slice(0, 2) < 7
+                  )
                 ? "bg-perso3"
                 : skyForecast[
                       `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
                     ][0].value === "3" &&
-                    (!skyForecast[
-                      `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ][0].time.slice(0, 2) > 22 ||
-                      !skyForecast[
+                    !(
+                      skyForecast[
                         `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                      ][0].time.slice(0, 2) < 7)
+                      ][0].time.slice(0, 2) > 22 ||
+                      skyForecast[
+                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                      ][0].time.slice(0, 2) < 7
+                    )
                   ? "bg-perso4"
                   : skyForecast[
                         `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
                       ][0].value === "1" &&
-                      (!skyForecast[
-                        `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                      ][0].time.slice(0, 2) > 22 ||
-                        !skyForecast[
+                      !(
+                        skyForecast[
                           `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                        ][0].time.slice(0, 2) < 7)
+                        ][0].time.slice(0, 2) > 22 ||
+                        skyForecast[
+                          `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
+                        ][0].time.slice(0, 2) < 7
+                      )
                     ? "bg-perso5"
                     : "bg-red-100";
       bgSet === ("bg-perso6" || "bg-perso1")
@@ -394,11 +404,22 @@ export default function WeatherCreateMyList(props) {
     }
   }, [isFetch, fetchFail]);
 
+  useEffect(() => {
+    if (isDragging) {
+      document.body.classList.add(`overflow-hidden`);
+    } else {
+      document.body.classList.remove(`overflow-hidden`);
+    }
+    return () => {
+      document.body.classList.remove(`overflow-hidden`);
+    };
+  }, [isDragging]);
+
   return (
     <div
       className={`${previousBg ? previousBg : ""} ${
         isDarkTheme ? "text-light" : "text-dark"
-      } mt-4 flex min-h-full flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden transition-bgground duration-75 ease-in scrollbar-hide sm:m-0 sm:w-full sm:flex-col sm:flex-nowrap md:m-0 md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-[45%] lg:min-w-0 lg:flex-row-reverse lg:flex-wrap lg:rounded-2xl`}
+      } mt-4 flex min-h-full flex-shrink-0 flex-col flex-nowrap items-center justify-start overflow-hidden transition-bgground duration-75 ease-in scrollbar-hide sm:m-0 sm:w-full sm:flex-col sm:flex-nowrap md:m-0 md:w-full md:flex-col md:flex-nowrap lg:h-fit lg:w-[45%] lg:min-w-0 lg:flex-row-reverse lg:flex-wrap lg:rounded-2xl `}
       onClick={() => (menuOn ? setMenuOn(false) : null)}
       onDragStart={(e) => e.preventDefault()}
       id="home3"
