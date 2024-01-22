@@ -223,9 +223,7 @@ export default function App() {
         }}
       >
         <div
-          className={`${previousBg} flex h-fit w-full flex-row items-start justify-start overflow-x-hidden ${
-            isDarkTheme ? "bg-perso6" : ""
-          }`}
+          className={`${previousBg} flex h-fit w-full flex-row items-start justify-start overflow-x-hidden `}
         >
           <Navigator menu={menu} />
           <div className="flex w-full flex-col lg:w-[calc(100%-250px)]">
@@ -265,7 +263,7 @@ export default function App() {
             <div
               className={` ${
                 isDarkTheme ? "text-light" : "text-gray-600"
-              } mt-2 flex h-fit w-9/12 flex-col self-end bg-inherit pr-10 text-right`}
+              } mt-2 flex h-fit w-9/12 flex-col self-end bg-inherit pr-3 text-right`}
             >
               <span className="whitespace-pre-line text-xs">
                 데이터는 실시간 관측된 자료이며 측정소 현지 사정이나 예기치 않은

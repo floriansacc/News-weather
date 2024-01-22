@@ -1,17 +1,49 @@
+import { useEffect, useState } from "react";
+
 export default function WeatherDust(props) {
+  const {
+    pm10,
+    setpm10,
+    pm25,
+    setpm25,
+    globalindex,
+    setglobalindex,
+    isdusted,
+    setisdusted,
+  } = props;
+
+  const [bg, setBg] = useState({ pm10: null, pm25: null });
+
   const dustGrade = [
-    { value: 1, level: "좋음" },
-    { value: 2, level: "보통" },
-    { value: 3, level: "나쁨" },
-    { value: 4, level: "매우나쁨" },
+    { grade: 0 },
+    { grade: 1, color: "bg-blue-500", name: "좋음" },
+    { grade: 2, color: "bg-green-500", name: "보통" },
+    { grade: 3, color: "bg-orange-500", name: "나쁨" },
+    { grade: 4, color: "bg-red-500", name: "매우나쁨" },
   ];
 
   return (
-    <div>
-      <p></p>
-      <p></p>
-      <p></p>
-      <p></p>
+    <div className={`inline-flex h-fit w-full justify-end`}>
+      <div
+        className={`${
+          !pm10 ? "" : dustGrade[pm10.grade].color
+        } m-2 flex flex-col p-1`}
+      >
+        <p>
+          미세먼지: {pm10.value} ㎍/m<sup>3</sup>
+        </p>
+        <p>{dustGrade[pm10.grade].name}</p>
+      </div>
+      <div
+        className={`${
+          !pm25 ? "" : dustGrade[pm25.grade].color
+        } m-2 flex flex-col p-1`}
+      >
+        <p>
+          초미세먼지: {pm25.value}㎍/m<sup>3</sup>
+        </p>
+        <p>{dustGrade[pm25.grade].name}</p>
+      </div>
     </div>
   );
 }

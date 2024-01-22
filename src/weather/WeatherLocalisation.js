@@ -6,6 +6,7 @@ import WeatherLongTerm from "./WeatherLongTerm";
 import WeatherPrediction24 from "./WeatherPrediction24";
 import WeatherCitySelector from "./WeatherCitySelector";
 import useFetchDust from "../fetch/useFetchDust";
+import WeatherDust from "./WeatherDust";
 
 export default function WeatherLocalisation(props) {
   const { mouseenter, mouseleave } = props;
@@ -60,11 +61,12 @@ export default function WeatherLocalisation(props) {
     isLoadedForecast,
     setIsLoadedForecast,
     isForecasted,
-    setisForecasted,
+    setIsForecasted,
     canRefersh,
+    setCanRefresh,
   } = useFetchTestLocation(citySelector, isLocated, refreshFetch);
 
-  /*const {
+  const {
     pm10,
     setPm10,
     pm25,
@@ -74,10 +76,8 @@ export default function WeatherLocalisation(props) {
     isDusted,
     setIsDusted,
   } = useFetchDust(citySelector, isLocated, refreshFetch);
-  */
 
   let bgSet;
-  const backgroundColoring = bgFunction();
 
   const RE = 6371.00877; // Earth radius (km)
   const GRID = 5.0; // Grid interval (km)
@@ -165,11 +165,13 @@ export default function WeatherLocalisation(props) {
     setRainNextDays([]);
     setAccuRain([]);
     setAccuSnow([]);
-    //setPm10({});
-    //setPm25({});
-    //setGlobalIndex({});
+    setPm10({});
+    setPm25({});
+    setGlobalIndex({});
     setIsLoaded(false);
     setIsLoadedForecast(false);
+    setIsForecasted(false);
+    setIsDusted(false);
     setRefreshGeoloc((prev) => prev + 1);
   };
 
@@ -204,12 +206,13 @@ export default function WeatherLocalisation(props) {
       setRainNextDays([]);
       setAccuRain([]);
       setAccuSnow([]);
-      //setPm10({});
-      //setPm25({});
-      //setGlobalIndex({});
+      setPm10({});
+      setPm25({});
+      setGlobalIndex({});
       setIsLoaded(false);
       setIsLoadedForecast(false);
-      setisForecasted(false);
+      setIsForecasted(false);
+      setIsDusted(false);
       setRefreshFetch((prev) => prev + 1);
     }
   };
@@ -263,26 +266,31 @@ export default function WeatherLocalisation(props) {
 
   const errorLocation = () => {
     window.console.log("Unable to retrieve your location");
+    document.getElementById("refresh-button").innerHTML =
+      "Unable to retrieve your location";
+    setCanRefresh(true);
   };
 
   function bgFunction() {
     if (!weatherInfoNow[0] || !skyForecast || !isLoaded || !isLoadedForecast) {
       if (previousBg) {
         bgSet = previousBg;
-        return bgSet;
+        setPreviousBg(bgSet);
+        return;
       }
       bgSet = "bg-yellow-100";
-      return bgSet;
+      setPreviousBg(bgSet);
+      return;
     } else {
       bgSet =
-        skyForecast[0].time.slice(0, 2) > 22 ||
+        skyForecast[0].time.slice(0, 2) > 19 ||
         skyForecast[0].time.slice(0, 2) < 7
           ? "bg-perso6"
           : (weatherInfoNow[0].value === "1" ||
                 weatherInfoNow[0].value === "5" ||
                 weatherInfoNow[0].value === "6") &&
               !(
-                skyForecast[0].time.slice(0, 2) > 22 ||
+                skyForecast[0].time.slice(0, 2) > 19 ||
                 skyForecast[0].time.slice(0, 2) < 7
               )
             ? "bg-perso1"
@@ -290,19 +298,19 @@ export default function WeatherLocalisation(props) {
               ? "bg-perso2"
               : skyForecast[0].value === "4" &&
                   !(
-                    skyForecast[0].time.slice(0, 2) > 22 ||
+                    skyForecast[0].time.slice(0, 2) > 19 ||
                     skyForecast[0].time.slice(0, 2) < 7
                   )
                 ? "bg-perso3"
                 : skyForecast[0].value === "3" &&
                     !(
-                      skyForecast[0].time.slice(0, 2) > 22 ||
+                      skyForecast[0].time.slice(0, 2) > 19 ||
                       skyForecast[0].time.slice(0, 2) < 7
                     )
                   ? "bg-perso4"
                   : skyForecast[0].value === "1" &&
                       !(
-                        skyForecast[0].time.slice(0, 2) > 22 ||
+                        skyForecast[0].time.slice(0, 2) > 19 ||
                         skyForecast[0].time.slice(0, 2) < 7
                       )
                     ? "bg-perso5"
@@ -310,7 +318,8 @@ export default function WeatherLocalisation(props) {
       bgSet === ("bg-perso6" || "bg-perso1")
         ? toggleTheme("dark")
         : toggleTheme("light");
-      return bgSet;
+      setPreviousBg(bgSet);
+      return;
     }
   }
 
@@ -319,20 +328,23 @@ export default function WeatherLocalisation(props) {
   }, [updateDates]);
 
   useEffect(() => {
-    setPreviousBg(bgSet);
-  }, [bgSet]);
+    if (isLoaded && isLoadedForecast) {
+      bgFunction();
+    }
+  }, [bgSet, isLoaded, isLoadedForecast]);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(succesLocation, errorLocation);
     return () => {
       setIsLocated(false);
       setCitySelector([null, null, null, null, null]);
+      document.getElementById("refresh-button").innerHTML = "Refresh Location";
     };
   }, [refreshGeoloc]);
 
   return (
     <div
-      className={`${activeTab === 1 ? "" : "mb-20"} ${backgroundColoring} ${
+      className={`${activeTab === 1 ? "" : "mb-20"} ${
         isDarkTheme ? "text-light" : "text-dark"
       } z-10 m-0 box-border flex h-full  w-fit min-w-full select-none flex-col flex-nowrap items-center justify-start overflow-hidden duration-500 sm:w-full md:w-full lg:h-fit lg:w-full lg:min-w-0 lg:rounded-2xl`}
       onClick={() => (menuOn ? setMenuOn(false) : null)}
@@ -383,6 +395,18 @@ export default function WeatherLocalisation(props) {
           windspeed={weatherInfoNow[7]}
           skyforecast={skyForecast}
           titlename={false}
+        />
+      )}
+      {isDusted && (
+        <WeatherDust
+          pm10={pm10}
+          setpm10={setPm10}
+          pm25={pm25}
+          setpm25={setPm25}
+          globalindex={globalIndex}
+          setglobalindex={setGlobalIndex}
+          isdusted={isDusted}
+          setisdusted={setIsDusted}
         />
       )}
       {isLoadedForecast && isForecasted && (

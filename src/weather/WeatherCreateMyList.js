@@ -274,7 +274,7 @@ export default function WeatherCreateMyList(props) {
       bgSet =
         skyForecast[
           `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-        ][0].time.slice(0, 2) > 22 ||
+        ][0].time.slice(0, 2) > 19 ||
         skyForecast[
           `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
         ][0].time.slice(0, 2) < 7
@@ -290,7 +290,7 @@ export default function WeatherCreateMyList(props) {
               !(
                 skyForecast[
                   `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                ][0].time.slice(0, 2) > 22 ||
+                ][0].time.slice(0, 2) > 19 ||
                 skyForecast[
                   `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
                 ][0].time.slice(0, 2) < 7
@@ -305,7 +305,7 @@ export default function WeatherCreateMyList(props) {
                 !(
                   skyForecast[
                     `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                  ][0].time.slice(0, 2) > 22 ||
+                  ][0].time.slice(0, 2) > 19 ||
                   skyForecast[
                     `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
                   ][0].time.slice(0, 2) < 7
@@ -316,7 +316,7 @@ export default function WeatherCreateMyList(props) {
                   !(
                     skyForecast[
                       `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                    ][0].time.slice(0, 2) > 22 ||
+                    ][0].time.slice(0, 2) > 19 ||
                     skyForecast[
                       `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
                     ][0].time.slice(0, 2) < 7
@@ -328,7 +328,7 @@ export default function WeatherCreateMyList(props) {
                     !(
                       skyForecast[
                         `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                      ][0].time.slice(0, 2) > 22 ||
+                      ][0].time.slice(0, 2) > 19 ||
                       skyForecast[
                         `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
                       ][0].time.slice(0, 2) < 7
@@ -340,7 +340,7 @@ export default function WeatherCreateMyList(props) {
                       !(
                         skyForecast[
                           `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
-                        ][0].time.slice(0, 2) > 22 ||
+                        ][0].time.slice(0, 2) > 19 ||
                         skyForecast[
                           `${liste[i]["Phase2"]} - ${liste[i]["Phase3"]}`
                         ][0].time.slice(0, 2) < 7

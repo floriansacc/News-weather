@@ -25,7 +25,7 @@ export default function useFetchTestLocation(city, isLocated, refreshFetch) {
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [isLoadedForecast, setIsLoadedForecast] = useState(false);
-  const [isForecasted, setisForecasted] = useState(false);
+  const [isForecasted, setIsForecasted] = useState(false);
   const [canRefersh, setCanRefresh] = useState(null);
 
   const serviceKey = process.env.REACT_APP_WEATHER_KEY;
@@ -245,11 +245,11 @@ export default function useFetchTestLocation(city, isLocated, refreshFetch) {
       let fetchAll = async () => {
         try {
           await getWeather3();
-          setisForecasted(true);
+          setIsForecasted(true);
           setCanRefresh(true);
         } catch (e) {
           window.console.log(e);
-          setisForecasted(false);
+          setIsForecasted(false);
           setCanRefresh(true);
         }
       };
@@ -257,7 +257,7 @@ export default function useFetchTestLocation(city, isLocated, refreshFetch) {
     }
     return () => {
       abortController.abort();
-      setisForecasted(false);
+      setIsForecasted(false);
       setCanRefresh(false);
     };
   }, [isLocated, refreshFetch]);
@@ -288,7 +288,8 @@ export default function useFetchTestLocation(city, isLocated, refreshFetch) {
     isLoadedForecast,
     setIsLoadedForecast,
     isForecasted,
-    setisForecasted,
+    setIsForecasted,
     canRefersh,
+    setCanRefresh,
   };
 }

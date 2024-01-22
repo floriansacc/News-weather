@@ -10,16 +10,16 @@ export default function WeatherNow(props) {
   const { images, isDarkTheme } = useContext(QueryContext);
 
   const skyStatus =
-    raincond.value === "1"
+    raincond.value === 1
       ? "Rain"
-      : raincond.value === "3"
+      : raincond.value === 3
         ? "Snow"
-        : skyforecast[0].value === "4"
+        : skyforecast[0].value === 4
           ? "Cloudy"
-          : skyforecast[0].value === "3"
+          : skyforecast[0].value === 3
             ? "Partly cloudy"
-            : (skyforecast[0].value === "1") &
-                (skyforecast[0].time.slice(0, 2) > 22 ||
+            : skyforecast[0].value === 1 &&
+                (skyforecast[0].time.slice(0, 2) > 21 ||
                   skyforecast[0].time.slice(0, 2) < 7)
               ? "Clear night"
               : "Sunny";

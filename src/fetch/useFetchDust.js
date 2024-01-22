@@ -37,15 +37,15 @@ export default function useFetchDust(city, isLocated, refreshFetch) {
         await jsonResponse.response.body.items.forEach((x, i) => {
           if (i === 0) {
             setPm10({
-              value: x.pm10Value,
-              grade: x.pm10Grade1h,
+              value: parseInt(x.pm10Value),
+              grade: parseInt(x.pm10Grade1h),
               city: x.sidoName,
               station: x.stationName,
               time: x.dateTime,
             });
             setPm25({
-              value: x.pm25Value,
-              grade: x.pm25Grade1h,
+              value: parseInt(x.pm25Value),
+              grade: parseInt(x.pm25Grade1h),
               city: x.sidoName,
               station: x.stationName,
               time: x.dateTime,
