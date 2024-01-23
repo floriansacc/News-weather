@@ -5,8 +5,8 @@ import WeatherNow from "./WeatherNow";
 import WeatherLongTerm from "./WeatherLongTerm";
 import WeatherPrediction24 from "./WeatherPrediction24";
 import WeatherCitySelector from "./WeatherCitySelector";
-import useFetchDust from "../fetch/useFetchDust";
-import WeatherDust from "./WeatherDust";
+import useFetchParticle from "../fetch/useFetchParticle";
+import WeatherParticle from "./WeatherParticle";
 
 export default function WeatherLocalisation(props) {
   const { mouseenter, mouseleave } = props;
@@ -75,7 +75,7 @@ export default function WeatherLocalisation(props) {
     setGlobalIndex,
     isDusted,
     setIsDusted,
-  } = useFetchDust(citySelector, isLocated, refreshFetch);
+  } = useFetchParticle(citySelector, isLocated, refreshFetch);
 
   let bgSet;
 
@@ -154,7 +154,7 @@ export default function WeatherLocalisation(props) {
     return rs;
   };
 
-  const handleRefresh = (e) => {
+  const refreshList = (e) => {
     setWeatherInfoNow([]);
     setWeatherForecast([]);
     setTempForecast([]);
@@ -172,12 +172,15 @@ export default function WeatherLocalisation(props) {
     setIsLoadedForecast(false);
     setIsForecasted(false);
     setIsDusted(false);
+  };
+
+  const handleRefresh = (e) => {
+    refreshList();
     setRefreshGeoloc((prev) => prev + 1);
   };
 
   const handleCitySelector = (e) => {
     if (e.target.name === "one") {
-      setCitySelector(["선택"]);
       setCitySelector([e.target.value]);
     } else if (e.target.name === "two") {
       setCitySelector([citySelector[0], e.target.value]);
@@ -196,23 +199,7 @@ export default function WeatherLocalisation(props) {
         coord[0],
         coord[1],
       ]);
-      setWeatherInfoNow([]);
-      setWeatherForecast([]);
-      setTempForecast([]);
-      setSkyForecast([]);
-      setHighestNextDays([]);
-      setTempNextDays([]);
-      setSkyNextDays([]);
-      setRainNextDays([]);
-      setAccuRain([]);
-      setAccuSnow([]);
-      setPm10({});
-      setPm25({});
-      setGlobalIndex({});
-      setIsLoaded(false);
-      setIsLoadedForecast(false);
-      setIsForecasted(false);
-      setIsDusted(false);
+      refreshList();
       setRefreshFetch((prev) => prev + 1);
     }
   };
@@ -397,8 +384,8 @@ export default function WeatherLocalisation(props) {
           titlename={false}
         />
       )}
-      {isDusted && (
-        <WeatherDust
+      {isDusted && pm10.value && (
+        <WeatherParticle
           pm10={pm10}
           setpm10={setPm10}
           pm25={pm25}

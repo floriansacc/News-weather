@@ -1,12 +1,21 @@
 import { useEffect, useState } from "react";
 
-export default function useFetchDust(city, isLocated, refreshFetch) {
+export default function useFetchParticle(city, isLocated, refreshFetch) {
   const [pm10, setPm10] = useState({});
   const [pm25, setPm25] = useState({});
   const [globalIndex, setGlobalIndex] = useState({});
   const [isDusted, setIsDusted] = useState(false);
+  const [cityTracker, setCityTracker] = useState("서울");
 
   const serviceKey = process.env.REACT_APP_DUST_KEY;
+
+  const getCity = (x) => {
+    if (x === "전라북도") {
+      return "전북";
+    } else {
+      return x.slice(0, 2);
+    }
+  };
 
   const cityDustUrl =
     "https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty";
@@ -21,7 +30,9 @@ export default function useFetchDust(city, isLocated, refreshFetch) {
     const abortController = new AbortController();
     const getDustStation = async () => {
       let temporary = [];
-      const urlDust = `${cityDustUrl}?serviceKey=xxxx&returnType=json&numofRows=100&pageNo=1&sidoName=서울&ver=1.3`;
+      const urlDust = `${cityDustUrl}?serviceKey=${serviceKey}&returnType=json&numofRows=100&pageNo=1&sidoName=${getCity(
+        city[0],
+      )}&ver=1.3`;
       try {
         const response = await fetch(urlDust, {
           headers: {
@@ -33,7 +44,10 @@ export default function useFetchDust(city, isLocated, refreshFetch) {
           throw new Error("Error fetch dust");
         }
         const jsonResponse = await response.json();
-        window.console.log(jsonResponse.response.body.items[0]);
+        window.console.log([
+          `Particle fetch${city[0]}`,
+          jsonResponse.response.header["resultMsg"],
+        ]);
         await jsonResponse.response.body.items.forEach((x, i) => {
           if (i === 0) {
             setPm10({

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function WeatherDust(props) {
+export default function WeatherParticle(props) {
   const {
     pm10,
     setpm10,
@@ -32,7 +32,11 @@ export default function WeatherDust(props) {
         <p>
           미세먼지: {pm10.value} ㎍/m<sup>3</sup>
         </p>
-        <p>{dustGrade[pm10.grade].name}</p>
+        <div className="flex flex-row">
+          <p className="pl-2">{dustGrade[pm10.grade].name}</p>
+          <p className="pl-2">({pm10.city},</p>
+          <p className="whitespace-pre pr-2"> {pm10.station})</p>
+        </div>
       </div>
       <div
         className={`${
@@ -42,7 +46,11 @@ export default function WeatherDust(props) {
         <p>
           초미세먼지: {pm25.value}㎍/m<sup>3</sup>
         </p>
-        <p>{dustGrade[pm25.grade].name}</p>
+        <div className="flex flex-row">
+          <p className="pl-2">{dustGrade[pm25.grade].name}</p>
+          <p className="pl-2">({pm25.city},</p>
+          <p className="whitespace-pre pr-2"> {pm25.station})</p>
+        </div>
       </div>
     </div>
   );
