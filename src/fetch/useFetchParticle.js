@@ -12,6 +12,18 @@ export default function useFetchParticle(city, isLocated, refreshFetch) {
   const getCity = (x) => {
     if (x === "전라북도") {
       return "전북";
+    } else if (x === "전라남도") {
+      return "전남";
+    } else if (x === "전라남도") {
+      return "전남";
+    } else if (x === "경상북도") {
+      return "경북";
+    } else if (x === "겅상남도") {
+      return "경남";
+    } else if (x === "충청북도") {
+      return "충북";
+    } else if (x === "충청남도") {
+      return "충남";
     } else {
       return x.slice(0, 2);
     }

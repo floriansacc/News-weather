@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef } from "react";
-import { QueryContext } from "../App";
+import { QueryContext } from "../../App";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 import { Tooltip } from "react-tooltip";

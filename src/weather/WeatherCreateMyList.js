@@ -1,13 +1,11 @@
 import { useEffect, useState, useContext } from "react";
-import WeatherUID from "./WeatherUID";
-import MenuList from "./MenuList";
-import ButtonOpenClose from "./ButtonOpenClose";
+import MenuList from "./components/MenuList";
+import ButtonOpenClose from "./components/ButtonOpenClose";
 import { QueryContext } from "../App";
 import useFetchCreateList from "../fetch/useFetchCreateList";
-import WeatherPrediction from "./WeatherPrediction";
-import WeatherNow from "./WeatherNow";
-import WeatherLongTerm from "./WeatherLongTerm";
-import WeatherPrediction24 from "./WeatherPrediction24";
+import WeatherNow from "./components/WeatherNow";
+import WeatherLongTerm from "./components/WeatherLongTerm";
+import WeatherPrediction24 from "./components/WeatherPrediction24";
 
 export default function WeatherCreateMyList(props) {
   const { mouseenter, mouseleave, resizew } = props;

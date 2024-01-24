@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { QueryContext } from "../App";
+import { QueryContext } from "../../App";
 import WeatherPredictionNextDays from "./WeatherPredictionNextDays";
 
 export default function WeatherLongTerm(props) {

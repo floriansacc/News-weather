@@ -12,8 +12,6 @@ export default function WeatherParticle(props) {
     setisdusted,
   } = props;
 
-  const [bg, setBg] = useState({ pm10: null, pm25: null });
-
   const dustGrade = [
     { grade: 0 },
     { grade: 1, color: "bg-blue-500", name: "좋음" },
@@ -27,7 +25,7 @@ export default function WeatherParticle(props) {
       <div
         className={`${
           !pm10 ? "" : dustGrade[pm10.grade].color
-        } m-2 flex flex-col p-1`}
+        } m-2 flex flex-col rounded-2xl p-2 text-sm`}
       >
         <p>
           미세먼지: {pm10.value} ㎍/m<sup>3</sup>
@@ -41,7 +39,7 @@ export default function WeatherParticle(props) {
       <div
         className={`${
           !pm25 ? "" : dustGrade[pm25.grade].color
-        } m-2 flex flex-col p-1`}
+        } m-2 flex flex-col rounded-2xl p-2 text-sm`}
       >
         <p>
           초미세먼지: {pm25.value}㎍/m<sup>3</sup>

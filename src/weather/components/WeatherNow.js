@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { QueryContext } from "../App";
+import { QueryContext } from "../../App";
 import WeatherCitySelector from "./WeatherCitySelector";
 import { IoPlaySkipForwardOutline } from "react-icons/io5";
 import { Tooltip } from "react-tooltip";

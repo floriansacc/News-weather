@@ -1,12 +1,12 @@
 import { useState, useEffect, useContext } from "react";
 import { QueryContext } from "../App";
 import useFetchTestLocation from "../fetch/useFetchTestLocation";
-import WeatherNow from "./WeatherNow";
-import WeatherLongTerm from "./WeatherLongTerm";
-import WeatherPrediction24 from "./WeatherPrediction24";
-import WeatherCitySelector from "./WeatherCitySelector";
+import WeatherNow from "./components/WeatherNow";
+import WeatherLongTerm from "./components/WeatherLongTerm";
+import WeatherPrediction24 from "./components/WeatherPrediction24";
+import WeatherCitySelector from "./components/WeatherCitySelector";
 import useFetchParticle from "../fetch/useFetchParticle";
-import WeatherParticle from "./WeatherParticle";
+import WeatherParticle from "./components/WeatherParticle";
 
 export default function WeatherLocalisation(props) {
   const { mouseenter, mouseleave } = props;
@@ -181,9 +181,9 @@ export default function WeatherLocalisation(props) {
 
   const handleCitySelector = (e) => {
     if (e.target.name === "one") {
-      setCitySelector([e.target.value]);
+      setCitySelector([e.target.value, "", ""]);
     } else if (e.target.name === "two") {
-      setCitySelector([citySelector[0], e.target.value]);
+      setCitySelector([citySelector[0], e.target.value, ""]);
     } else if (e.target.name === "three") {
       let [coord] = Array.from(
         new Set(

@@ -223,7 +223,7 @@ export default function App() {
         }}
       >
         <div
-          className={`${previousBg} flex h-fit w-full flex-row items-start justify-start overflow-x-hidden `}
+          className={`${previousBg} flex h-fit min-h-screen w-full flex-row items-start justify-start overflow-x-hidden `}
         >
           <Navigator menu={menu} />
           <div className="flex w-full flex-col lg:w-[calc(100%-250px)]">
