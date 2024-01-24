@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { QueryContext } from "../App";
 
-export default function useFetchTestLocation(city, isLocated, refreshFetch) {
+export default function useFetchLocation(city, isLocated, refreshFetch) {
   const {
     baseDate,
     baseDateFuture,

@@ -1,7 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 
 module.exports = {
-  content: ["./src/*.js", "./src/weather/*.js"],
+  content: [
+    "./src/*.js",
+    "./src/weather/*.js",
+    "./src/weather/components/*.js",
+  ],
   theme: {
     screens: {
       sm: { max: "600px" },

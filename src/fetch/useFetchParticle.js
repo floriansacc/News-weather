@@ -7,7 +7,7 @@ export default function useFetchParticle(city, isLocated, refreshFetch) {
   const [isDusted, setIsDusted] = useState(false);
   const [cityTracker, setCityTracker] = useState("서울");
 
-  const serviceKey = process.env.REACT_APP_DUST_KEY;
+  const serviceKey = process.env.REACT_APP_WEATHER_KEY;
 
   const getCity = (x) => {
     if (x === "전라북도") {

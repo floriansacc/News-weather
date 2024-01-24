@@ -1,11 +1,11 @@
 import { useState, useEffect, useContext } from "react";
 import { QueryContext } from "../App";
-import useFetchTestLocation from "../fetch/useFetchTestLocation";
+import useFetchLocation from "../fetch/useFetchLocation";
+import useFetchParticle from "../fetch/useFetchParticle";
 import WeatherNow from "./components/WeatherNow";
 import WeatherLongTerm from "./components/WeatherLongTerm";
 import WeatherPrediction24 from "./components/WeatherPrediction24";
 import WeatherCitySelector from "./components/WeatherCitySelector";
-import useFetchParticle from "../fetch/useFetchParticle";
 import WeatherParticle from "./components/WeatherParticle";
 
 export default function WeatherLocalisation(props) {
@@ -64,7 +64,7 @@ export default function WeatherLocalisation(props) {
     setIsForecasted,
     canRefersh,
     setCanRefresh,
-  } = useFetchTestLocation(citySelector, isLocated, refreshFetch);
+  } = useFetchLocation(citySelector, isLocated, refreshFetch);
 
   const {
     pm10,

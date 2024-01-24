@@ -1,11 +1,29 @@
 import { useContext } from "react";
-import WeatherCreateMyList from "./WeatherCreateMyList";
 import WeatherLocalisation from "./WeatherLocalisation";
+import WeatherCreateMyList from "./WeatherCreateMyList";
 import { QueryContext } from "../App";
+import useFetchRadar from "../fetch/useFetchRadar";
+import WeatherRadar from "./components/WeatherRadar";
 
 export default function WeatherHome(props) {
   const { mouseenter, mouseleave, resizew } = props;
   const { menuOn, setMenuOn } = useContext(QueryContext);
+
+  const { radar, setRadar, isRadarOk, setIsRadarOk } = useFetchRadar();
+
+  /*
+  {isRadarOk && radar && (
+          <div>
+            <WeatherRadar
+              radar={radar}
+              setradar={setRadar}
+              isradarok={isRadarOk}
+              setisradarok={setIsRadarOk}
+            />
+          </div>
+        )} 
+        */
+
   return (
     <div
       className="flex h-fit w-full flex-col flex-wrap items-start justify-around overflow-hidden sm:w-full sm:flex-col sm:flex-nowrap sm:items-center md:w-full md:flex-col md:flex-nowrap lg:m-2 lg:h-fit"
@@ -22,11 +40,16 @@ export default function WeatherHome(props) {
         <p>- Make a list of city and display their weather </p>
         <p className="my-2">Future update will improve the list creation</p>
       </div>
-      <div className="flex w-[90%] flex-col lg:w-[40%]">
-        <p className=" my-2 self-center rounded-2xl border border-solid border-red-400 p-2 text-2xl">
-          Location
-        </p>
-        <WeatherLocalisation mouseenter={mouseenter} mouseleave={mouseleave} />
+      <div className="flex w-full flex-col items-center justify-around lg:flex-row">
+        <div className="flex w-[90%] flex-col lg:w-[40%]">
+          <p className=" my-2 self-center rounded-2xl border border-solid border-red-400 p-2 text-2xl">
+            Location
+          </p>
+          <WeatherLocalisation
+            mouseenter={mouseenter}
+            mouseleave={mouseleave}
+          />
+        </div>
       </div>
     </div>
   );
