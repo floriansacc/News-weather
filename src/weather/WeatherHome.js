@@ -50,6 +50,19 @@ export default function WeatherHome(props) {
             mouseleave={mouseleave}
           />
         </div>
+        {isRadarOk && radar && (
+          <div className="flex w-full flex-col items-center justify-center">
+            <p className=" my-2 self-center rounded-2xl border border-solid border-red-400 p-2 text-2xl">
+              Radar
+            </p>
+            <WeatherRadar
+              radar={radar}
+              setradar={setRadar}
+              isradarok={isRadarOk}
+              setisradarok={setIsRadarOk}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

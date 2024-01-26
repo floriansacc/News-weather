@@ -277,9 +277,12 @@ export default function App() {
 
                 <div className="flex flex-col items-start justify-end">
                   <span className="text-xs">
-                    - 기상청 (단기예보 조회서비스)
+                    - 단기예보 조회서비스 (기상청)
                   </span>
-                  <span className="text-xs">- 한국환경공단 (디개오염정보)</span>
+                  <span className="text-xs">
+                    - 레이더영상 조회서비스 (기상청)
+                  </span>
+                  <span className="text-xs">- 대기오염정보 (한국환경공단)</span>
                 </div>
               </div>
             </div>
