@@ -30,21 +30,13 @@ export default function useFetchParticle(city, isLocated, refreshFetch) {
   };
 
   const cityDustUrl =
-    "https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty";
-
-  const x =
-    "http://apis.data.go.kr/B552584/MsrstnInfoInqireSvc/getNearbyMsrstnList?serviceKey=서비스키&returnType=json&tmX=317994.49&tmY=4160810.57";
-
-  const test =
-    "http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getCtprvnRltmMesureDnsty?serviceKey=서비스키&returnType=json&numofRows=100&pageNo=1&sidoName=서울";
+    "http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty";
 
   useEffect(() => {
     const abortController = new AbortController();
     const getDustStation = async () => {
       let temporary = [];
-      const urlDust = `${cityDustUrl}?serviceKey=${serviceKey}&returnType=json&numofRows=100&pageNo=1&sidoName=${getCity(
-        city[0],
-      )}&ver=1.3`;
+      const urlDust = `${cityDustUrl}?serviceKey=${serviceKey}&returnType=json&stationName=${city[5]}&dataTerm=DAILY&ver=1.5`;
       try {
         const response = await fetch(urlDust, {
           headers: {
@@ -60,6 +52,7 @@ export default function useFetchParticle(city, isLocated, refreshFetch) {
           `Particle fetch${city[0]}`,
           jsonResponse.response.header["resultMsg"],
         ]);
+        window.console.log(jsonResponse.response.body.items);
         await jsonResponse.response.body.items.forEach((x, i) => {
           if (i === 0) {
             setPm10({

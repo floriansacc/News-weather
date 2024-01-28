@@ -31,6 +31,7 @@ export default function WeatherLocalisation(props) {
     "",
     null,
     null,
+    null,
   ]);
   const [refreshGeoloc, setRefreshGeoloc] = useState(0);
   const [refreshFetch, setRefreshFetch] = useState(0);
@@ -189,7 +190,7 @@ export default function WeatherLocalisation(props) {
         new Set(
           dataimport
             .filter((word) => word.Part3 === e.target.value)
-            .map((x) => [x.nx, x.ny]),
+            .map((x) => [x.nx, x.ny, x.stationName]),
         ),
       );
       setCitySelector([
@@ -198,19 +199,29 @@ export default function WeatherLocalisation(props) {
         e.target.value,
         coord[0],
         coord[1],
+        coord[2],
       ]);
       refreshList();
       setRefreshFetch((prev) => prev + 1);
     }
   };
 
-  const findclosest = (xValue, data, parameter) => {
+  const findclosest = (xValue, yValue, data) => {
+    function calcDistance(x1, y1, x2, y2) {
+      const X = x2 - x1;
+      const Y = y2 - y1;
+      return Math.sqrt(X * X + Y * Y);
+    }
     let closestObject = null;
     let minDistance = 0.1;
     data.forEach((entry) => {
-      const param = entry[parameter];
-      const distance = Math.abs(xValue - param);
-      if (distance < minDistance) {
+      const distance = calcDistance(
+        xValue,
+        yValue,
+        entry["latitude"],
+        entry["longitude"],
+      );
+      if (minDistance === null || distance < minDistance) {
         minDistance = distance;
         closestObject = entry;
       }
@@ -233,10 +244,10 @@ export default function WeatherLocalisation(props) {
       });
       let cityName = findclosest(
         temporary.lat,
+        temporary.lng,
         dataimport.filter(
           (word) => word.nx === temporary.x && word.ny === temporary.y,
         ),
-        "latitude",
       );
       setCitySelector([
         cityName.Part1,
@@ -244,6 +255,7 @@ export default function WeatherLocalisation(props) {
         cityName.Part3,
         temporary.x,
         temporary.y,
+        cityName.stationName,
       ]);
       setIsLocated(true);
     } catch (e) {

@@ -25,29 +25,27 @@ export default function WeatherParticle(props) {
       <div
         className={`${
           !pm10 ? "" : dustGrade[pm10.grade].color
-        } m-2 flex flex-col rounded-2xl p-2 text-sm`}
+        } m-2 flex flex-col gap-2 rounded-2xl p-2 text-sm`}
       >
         <p>
           미세먼지: {pm10.value} ㎍/m<sup>3</sup>
         </p>
-        <div className="flex flex-row">
-          <p className="pl-2">{dustGrade[pm10.grade].name}</p>
-          <p className="pl-2">({pm10.city},</p>
-          <p className="whitespace-pre pr-2"> {pm10.station})</p>
+        <div className="flex flex-row justify-center ">
+          <p>{dustGrade[pm10.grade].name}</p>
+          <p className="whitespace-pre"> ({pm10.station})</p>
         </div>
       </div>
       <div
         className={`${
           !pm25 ? "" : dustGrade[pm25.grade].color
-        } m-2 flex flex-col rounded-2xl p-2 text-sm`}
+        } m-2 flex flex-col gap-2 rounded-2xl p-2 text-sm`}
       >
         <p>
-          초미세먼지: {pm25.value}㎍/m<sup>3</sup>
+          초미세먼지: {pm25.value} ㎍/m<sup>3</sup>
         </p>
-        <div className="flex flex-row">
-          <p className="pl-2">{dustGrade[pm25.grade].name}</p>
-          <p className="pl-2">({pm25.city},</p>
-          <p className="whitespace-pre pr-2"> {pm25.station})</p>
+        <div className="flex flex-row justify-center ">
+          <p>{dustGrade[pm25.grade].name}</p>
+          <p className="whitespace-pre"> ({pm25.station})</p>
         </div>
       </div>
     </div>
