@@ -402,17 +402,6 @@ export default function WeatherCreateMyList(props) {
     }
   }, [isFetch, fetchFail]);
 
-  useEffect(() => {
-    if (isDragging) {
-      document.body.classList.add(`overflow-hidden`);
-    } else {
-      document.body.classList.remove(`overflow-hidden`);
-    }
-    return () => {
-      document.body.classList.remove(`overflow-hidden`);
-    };
-  }, [isDragging]);
-
   return (
     <div
       className={`${previousBg ? previousBg : ""} ${
@@ -456,6 +445,7 @@ export default function WeatherCreateMyList(props) {
             >
               {isLoaded && isLoadedForecast && (
                 <div
+                  className="touch-pan-x"
                   onPointerDown={handlePointerDown}
                   onPointerMove={handlePointerMove}
                   onPointerUp={handlePointerUp}

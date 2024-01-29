@@ -53,10 +53,6 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
           throw new Error("Pas de météo pour toi");
         }
         const jsonResponse = await response.json();
-        window.console.log([
-          `Geolocation ${city}`,
-          jsonResponse.response.header["resultMsg"],
-        ]);
         await jsonResponse.response.body.items.item.forEach((x) => {
           setWeatherInfoNow((prev) => [
             ...prev,
@@ -81,9 +77,10 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
     if (isLocated) {
       let fetchAll = async () => {
         try {
-          await getWeather();
-          setIsLoaded(true);
-          setCanRefresh(true);
+          await getWeather().then(() => {
+            setIsLoaded(true);
+            setCanRefresh(true);
+          });
         } catch (e) {
           window.console.log(e);
           setIsLoaded(false);
@@ -116,10 +113,6 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
           throw new Error("Pas de météo pour toi");
         }
         const jsonResponse = await response.json();
-        window.console.log([
-          `Geolocation Forecast ${city}`,
-          jsonResponse.response.header["resultMsg"],
-        ]);
         await jsonResponse.response.body.items.item.forEach((x) => {
           let newData = {
             Phase1: city[0],
@@ -146,10 +139,9 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
     if (isLocated) {
       let fetchAll = async () => {
         try {
-          await getWeather2();
-          setIsLoadedForecast(true);
-        } catch (e) {
-          window.console.log(e);
+          await getWeather2().then(() => setIsLoadedForecast(true));
+        } catch (error) {
+          window.console.log(error);
           setIsLoadedForecast(false);
         }
       };
@@ -179,10 +171,6 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
           throw new Error("Pas de météo pour toi");
         }
         const jsonResponse = await response.json();
-        window.console.log([
-          `Geolocation next day ${city}`,
-          jsonResponse.response.header["resultMsg"],
-        ]);
         await jsonResponse.response.body.items.item.forEach((x, i) => {
           let newData = {
             Phase1: city[0],
@@ -244,9 +232,10 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
     if (isLocated) {
       let fetchAll = async () => {
         try {
-          await getWeather3();
-          setIsForecasted(true);
-          setCanRefresh(true);
+          await getWeather3().then(() => {
+            setIsForecasted(true);
+            setCanRefresh(true);
+          });
         } catch (e) {
           window.console.log(e);
           setIsForecasted(false);

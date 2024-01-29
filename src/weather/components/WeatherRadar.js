@@ -12,6 +12,7 @@ export default function WeatherRadar(props) {
   const counter = useRef(0);
   const [isPaused, pause] = useState(false);
   const isPausedRef = useRef(isPaused);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   const handleChangeBar = (e) => {
     setImgSrc(parseInt(e.target.value));
@@ -28,6 +29,10 @@ export default function WeatherRadar(props) {
     } else {
       pause(entry);
     }
+  };
+
+  const handleImageLoaded = () => {
+    setIsImageLoaded(true);
   };
 
   useEffect(() => {
@@ -61,7 +66,7 @@ export default function WeatherRadar(props) {
   }, [isPaused]);
 
   useEffect(() => {
-    if (!isPaused) {
+    if (!isPaused && isImageLoaded) {
       const timer = setInterval(() => {
         if (radar[counter.current + 1]) {
           setImgSrc((prev) => prev + 1);
@@ -73,7 +78,7 @@ export default function WeatherRadar(props) {
         clearInterval(timer);
       };
     }
-  }, [isPaused]);
+  }, [isPaused, isImageLoaded]);
 
   return (
     <div
@@ -90,6 +95,7 @@ export default function WeatherRadar(props) {
         <img
           className="h-full w-full"
           src={radar[imgSrc]}
+          onLoad={handleImageLoaded}
           onClick={() => handleClickImage("img")}
         ></img>
         <div className="h-fit w-full px-4">

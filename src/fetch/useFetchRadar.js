@@ -44,8 +44,7 @@ export default function useFetchRadar(refreshFetch) {
     };
     let fetchRadar = async () => {
       try {
-        await getRadar();
-        setIsRadarOk(true);
+        await getRadar().then(() => setIsRadarOk(true));
       } catch (e) {
         window.console.log(e);
         setIsRadarOk(false);

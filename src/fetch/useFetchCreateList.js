@@ -60,10 +60,6 @@ export default function useFetchCreateList(liste, refreshFetch) {
             throw new Error("Pas de météo pour toi");
           }
           const jsonResponse = await response.json();
-          window.console.log([
-            `List ${name[0]} ${name[1]}`,
-            jsonResponse.response.header["resultMsg"],
-          ]);
           await jsonResponse.response.body.items.item.forEach((x, i) => {
             let newData = {
               Phase1: name[0],
@@ -98,10 +94,6 @@ export default function useFetchCreateList(liste, refreshFetch) {
             throw new Error("Pas de météo pour toi");
           }
           const jsonResponse = await response.json();
-          window.console.log([
-            `List Forecast ${name[0]} ${name[1]}`,
-            jsonResponse.response.header["resultMsg"],
-          ]);
           await jsonResponse.response.body.items.item.forEach((x, i) => {
             let newData = {
               Phase1: name[0],
@@ -114,11 +106,11 @@ export default function useFetchCreateList(liste, refreshFetch) {
               nx: x.nx,
               ny: x.ny,
             };
-            if (x.category === "PTY") {
-              temporary[i] = newData;
-            } else if (x.category === "T1H") {
-              temporary[i] = newData;
-            } else if (x.category === "SKY") {
+            if (
+              x.category === "PTY" ||
+              x.category === "T1H" ||
+              x.category === "SKY"
+            ) {
               temporary[i] = newData;
             }
           });
@@ -143,10 +135,6 @@ export default function useFetchCreateList(liste, refreshFetch) {
             throw new Error("Pas de météo pour toi");
           }
           const jsonResponse = await response.json();
-          window.console.log([
-            `List next day ${name[0]} ${name[1]}`,
-            jsonResponse.response.header["resultMsg"],
-          ]);
           await jsonResponse.response.body.items.item.forEach((x, i) => {
             let newData = {
               Phase1: name[0],
@@ -160,40 +148,13 @@ export default function useFetchCreateList(liste, refreshFetch) {
               ny: ny,
             };
             if (
-              (x.category === "TMN" || x.category === "TMX") &&
-              (x.fcstDate === tomorrowDate || x.fcstDate === afterTomorrowDate)
-            ) {
-              temporary[i] = newData;
-            } else if (
-              x.category === "TMP" &&
-              (x.fcstDate === baseDate ||
-                x.fcstDate === tomorrowDate ||
-                x.fcstDate === afterTomorrowDate)
-            ) {
-              temporary[i] = newData;
-            } else if (
-              x.category === "SKY" &&
-              (x.fcstDate === baseDate ||
-                x.fcstDate === tomorrowDate ||
-                x.fcstDate === afterTomorrowDate)
-            ) {
-              temporary[i] = newData;
-            } else if (
-              x.category === "PTY" &&
-              (x.fcstDate === baseDate ||
-                x.fcstDate === tomorrowDate ||
-                x.fcstDate === afterTomorrowDate)
-            ) {
-              temporary[i] = newData;
-            } else if (
-              x.category === "PCP" &&
-              (x.fcstDate === baseDate ||
-                x.fcstDate === tomorrowDate ||
-                x.fcstDate === afterTomorrowDate)
-            ) {
-              temporary[i] = newData;
-            } else if (
-              x.category === "SNO" &&
+              (x.category === "TMN" ||
+                x.category === "TMX" ||
+                x.category === "TMP" ||
+                x.category === "SKY" ||
+                x.category === "PTY" ||
+                x.category === "PCP" ||
+                x.category === "SNO") &&
               (x.fcstDate === baseDate ||
                 x.fcstDate === tomorrowDate ||
                 x.fcstDate === afterTomorrowDate)
@@ -344,14 +305,12 @@ export default function useFetchCreateList(liste, refreshFetch) {
           await saveDataNow();
           await saveDataForecast();
           await saveDataNextDays();
-          window.console.log("List sucess");
           setIsFetch(true);
           setIsLoaded(true);
           setIsLoadedForecast(true);
           setisForecasted(true);
           setCanRefresh(true);
         } catch (e) {
-          window.console.log(`List fail: ${e}`);
           setCanRefresh(true);
           setIsFetch(false);
         }
@@ -385,10 +344,6 @@ export default function useFetchCreateList(liste, refreshFetch) {
             throw new Error("Pas de météo pour toi");
           }
           const jsonResponse = await response.json();
-          window.console.log([
-            `Saved list ${name[0]} ${name[1]}`,
-            jsonResponse.response.header["resultMsg"],
-          ]);
           await jsonResponse.response.body.items.item.forEach((x, i) => {
             let newData = {
               Phase1: name[0],
@@ -423,10 +378,6 @@ export default function useFetchCreateList(liste, refreshFetch) {
             throw new Error("Pas de météo pour toi");
           }
           const jsonResponse = await response.json();
-          window.console.log([
-            `Saved list Forecast ${name[0]} ${name[1]}`,
-            jsonResponse.response.header["resultMsg"],
-          ]);
           await jsonResponse.response.body.items.item.forEach((x, i) => {
             let newData = {
               Phase1: name[0],
@@ -439,11 +390,11 @@ export default function useFetchCreateList(liste, refreshFetch) {
               nx: x.nx,
               ny: x.ny,
             };
-            if (x.category === "PTY") {
-              temporary[i] = newData;
-            } else if (x.category === "T1H") {
-              temporary[i] = newData;
-            } else if (x.category === "SKY") {
+            if (
+              x.category === "PTY" ||
+              x.category === "T1H" ||
+              x.category === "SKY"
+            ) {
               temporary[i] = newData;
             }
           });
@@ -468,10 +419,6 @@ export default function useFetchCreateList(liste, refreshFetch) {
             throw new Error("Pas de météo pour toi");
           }
           const jsonResponse = await response.json();
-          window.console.log([
-            `Saved list next day ${name[0]} ${name[1]}`,
-            jsonResponse.response.header["resultMsg"],
-          ]);
           await jsonResponse.response.body.items.item.forEach((x, i) => {
             let newData = {
               Phase1: name[0],
@@ -485,40 +432,13 @@ export default function useFetchCreateList(liste, refreshFetch) {
               ny: ny,
             };
             if (
-              (x.category === "TMN" || x.category === "TMX") &&
-              (x.fcstDate === tomorrowDate || x.fcstDate === afterTomorrowDate)
-            ) {
-              temporary[i] = newData;
-            } else if (
-              x.category === "TMP" &&
-              (x.fcstDate === baseDate ||
-                x.fcstDate === tomorrowDate ||
-                x.fcstDate === afterTomorrowDate)
-            ) {
-              temporary[i] = newData;
-            } else if (
-              x.category === "SKY" &&
-              (x.fcstDate === baseDate ||
-                x.fcstDate === tomorrowDate ||
-                x.fcstDate === afterTomorrowDate)
-            ) {
-              temporary[i] = newData;
-            } else if (
-              x.category === "PTY" &&
-              (x.fcstDate === baseDate ||
-                x.fcstDate === tomorrowDate ||
-                x.fcstDate === afterTomorrowDate)
-            ) {
-              temporary[i] = newData;
-            } else if (
-              x.category === "PCP" &&
-              (x.fcstDate === baseDate ||
-                x.fcstDate === tomorrowDate ||
-                x.fcstDate === afterTomorrowDate)
-            ) {
-              temporary[i] = newData;
-            } else if (
-              x.category === "SNO" &&
+              (x.category === "TMN" ||
+                x.category === "TMX" ||
+                x.category === "TMP" ||
+                x.category === "SKY" ||
+                x.category === "PTY" ||
+                x.category === "PCP" ||
+                x.category === "SNO") &&
               (x.fcstDate === baseDate ||
                 x.fcstDate === tomorrowDate ||
                 x.fcstDate === afterTomorrowDate)

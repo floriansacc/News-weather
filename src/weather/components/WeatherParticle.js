@@ -24,7 +24,7 @@ export default function WeatherParticle(props) {
     <div className={`inline-flex h-fit w-full justify-end`}>
       <div
         className={`${
-          !pm10 ? "" : dustGrade[pm10.grade].color
+          !pm10 && pm10 === null ? "" : dustGrade[pm10.grade].color
         } m-2 flex flex-col gap-2 rounded-2xl p-2 text-sm`}
       >
         <p>
@@ -37,7 +37,7 @@ export default function WeatherParticle(props) {
       </div>
       <div
         className={`${
-          !pm25 ? "" : dustGrade[pm25.grade].color
+          !pm25 && pm25 === null ? "" : dustGrade[pm25.grade].color
         } m-2 flex flex-col gap-2 rounded-2xl p-2 text-sm`}
       >
         <p>
