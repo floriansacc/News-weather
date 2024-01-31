@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { QueryContext } from "../../App";
 import { FaPlay } from "react-icons/fa6";
 import { FaPause } from "react-icons/fa6";
+import { MdFullscreen } from "react-icons/md";
 
 export default function WeatherRadar(props) {
   const { radar, setradar } = props;
@@ -13,6 +14,8 @@ export default function WeatherRadar(props) {
   const [isPaused, pause] = useState(false);
   const isPausedRef = useRef(isPaused);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
+
+  const radarDiv = document.getElementById("radar-div");
 
   const handleChangeBar = (e) => {
     setImgSrc(parseInt(e.target.value));
@@ -35,8 +38,17 @@ export default function WeatherRadar(props) {
     setIsImageLoaded(true);
   };
 
+  const handleFullScreen = (e) => {
+    if (!radarDiv) return;
+    if (document.fullscreenElement) {
+      document.exitFullscreen();
+    } else {
+      radarDiv.requestFullscreen();
+    }
+  };
+
   useEffect(() => {
-    const radarDiv = document.getElementById("radar-div");
+    if (!radarDiv) return;
     const handlePressSpace = (e) => {
       if (e.code === "Space" || e.keyCode === 32) {
         e.preventDefault();
@@ -66,6 +78,7 @@ export default function WeatherRadar(props) {
   }, [isPaused]);
 
   useEffect(() => {
+    if (!radarDiv) return;
     if (!isPaused && isImageLoaded) {
       const timer = setInterval(() => {
         if (radar[counter.current + 1]) {
@@ -86,7 +99,13 @@ export default function WeatherRadar(props) {
       tabIndex={0}
       id="radar-div"
     >
-      <div className="flex flex-col items-end justify-around">
+      <div
+        className={`${
+          document.fullscreenElement
+            ? "absolute aspect-square h-[90%] w-auto"
+            : ""
+        } flex flex-col items-end justify-around`}
+      >
         <div className="hidden">
           <p className="font-bold">Test</p>
           <p className="font-bold">{imgSrc}</p>
@@ -108,19 +127,24 @@ export default function WeatherRadar(props) {
             onChange={handleChangeBar}
           ></input>
         </div>
-        <div className="mr-6 flex h-fit w-fit flex-row rounded-full bg-slate-100 p-1 transition-all">
-          {isPaused && (
-            <FaPlay
-              className={`mx-1 h-6 w-6 transition-colors hover:animate-pulse hover:text-[#53789e]`}
-              onClick={() => handleClickImage(false)}
-            />
-          )}
-          {!isPaused && (
-            <FaPause
-              className={`mx-1 h-6 w-6 transition-colors hover:animate-pulse hover:text-[#53789e]`}
-              onClick={() => handleClickImage(true)}
-            />
-          )}
+        <div className="flex flex-row gap-4 text-black">
+          <div className="flex h-fit w-fit flex-row rounded-full bg-slate-100 p-1 transition-all">
+            {isPaused && (
+              <FaPlay
+                className={`mx-1 h-6 w-6 transition-colors lg:hover:animate-pulse lg:hover:text-[#53789e]`}
+                onClick={() => handleClickImage(false)}
+              />
+            )}
+            {!isPaused && (
+              <FaPause
+                className={`mx-1 h-6 w-6 transition-colors lg:hover:animate-pulse lg:hover:text-[#53789e]`}
+                onClick={() => handleClickImage(true)}
+              />
+            )}
+          </div>
+          <div className="flex h-fit w-fit flex-row rounded-full bg-slate-100 p-1 transition-all">
+            <MdFullscreen className="mx-1 h-6 w-6" onClick={handleFullScreen} />
+          </div>
         </div>
       </div>
     </div>

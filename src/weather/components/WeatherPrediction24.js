@@ -111,17 +111,20 @@ export default function WeatherPrediction24(props) {
       rainnextdays[i + 1].value === "1" ||
       rainnextdays[i + 1].value === "5" ||
       rainnextdays[i + 1].value === "6"
-        ? { value: 4, name: "snowy" }
+        ? { image: images[4], text: "Rainy" }
         : rainnextdays[i + 1].value === "2" || rainnextdays[i + 1].value === "3"
-          ? { value: 5, name: "rainy" }
+          ? { image: images[5], text: "Snowy" }
           : skynextdays[i + 1].value === "4"
-            ? { value: 3, name: "cloudy" }
+            ? { image: images[3], text: "Cloudy" }
             : skynextdays[i + 1].value === "3"
-              ? { value: 2, name: "partially cloudy" }
+              ? { image: images[2], text: "Partially cloud" }
               : skynextdays[i + 1].time.slice(0, 2) > 21 ||
                   skynextdays[i + 1].time.slice(0, 2) < 7
-                ? { value: 6, name: "clear night" }
-                : { value: `${skynextdays[i + 1].value - 1}`, name: "sunny" };
+                ? { image: images[6], text: "Clear night" }
+                : {
+                    image: images[skynextdays[i + 1].value - 1],
+                    text: "Sunny",
+                  };
 
     return x;
   };
@@ -139,9 +142,9 @@ export default function WeatherPrediction24(props) {
             >
               <img
                 data-tooltip-id="image24-tooltip"
-                data-tooltip-content={skyStatus(i).name}
+                data-tooltip-content={skyStatus(i).text}
                 data-data-tooltip-place="top"
-                src={images[skyStatus(i).value]}
+                src={skyStatus(i).image}
                 className="h-7 w-auto"
                 key={`image${x.value}${i}`}
               ></img>

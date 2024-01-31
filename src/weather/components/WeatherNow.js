@@ -17,10 +17,10 @@ export default function WeatherNow(props) {
           : skyforecast[0].value === "4"
             ? { image: images[3], text: "Cloudy" }
             : skyforecast[0].value === "3"
-              ? { image: images[6], text: "Partially cloud" }
+              ? { image: images[2], text: "Partially cloud" }
               : skyforecast[0].time.slice(0, 2) > 22 ||
                   skyforecast[0].time.slice(0, 2) < 7
-                ? { image: images[6], text: "Sunny" }
+                ? { image: images[6], text: "Clear night" }
                 : { image: images[skyforecast[0].value - 1], text: "Sunny" };
     return x;
   }
