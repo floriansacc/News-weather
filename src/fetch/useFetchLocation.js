@@ -38,6 +38,7 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
     "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
 
   useEffect(() => {
+    if (isLoaded) return;
     const abortController = new AbortController();
     const getWeather = async () => {
       const getUrlWeatherNow = `${weatherUrlNow}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTime}&nx=${city[3]}&ny=${city[4]}`;
@@ -75,16 +76,24 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
       }
     };
     if (isLocated) {
-      let fetchAll = async () => {
+      let fetchAll = async (attempt = 1) => {
+        console.log("try fetch Weather 1", attempt);
         try {
           await getWeather().then(() => {
             setIsLoaded(true);
             setCanRefresh(true);
           });
         } catch (e) {
-          window.console.log(e);
+          console.log(e);
           setIsLoaded(false);
           setCanRefresh(true);
+          const maxRetries = 3;
+          if (attempt < maxRetries) {
+            setTimeout(() => {
+              console.log(`Retry attempt Weather 1: ${attempt}`);
+              fetchAll(attempt + 1);
+            }, 3000);
+          }
         }
       };
       fetchAll();
@@ -98,6 +107,7 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
   }, [isLocated, refreshFetch]);
 
   useEffect(() => {
+    if (isLoadedForecast) return;
     const abortController = new AbortController();
     const getWeather2 = async () => {
       const getUrlWeatherForecast = `${weatherUrlForecast}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTimeForecast}&nx=${city[3]}&ny=${city[4]}`;
@@ -137,12 +147,24 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
       }
     };
     if (isLocated) {
-      let fetchAll = async () => {
+      let fetchAll = async (attempt = 1) => {
+        console.log("try fetch Weather 2", attempt);
         try {
-          await getWeather2().then(() => setIsLoadedForecast(true));
-        } catch (error) {
-          window.console.log(error);
+          await getWeather2().then(() => {
+            setIsLoadedForecast(true);
+            setCanRefresh(true);
+          });
+        } catch (e) {
+          console.log(e);
           setIsLoadedForecast(false);
+          setCanRefresh(true);
+          const maxRetries = 3;
+          if (attempt < maxRetries) {
+            setTimeout(() => {
+              console.log(`Retry attempt Weather 2: ${attempt}`);
+              fetchAll(attempt + 1);
+            }, 3000);
+          }
         }
       };
       fetchAll();
@@ -156,6 +178,7 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
   }, [isLocated, refreshFetch]);
 
   useEffect(() => {
+    if (isForecasted) return;
     const abortController = new AbortController();
     const getWeather3 = async () => {
       const getUrlWeatherNextDay = `${weatherNextDay}?serviceKey=${serviceKey}&numOfRows=800&dataType=JSON&pageNo=1&base_date=${baseDateFuture}&base_time=${futureTime}&nx=${city[3]}&ny=${city[4]}`;
@@ -230,16 +253,24 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
       }
     };
     if (isLocated) {
-      let fetchAll = async () => {
+      let fetchAll = async (attempt = 1) => {
+        console.log("try fetch Weather 3:", attempt);
         try {
           await getWeather3().then(() => {
             setIsForecasted(true);
             setCanRefresh(true);
           });
         } catch (e) {
-          window.console.log(e);
+          console.log(e);
           setIsForecasted(false);
           setCanRefresh(true);
+          const maxRetries = 3;
+          if (attempt < maxRetries) {
+            setTimeout(() => {
+              console.log(`Retry attempt Weather 3: ${attempt}`);
+              fetchAll(attempt + 1);
+            }, 3000);
+          }
         }
       };
       fetchAll();
