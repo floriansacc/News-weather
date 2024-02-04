@@ -4,12 +4,22 @@ import WeatherCreateMyList from "./WeatherCreateMyList";
 import { QueryContext } from "../App";
 import useFetchRadar from "../fetch/useFetchRadar";
 import WeatherRadar from "./components/WeatherRadar";
+import WeatherRadar2 from "./components/WeatherRadar2";
+import useFetchPartRadar from "../fetch/useFetchPartRadar";
 
 export default function WeatherHome(props) {
   const { mouseenter, mouseleave, resizew } = props;
   const { menuOn, setMenuOn, isDarkTheme } = useContext(QueryContext);
 
   const { radar, setRadar, isRadarOk, setIsRadarOk } = useFetchRadar();
+
+  const {
+    setRadarDust10,
+    radarDust25,
+    setRadarDust25,
+    isRadarDusted,
+    setIsRadarDusted,
+  } = useFetchPartRadar();
 
   /*
   <div className=" my-10 flex h-fit w-fit flex-col items-center justify-center bg-green-900 px-10 py-10 text-white sm:w-full md:w-full">
@@ -23,6 +33,21 @@ export default function WeatherHome(props) {
         <p>- Make a list of city and display their weather </p>
         <p className="my-2">Future update will improve the list creation</p>
       </div>
+
+              <WeatherRadar2
+                radar1={setRadarDust10}
+                setradar1={setRadarDust10}
+                isradarok={isRadarDusted}
+                setisradarok={setIsRadarDusted}
+              />
+              <button
+                className="h-10 w-10 bg-red-500"
+                onClick={() => {
+                  console.log(setRadarDust10);
+                  console.log(radarDust25);
+                }}
+              ></button>
+
       */
 
   return (
@@ -47,12 +72,14 @@ export default function WeatherHome(props) {
             Radar
           </p>
           {isRadarOk && radar && (
-            <WeatherRadar
-              radar={radar}
-              setradar={setRadar}
-              isradarok={isRadarOk}
-              setisradarok={setIsRadarOk}
-            />
+            <>
+              <WeatherRadar
+                radar={radar}
+                setradar={setRadar}
+                isradarok={isRadarOk}
+                setisradarok={setIsRadarOk}
+              />
+            </>
           )}
         </div>
       </div>

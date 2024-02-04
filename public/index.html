@@ -2,18 +2,44 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="./favicon.ico" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
     <meta
       http-equiv="Content-Security-Policy"
       content="upgrade-insecure-requests"
     />
     <meta
-      name="description"
-      content="Web site created using create-react-app"
+      name="theme-color"
+      media="(prefers-color-scheme: light)"
+      content="white"
     />
-    <link rel="apple-touch-icon" href="./favicon.png" />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: dark)"
+      content="black"
+    />
+    <meta
+      name="description"
+      content="Application showing the weather in South Korea"
+    />
+    <meta
+      property="og:description"
+      content="Application showing the weather in South Korea"
+    />
+    <meta
+      name="keywords"
+      content="JavaScript, React, 날씨, 동네날씨, Weather, Florian, Sacchetti"
+    />
+
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://floriansacc.github.io/News-weather/"
+    />
+    <meta property="og:image" content="%PUBLIC_URL%/miniature.png" />
+
+    <meta property="og:title" content="날씨 앱 - Weather App" />
+    <link rel="apple-touch-icon" href="./favicon.ico" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <link
       rel="stylesheet"
@@ -26,7 +52,7 @@
       type="text/css"
       href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
     />
-    <title>Weather App</title>
+    <title>날씨 앱 - Weather App</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

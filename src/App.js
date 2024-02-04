@@ -45,6 +45,7 @@ export default function App() {
   let todayMonth = String(currentDate.getMonth() + 1).padStart(2, "0"); // Adding 1 because months are zero-based
   let todayDay = String(currentDate.getDate()).padStart(2, "0");
   let formattedToday = `${todayYear}${todayMonth}${todayDay}`;
+  let forDustToday = `${todayYear}-${todayMonth}-${todayDay}`;
 
   let tomorrow = new Date(currentDate);
   tomorrow.setDate(currentDate.getDate() + 1);
@@ -52,6 +53,7 @@ export default function App() {
   let tomorrowMonth = String(tomorrow.getMonth() + 1).padStart(2, "0"); // Adding 1 because months are zero-based
   let tomorrowDaytoChange = String(tomorrow.getDate()).padStart(2, "0");
   let tomorrowDate = `${tomorrowYear}${tomorrowMonth}${tomorrowDaytoChange}`;
+  let forDustTomorrow = `${tomorrowYear}-${tomorrowMonth}-${tomorrowDaytoChange}`;
 
   let afterTomorrow = new Date(currentDate);
   afterTomorrow.setDate(currentDate.getDate() + 2);
@@ -211,6 +213,8 @@ export default function App() {
           updateDates,
           baseDate,
           baseDateFuture,
+          forDustToday,
+          forDustTomorrow,
           baseTime,
           baseTimeForecast,
           tomorrowDate,

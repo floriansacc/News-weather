@@ -1,6 +1,8 @@
 User-agent: *
-Allow: /
+DIsallow:
 
 User-agent: Googlebot-Image
 Disallow: /
+
+
 Sitemap: https://floriansacc.github.io/News-weather/
