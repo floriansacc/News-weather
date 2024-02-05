@@ -26,23 +26,21 @@ export default function useFetchParticle(city, isLocated, refreshFetch) {
           throw new Error("Error fetch dust");
         }
         const jsonResponse = await response.json();
-        await jsonResponse.response.body.items.forEach((x, i) => {
-          if (i === 0) {
-            setPm10({
-              value: parseInt(x.pm10Value),
-              grade: parseInt(x.pm10Grade1h),
-              city: x.sidoName,
-              station: x.stationName,
-              time: x.dateTime,
-            });
-            setPm25({
-              value: parseInt(x.pm25Value),
-              grade: parseInt(x.pm25Grade1h),
-              city: x.sidoName,
-              station: x.stationName,
-              time: x.dateTime,
-            });
-          }
+        setPm10({
+          value: parseInt(jsonResponse.response.body.items[0].pm10Value),
+          grade: parseInt(jsonResponse.response.body.items[0].pm10Grade1h),
+          city: jsonResponse.response.body.items[0].sidoName,
+          station: jsonResponse.response.body.items[0].stationName,
+          time: jsonResponse.response.body.items[0].dataTime,
+          flag: jsonResponse.response.body.items[0].pm10Flag,
+        });
+        setPm25({
+          value: parseInt(jsonResponse.response.body.items[0].pm25Value),
+          grade: parseInt(jsonResponse.response.body.items[0].pm25Grade1h),
+          city: jsonResponse.response.body.items[0].sidoName,
+          station: jsonResponse.response.body.items[0].stationName,
+          time: jsonResponse.response.body.items[0].dataTime,
+          flag: jsonResponse.response.body.items[0].pm25Flag,
         });
       } catch (error) {
         console.log(`Dust fetch error: ${error}`);

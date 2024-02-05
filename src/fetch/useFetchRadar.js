@@ -3,8 +3,8 @@ import { QueryContext } from "../App";
 
 export default function useFetchRadar(refreshFetch) {
   const { baseDate } = useContext(QueryContext);
-  const [radar, setRadar] = useState();
-  const [isRadarOk, setIsRadarOk] = useState(false);
+  const [radarRain, setRadarRain] = useState();
+  const [isRadarRain, setIsRadarRain] = useState(false);
 
   const radarUrl =
     "https://apis.data.go.kr/1360000/RadarImgInfoService/getCmpImg";
@@ -32,7 +32,7 @@ export default function useFetchRadar(refreshFetch) {
           jsponResponse.response.header["resultMsg"],
         ]);
         window.console.log(jsponResponse.response.body.items.item);
-        setRadar(
+        setRadarRain(
           jsponResponse.response.body.items.item[0]["rdr-img-file"]
             .replace("[", "")
             .replace("]", "")
@@ -44,24 +44,24 @@ export default function useFetchRadar(refreshFetch) {
     };
     let fetchRadar = async () => {
       try {
-        await getRadar().then(() => setIsRadarOk(true));
+        await getRadar().then(() => setIsRadarRain(true));
       } catch (e) {
         window.console.log(e);
-        setIsRadarOk(false);
+        setIsRadarRain(false);
       }
     };
     fetchRadar();
     return () => {
       abortController.abort();
-      setRadar();
-      setIsRadarOk(false);
+      setRadarRain();
+      setIsRadarRain(false);
     };
   }, [refreshFetch]);
 
   return {
-    radar,
-    setRadar,
-    isRadarOk,
-    setIsRadarOk,
+    radarRain,
+    setRadarRain,
+    isRadarRain,
+    setIsRadarRain,
   };
 }

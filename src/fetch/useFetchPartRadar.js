@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { QueryContext } from "../App";
 
 export default function useFetchPartRadar(isLocated, refreshFetch) {
-  const { forDustToday, forDustTomorrow } = useContext(QueryContext);
+  const { baseTimeDust } = useContext(QueryContext);
 
   const [radarDust10, setRadarDust10] = useState([]);
   const [radarDust25, setRadarDust25] = useState([]);
@@ -18,7 +18,8 @@ export default function useFetchPartRadar(isLocated, refreshFetch) {
     const abortController = new AbortController();
     let rightData;
     const getRadarDust = async () => {
-      const urlDust = `${cityDustUrl}?serviceKey=${serviceKey}&returnType=json&numOfRows=1000&searchDate=2024-02-04`;
+      const urlDust = `${cityDustUrl}?serviceKey=${serviceKey}&returnType=json&numOfRows=1000&searchDate=${baseTimeDust}`;
+      console.log(baseTimeDust);
       try {
         const response = await fetch(urlDust, {
           headers: {
@@ -41,19 +42,9 @@ export default function useFetchPartRadar(isLocated, refreshFetch) {
           ) {
             setRadarDust10((prev) => [
               ...prev,
-
-              {
-                date: x.dataTime,
-                inform: x.informData,
-                src: [
-                  x.imageUrl1,
-                  x.imageUrl2,
-                  x.imageUrl3,
-                  x.imageUrl4,
-                  x.imageUrl5,
-                  x.imageUrl6,
-                ],
-              },
+              x.imageUrl1,
+              x.imageUrl2,
+              x.imageUrl3,
             ]);
           }
           if (
@@ -63,19 +54,9 @@ export default function useFetchPartRadar(isLocated, refreshFetch) {
           ) {
             setRadarDust25((prev) => [
               ...prev,
-
-              {
-                date: x.dataTime,
-                inform: x.informData,
-                src: [
-                  x.imageUrl1,
-                  x.imageUrl2,
-                  x.imageUrl3,
-                  x.imageUrl4,
-                  x.imageUrl5,
-                  x.imageUrl6,
-                ],
-              },
+              x.imageUrl4,
+              x.imageUrl5,
+              x.imageUrl6,
             ]);
           }
         });
@@ -101,7 +82,7 @@ export default function useFetchPartRadar(isLocated, refreshFetch) {
   }, [refreshFetch]);
 
   return {
-    setRadarDust10,
+    radarDust10,
     setRadarDust10,
     radarDust25,
     setRadarDust25,

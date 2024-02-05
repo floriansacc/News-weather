@@ -24,29 +24,44 @@ export default function WeatherParticle(props) {
     <div className={`inline-flex h-fit w-full justify-end`}>
       <div
         className={`${
-          !pm10 && pm10 === null ? "" : dustGrade[pm10.grade].color
+          pm10.flag !== null || !pm10
+            ? "bg-white/75 text-red-600"
+            : dustGrade[pm10.grade].color
         } m-2 flex flex-col gap-2 rounded-2xl p-2 text-sm`}
       >
         <p>미세먼지 {pm10.station}</p>
         <div className="flex flex-row items-center justify-center gap-2 ">
-          <p className="text-xl">{dustGrade[pm10.grade].name}</p>
-          <p className="whitespace-pre">
-            ( {pm10.value} ㎍/m<sup>3</sup>)
-          </p>
+          {!pm10.flag && (
+            <>
+              <p className="text-xl">{dustGrade[pm10.grade].name}</p>
+              <p className="whitespace-pre">
+                ( {pm10.value} ㎍/m<sup>3</sup>)
+              </p>
+            </>
+          )}
+          {pm10.flag && <p className="text-xl">오류: {pm10.flag}</p>}
         </div>
       </div>
 
       <div
         className={`${
-          !pm25 && pm25 === null ? "" : dustGrade[pm25.grade].color
+          pm25.flag !== null || !pm25
+            ? "bg-white/75 text-red-600"
+            : dustGrade[pm25.grade].color
         } m-2 flex flex-col gap-2 rounded-2xl p-2 text-sm`}
       >
         <p>초미세먼지 {pm25.station}</p>
+
         <div className="flex flex-row items-center justify-center gap-2 ">
-          <p className="text-xl">{dustGrade[pm25.grade].name}</p>
-          <p className="whitespace-pre">
-            ( {pm25.value} ㎍/m<sup>3</sup>)
-          </p>
+          {!pm25.flag && (
+            <>
+              <p className="text-xl">{dustGrade[pm25.grade].name}</p>
+              <p className="whitespace-pre">
+                ( {pm25.value} ㎍/m<sup>3</sup>)
+              </p>
+            </>
+          )}
+          {pm25.flag && <p className="text-xl">오류: {pm25.flag}</p>}
         </div>
       </div>
     </div>

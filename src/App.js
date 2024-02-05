@@ -47,6 +47,13 @@ export default function App() {
   let formattedToday = `${todayYear}${todayMonth}${todayDay}`;
   let forDustToday = `${todayYear}-${todayMonth}-${todayDay}`;
 
+  let yesterday = new Date(currentDate);
+  yesterday.setDate(currentDate.getDate() - 1);
+  let yesterdayYear = yesterday.getFullYear();
+  let yesterdayMonth = String(yesterday.getMonth() + 1).padStart(2, "0"); // Adding 1 because months are zero-based
+  let yesterdayDaytoChange = String(yesterday.getDate()).padStart(2, "0");
+  let forDustYesterday = `${yesterdayYear}-${yesterdayMonth}-${yesterdayDaytoChange}`;
+
   let tomorrow = new Date(currentDate);
   tomorrow.setDate(currentDate.getDate() + 1);
   let tomorrowYear = tomorrow.getFullYear();
@@ -67,6 +74,14 @@ export default function App() {
     "0",
   );
   let afterTomorrowDate = `${afterTomorrowYear}${afterTomorrowMonth}${afterTomorrowDaytoChange}`;
+
+  const baseDateDustCalc = () => {
+    if (hourNow < 6) {
+      return forDustYesterday;
+    } else {
+      return formattedToday;
+    }
+  };
 
   const baseTimeCalcNow = () => {
     if (hourNow < 10 && hourNow !== 0) {
@@ -144,6 +159,7 @@ export default function App() {
   const baseTime = baseTimeCalcNow();
   const baseTimeForecast = baseTimeCalcForecast();
   const futureTime = baseTimeCalcFuture();
+  const baseTimeDust = baseDateDustCalc();
 
   const baseDate =
     hourNow === 0 && minutes < 30 ? formattedToday - 1 : formattedToday;
@@ -213,10 +229,9 @@ export default function App() {
           updateDates,
           baseDate,
           baseDateFuture,
-          forDustToday,
-          forDustTomorrow,
           baseTime,
           baseTimeForecast,
+          baseTimeDust,
           tomorrowDate,
           afterTomorrowDate,
           futureTime,

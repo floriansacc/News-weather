@@ -4,16 +4,17 @@ import WeatherCreateMyList from "./WeatherCreateMyList";
 import { QueryContext } from "../App";
 import useFetchRadar from "../fetch/useFetchRadar";
 import WeatherRadar from "./components/WeatherRadar";
-import WeatherRadar2 from "./components/WeatherRadar2";
 import useFetchPartRadar from "../fetch/useFetchPartRadar";
 
 export default function WeatherHome(props) {
   const { mouseenter, mouseleave, resizew } = props;
   const { menuOn, setMenuOn, isDarkTheme } = useContext(QueryContext);
 
-  const { radar, setRadar, isRadarOk, setIsRadarOk } = useFetchRadar();
+  const { radarRain, setRadarRain, isRadarRain, setIsRadarRain } =
+    useFetchRadar();
 
   const {
+    radarDust10,
     setRadarDust10,
     radarDust25,
     setRadarDust25,
@@ -57,8 +58,8 @@ export default function WeatherHome(props) {
       } flex h-fit w-full flex-col flex-wrap items-start justify-around overflow-hidden sm:w-full sm:flex-col sm:flex-nowrap sm:items-center md:w-full md:flex-col md:flex-nowrap lg:m-2 lg:h-fit`}
       onClick={() => (menuOn ? setMenuOn(false) : null)}
     >
-      <div className="flex w-full flex-col items-start justify-around lg:flex-row">
-        <div className="flex w-[90%] flex-col lg:w-[40%]">
+      <div className="flex w-full flex-col items-start justify-around sm:items-center lg:flex-row">
+        <div className="flex w-[93%] flex-col lg:w-[40%]">
           <p className=" my-2 self-center rounded-2xl border border-solid border-red-400 p-2 text-2xl">
             Location
           </p>
@@ -71,13 +72,33 @@ export default function WeatherHome(props) {
           <p className=" my-2 self-center rounded-2xl border border-solid border-red-400 p-2 text-2xl">
             Radar
           </p>
-          {isRadarOk && radar && (
+          {isRadarRain && radarRain && (
+            <WeatherRadar
+              radar={radarRain}
+              setradar={setRadarRain}
+              isradarok={isRadarRain}
+              setisradarok={setIsRadarDusted}
+              timeTimer={200}
+              tickDisplay={false}
+            />
+          )}
+          {isRadarDusted && radarDust10 && radarDust25 && (
             <>
               <WeatherRadar
-                radar={radar}
-                setradar={setRadar}
-                isradarok={isRadarOk}
-                setisradarok={setIsRadarOk}
+                radar={radarDust10}
+                setradar={setRadarDust10}
+                isradarok={isRadarDusted}
+                setisradarok={setIsRadarRain}
+                timeTimer={3000}
+                tickDisplay={true}
+              />
+              <WeatherRadar
+                radar={radarDust25}
+                setradar={setRadarDust25}
+                isradarok={isRadarDusted}
+                setisradarok={setIsRadarRain}
+                timeTimer={3000}
+                tickDisplay={true}
               />
             </>
           )}

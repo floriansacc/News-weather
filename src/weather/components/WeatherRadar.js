@@ -5,13 +5,13 @@ import { FaPause } from "react-icons/fa6";
 import { MdFullscreen } from "react-icons/md";
 
 export default function WeatherRadar(props) {
-  const { radar, setradar } = props;
+  const { radar, setradar, timeTimer, tickDisplay } = props;
   const { baseTime, baseDate } = useContext(QueryContext);
 
   const [imgSrc, setImgSrc] = useState(0);
   const [widthBar, setWidthBar] = useState(0);
   const counter = useRef(0);
-  const [isPaused, pause] = useState(false);
+  const [isPaused, pause] = useState(true);
   const isPausedRef = useRef(isPaused);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
@@ -86,7 +86,7 @@ export default function WeatherRadar(props) {
           setWidthBar((counter.current / radar.length) * 100);
           counter.current += 1;
         }
-      }, 200);
+      }, timeTimer);
       return () => {
         clearInterval(timer);
       };
@@ -123,9 +123,17 @@ export default function WeatherRadar(props) {
             type="range"
             min={0}
             max={radar.length - 1}
+            list={radar[0]}
             value={imgSrc}
             onChange={handleChangeBar}
           ></input>
+          {tickDisplay && (
+            <datalist id={radar[0]}>
+              {radar.map((x, i) => (
+                <option value={i} />
+              ))}
+            </datalist>
+          )}
         </div>
         <div className="flex flex-row gap-4 text-black">
           <div className="flex h-fit w-fit flex-row rounded-full bg-slate-100 p-1 transition-all">
