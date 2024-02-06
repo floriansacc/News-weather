@@ -79,7 +79,7 @@ export default function App() {
     if (hourNow < 6) {
       return forDustYesterday;
     } else {
-      return formattedToday;
+      return forDustToday;
     }
   };
 
