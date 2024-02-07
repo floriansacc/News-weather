@@ -49,9 +49,10 @@ export default function useFetchParticle(city, isLocated, refreshFetch) {
     if (isLocated) {
       let fetchAll = async () => {
         try {
-          await getDustStation().then(() => setIsDusted(true));
+          await getDustStation();
+          setIsDusted(true);
         } catch (e) {
-          window.console.log(e);
+          console.log(e);
           setIsDusted(false);
         }
       };

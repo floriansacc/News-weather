@@ -43,7 +43,7 @@ export default function useFetchCreateList(liste, refreshFetch) {
 
   useEffect(() => {
     if (!liste[0] && !listSaved) {
-      window.console.log("no first fetch");
+      console.log("no first fetch");
       return;
     } else {
       const getWeatherListNow = async (name, nx, ny) => {
@@ -164,7 +164,7 @@ export default function useFetchCreateList(liste, refreshFetch) {
           });
           return temporary;
         } catch (error) {
-          window.console.log(error);
+          console.log(error);
           setisForecasted(false);
           return Promise.reject(error);
         }
@@ -187,7 +187,7 @@ export default function useFetchCreateList(liste, refreshFetch) {
             }`]: resultsFirstFetch ? resultsFirstFetch : [],
           }));
         } catch (error) {
-          window.console.log(error);
+          console.log(error);
           setIsLoaded(false);
           return Promise.reject(error);
         }
@@ -228,7 +228,7 @@ export default function useFetchCreateList(liste, refreshFetch) {
               : [],
           }));
         } catch (error) {
-          window.console.log(error);
+          console.log(error);
           setIsLoadedForecast(false);
           return Promise.reject(error);
         }
@@ -295,7 +295,7 @@ export default function useFetchCreateList(liste, refreshFetch) {
               : [],
           }));
         } catch (error) {
-          window.console.log(error);
+          console.log(error);
           setisForecasted(false);
           return Promise.reject(error);
         }
@@ -359,7 +359,7 @@ export default function useFetchCreateList(liste, refreshFetch) {
           });
           return temporary;
         } catch (error) {
-          window.console.log(`Premier fetch error: ${error}`);
+          console.log(`Premier fetch error: ${error}`);
           setIsLoaded(false);
           return Promise.reject(error);
         }
@@ -400,7 +400,7 @@ export default function useFetchCreateList(liste, refreshFetch) {
           });
           return temporary;
         } catch (error) {
-          window.console.log(`Second fetch error: ${error}`);
+          console.log(`Second fetch error: ${error}`);
           setIsLoadedForecast(false);
           return Promise.reject(error);
         }
@@ -448,7 +448,7 @@ export default function useFetchCreateList(liste, refreshFetch) {
           });
           return temporary;
         } catch (error) {
-          window.console.log(error);
+          console.log(error);
           setisForecasted(false);
           return Promise.reject(error);
         }
@@ -467,7 +467,7 @@ export default function useFetchCreateList(liste, refreshFetch) {
                 resultsFirstFetch ? resultsFirstFetch : [],
             }));
           } catch (error) {
-            window.console.log(error);
+            console.log(error);
             setIsLoaded(false);
             return Promise.reject(error);
           }
@@ -503,7 +503,7 @@ export default function useFetchCreateList(liste, refreshFetch) {
                   : [],
             }));
           } catch (error) {
-            window.console.log(error);
+            console.log(error);
             setIsLoadedForecast(false);
             return Promise.reject(error);
           }
@@ -562,7 +562,7 @@ export default function useFetchCreateList(liste, refreshFetch) {
                   : [],
             }));
           } catch (error) {
-            window.console.log(error);
+            console.log(error);
             setisForecasted(false);
             return Promise.reject(error);
           }
@@ -573,14 +573,14 @@ export default function useFetchCreateList(liste, refreshFetch) {
           await saveDataNow();
           await saveDataForecast();
           await saveDataNextDays();
-          window.console.log("List recover sucess");
+          console.log("List recover sucess");
           setIsFetch(true);
           setIsLoaded(true);
           setIsLoadedForecast(true);
           setisForecasted(true);
           setCanRefresh(true);
         } catch (e) {
-          window.console.log(`List recover fail: ${e}`);
+          console.log(`List recover fail: ${e}`);
           setCanRefresh(true);
           setIsFetch(false);
         }

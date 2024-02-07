@@ -66,11 +66,10 @@ export default function useFetchPartRadar(isLocated, refreshFetch) {
     };
     let fetchAll = async () => {
       try {
-        await getRadarDust().then(() => {
-          setIsRadarDusted(true);
-        });
+        await getRadarDust();
+        setIsRadarDusted(true);
       } catch (e) {
-        window.console.log(e);
+        console.log(e);
         setIsRadarDusted(false);
       }
     };

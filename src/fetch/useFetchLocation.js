@@ -38,7 +38,6 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
     "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
 
   useEffect(() => {
-    if (isLoaded) return;
     const abortController = new AbortController();
     const getWeather = async () => {
       const getUrlWeatherNow = `${weatherUrlNow}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTime}&nx=${city[3]}&ny=${city[4]}`;
@@ -54,7 +53,11 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
           throw new Error("Pas de météo pour toi");
         }
         const jsonResponse = await response.json();
-        await jsonResponse.response.body.items.item.forEach((x) => {
+
+        await jsonResponse.response.body.items.item.forEach((x, i) => {
+          if (i === 0) {
+            setWeatherInfoNow([]);
+          }
           setWeatherInfoNow((prev) => [
             ...prev,
             {
@@ -71,7 +74,7 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
         });
       } catch (error) {
         setIsLoaded(false);
-        window.console.log(error);
+        console.log(error);
         return Promise.reject(error);
       }
     };
@@ -79,10 +82,9 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
       let fetchAll = async (attempt = 1) => {
         console.log("try fetch Weather 1", attempt);
         try {
-          await getWeather().then(() => {
-            setIsLoaded(true);
-            setCanRefresh(true);
-          });
+          await getWeather();
+          setIsLoaded(true);
+          setCanRefresh(true);
         } catch (e) {
           console.log(e);
           setIsLoaded(false);
@@ -107,13 +109,11 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
   }, [isLocated, refreshFetch]);
 
   useEffect(() => {
-    if (isLoadedForecast) return;
-    const abortController = new AbortController();
-    const getWeather2 = async () => {
+    const getWeather2 = async (signal) => {
       const getUrlWeatherForecast = `${weatherUrlForecast}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTimeForecast}&nx=${city[3]}&ny=${city[4]}`;
       try {
         const response = await fetch(getUrlWeatherForecast, {
-          signal: abortController.signal,
+          signal: signal,
           headers: {
             Accept: "application / json",
           },
@@ -123,7 +123,13 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
           throw new Error("Pas de météo pour toi");
         }
         const jsonResponse = await response.json();
-        await jsonResponse.response.body.items.item.forEach((x) => {
+
+        await jsonResponse.response.body.items.item.forEach((x, i) => {
+          if (i === 0) {
+            setWeatherForecast([]);
+            setTempForecast([]);
+            setSkyForecast([]);
+          }
           let newData = {
             Phase1: city[0],
             Phase2: city[1],
@@ -148,16 +154,14 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
     };
     if (isLocated) {
       let fetchAll = async (attempt = 1) => {
+        const abortController = new AbortController();
         console.log("try fetch Weather 2", attempt);
         try {
-          await getWeather2().then(() => {
-            setIsLoadedForecast(true);
-            setCanRefresh(true);
-          });
+          await getWeather2(abortController.signal);
+          setIsLoadedForecast(true);
+          setCanRefresh(true);
         } catch (e) {
           console.log(e);
-          setIsLoadedForecast(false);
-          setCanRefresh(true);
           const maxRetries = 3;
           if (attempt < maxRetries) {
             setTimeout(() => {
@@ -165,12 +169,13 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
               fetchAll(attempt + 1);
             }, 3000);
           }
+          setIsLoadedForecast(false);
+          setCanRefresh(true);
         }
       };
       fetchAll();
     }
     return () => {
-      abortController.abort();
       setIsLoaded(false);
       setIsLoadedForecast(false);
       setCanRefresh(false);
@@ -178,7 +183,6 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
   }, [isLocated, refreshFetch]);
 
   useEffect(() => {
-    if (isForecasted) return;
     const abortController = new AbortController();
     const getWeather3 = async () => {
       const getUrlWeatherNextDay = `${weatherNextDay}?serviceKey=${serviceKey}&numOfRows=800&dataType=JSON&pageNo=1&base_date=${baseDateFuture}&base_time=${futureTime}&nx=${city[3]}&ny=${city[4]}`;
@@ -194,7 +198,15 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
           throw new Error("Pas de météo pour toi");
         }
         const jsonResponse = await response.json();
+
         await jsonResponse.response.body.items.item.forEach((x, i) => {
+          if (i === 0) {
+            setHighestNextDays([]);
+            setTempNextDays([]);
+            setSkyNextDays([]);
+            setAccuRain([]);
+            setAccuSnow([]);
+          }
           let newData = {
             Phase1: city[0],
             Phase2: city[1],
@@ -247,7 +259,7 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
           }
         });
       } catch (error) {
-        window.console.log(error);
+        console.log(error);
         setIsLoaded(false);
         return Promise.reject(error);
       }
@@ -256,14 +268,11 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
       let fetchAll = async (attempt = 1) => {
         console.log("try fetch Weather 3:", attempt);
         try {
-          await getWeather3().then(() => {
-            setIsForecasted(true);
-            setCanRefresh(true);
-          });
+          await getWeather3();
+          setIsForecasted(true);
+          setCanRefresh(true);
         } catch (e) {
           console.log(e);
-          setIsForecasted(false);
-          setCanRefresh(true);
           const maxRetries = 3;
           if (attempt < maxRetries) {
             setTimeout(() => {
@@ -271,6 +280,8 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
               fetchAll(attempt + 1);
             }, 3000);
           }
+          setIsForecasted(false);
+          setCanRefresh(true);
         }
       };
       fetchAll();

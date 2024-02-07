@@ -27,11 +27,8 @@ export default function useFetchRadar(refreshFetch) {
           throw new Error("Pas de radar pour toi");
         }
         const jsponResponse = await response.json();
-        window.console.log([
-          `Radar`,
-          jsponResponse.response.header["resultMsg"],
-        ]);
-        window.console.log(jsponResponse.response.body.items.item);
+        console.log([`Radar`, jsponResponse.response.header["resultMsg"]]);
+        console.log(jsponResponse.response.body.items.item);
         setRadarRain(
           jsponResponse.response.body.items.item[0]["rdr-img-file"]
             .replace("[", "")
@@ -39,14 +36,15 @@ export default function useFetchRadar(refreshFetch) {
             .split(","),
         );
       } catch (error) {
-        window.console.log(error);
+        console.log(error);
       }
     };
     let fetchRadar = async () => {
       try {
-        await getRadar().then(() => setIsRadarRain(true));
+        await getRadar();
+        setIsRadarRain(true);
       } catch (e) {
-        window.console.log(e);
+        console.log(e);
         setIsRadarRain(false);
       }
     };
