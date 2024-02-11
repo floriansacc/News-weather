@@ -7,6 +7,7 @@ import WeatherLongTerm from "./components/WeatherLongTerm";
 import WeatherPrediction24 from "./components/WeatherPrediction24";
 import WeatherCitySelector from "./components/WeatherCitySelector";
 import WeatherParticle from "./components/WeatherParticle";
+import { useSpring, useSpringRef } from "react-spring";
 
 export default function WeatherLocalisation(props) {
   const { mouseenter, mouseleave } = props;
@@ -77,6 +78,24 @@ export default function WeatherLocalisation(props) {
     isDusted,
     setIsDusted,
   } = useFetchParticle(citySelector, isLocated, refreshFetch);
+
+  const springRefNow = useSpringRef();
+  const springRefPredi = useSpringRef();
+  const springRefLongTerm = useSpringRef();
+  const springRefParticle = useSpringRef();
+
+  const springNow = useSpring({
+    ref: springRefNow,
+  });
+  const springPredi = useSpring({
+    ref: springRefPredi,
+  });
+  const springLongTerm = useSpring({
+    ref: springRefLongTerm,
+  });
+  const springParticle = useSpring({
+    ref: springRefParticle,
+  });
 
   let bgSet;
 
@@ -156,22 +175,22 @@ export default function WeatherLocalisation(props) {
   };
 
   const refreshList = (e) => {
-    setWeatherInfoNow([]);
-    setWeatherForecast([]);
-    setTempForecast([]);
-    setSkyForecast([]);
-    setHighestNextDays([]);
-    setTempNextDays([]);
-    setSkyNextDays([]);
-    setRainNextDays([]);
-    setAccuRain([]);
-    setAccuSnow([]);
+    // setWeatherInfoNow([]);
+    // setWeatherForecast([]);
+    // setTempForecast([]);
+    // setSkyForecast([]);
+    // setHighestNextDays([]);
+    // setTempNextDays([]);
+    // setSkyNextDays([]);
+    // setRainNextDays([]);
+    // setAccuRain([]);
+    // setAccuSnow([]);
     setPm10({});
     setPm25({});
     setGlobalIndex({});
-    setIsLoaded(false);
-    setIsLoadedForecast(false);
-    setIsForecasted(false);
+    // setIsLoaded(false);
+    // setIsLoadedForecast(false);
+    // setIsForecasted(false);
     setIsDusted(false);
   };
 
@@ -341,6 +360,58 @@ export default function WeatherLocalisation(props) {
     };
   }, [refreshGeoloc]);
 
+  useEffect(() => {
+    if (!weatherInfoNow) return;
+    springRefNow.start({
+      from: { opacity: "0" },
+      to: { opacity: "1" },
+      //delay: 500,
+      config: {
+        duration: 400,
+        easing: (x) => (x === 0 ? 0 : Math.pow(2, 10 * x - 10)),
+      },
+    });
+  }, [weatherInfoNow]);
+
+  useEffect(() => {
+    if (!weatherForecast) return;
+    springRefPredi.start({
+      from: { opacity: "0" },
+      to: { opacity: "1" },
+      //delay: 500,
+      config: {
+        duration: 400,
+        easing: (x) => (x === 0 ? 0 : Math.pow(2, 10 * x - 10)),
+      },
+    });
+  }, [weatherForecast]);
+
+  useEffect(() => {
+    if (!skyNextDays) return;
+    springRefLongTerm.start({
+      from: { opacity: "0" },
+      to: { opacity: "1" },
+      //delay: 500,
+      config: {
+        duration: 400,
+        easing: (x) => (x === 0 ? 0 : Math.pow(2, 10 * x - 10)),
+      },
+    });
+  }, [skyNextDays]);
+
+  useEffect(() => {
+    if (!pm10) return;
+    springRefParticle.start({
+      from: { opacity: "0" },
+      to: { opacity: "1" },
+      //delay: 500,
+      config: {
+        duration: 400,
+        easing: (x) => (x === 0 ? 0 : Math.pow(2, 10 * x - 10)),
+      },
+    });
+  }, [pm10]);
+
   return (
     <div
       className={`${activeTab === 1 ? "" : "mb-20"} ${
@@ -394,6 +465,7 @@ export default function WeatherLocalisation(props) {
           windspeed={weatherInfoNow[7]}
           skyforecast={skyForecast}
           titlename={false}
+          springanimation={springNow}
         />
       )}
       {isDusted && pm10.value && (
@@ -406,6 +478,7 @@ export default function WeatherLocalisation(props) {
           setglobalindex={setGlobalIndex}
           isdusted={isDusted}
           setisdusted={setIsDusted}
+          springanimation={springParticle}
         />
       )}
       {isLoadedForecast && isForecasted && (
@@ -416,6 +489,7 @@ export default function WeatherLocalisation(props) {
               tempnextdays={tempNextDays}
               skynextdays={skyNextDays}
               rainnextdays={rainNextDays}
+              springanimation={springPredi}
             />
           </div>
           <WeatherLongTerm
@@ -424,6 +498,7 @@ export default function WeatherLocalisation(props) {
             skynextdays={skyNextDays}
             rainnextdays={rainNextDays}
             isforecasted={isForecasted}
+            springanimation={springLongTerm}
           />
         </>
       )}

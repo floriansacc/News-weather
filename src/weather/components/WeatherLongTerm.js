@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { QueryContext } from "../../App";
 import WeatherPredictionNextDays from "./WeatherPredictionNextDays";
+import { animated } from "react-spring";
 
 export default function WeatherLongTerm(props) {
   const {
@@ -9,6 +10,7 @@ export default function WeatherLongTerm(props) {
     skynextdays,
     rainnextdays,
     isforecasted,
+    springanimation,
   } = props;
   const { images } = useContext(QueryContext);
 
@@ -55,7 +57,10 @@ export default function WeatherLongTerm(props) {
   ];
 
   return (
-    <div className="m-2 mt-0 flex h-fit w-full flex-wrap self-center rounded-2xl border-2 border-solid border-transparent bg-white bg-opacity-25 p-2">
+    <animated.div
+      style={springanimation ? { ...springanimation } : {}}
+      className="m-2 mt-0 flex h-fit w-full flex-wrap self-center rounded-2xl border-2 border-solid border-transparent bg-white bg-opacity-25 p-2"
+    >
       {arrayToMap.map((x, i) => (
         <ul className="mx-1 flex h-fit w-fit min-w-fit flex-col items-center justify-center rounded-2xl bg-white bg-opacity-10">
           <li
@@ -101,6 +106,6 @@ export default function WeatherLongTerm(props) {
         rainnextdays={rainnextdays}
         skynextdays={skynextdays}
       />
-    </div>
+    </animated.div>
   );
 }

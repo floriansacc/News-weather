@@ -102,8 +102,8 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
     }
     return () => {
       abortController.abort();
-      setIsLoaded(false);
-      setIsLoadedForecast(false);
+      //setIsLoaded(false);
+      // setIsLoadedForecast(false);
       setCanRefresh(false);
     };
   }, [isLocated, refreshFetch]);
@@ -176,8 +176,8 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
       fetchAll();
     }
     return () => {
-      setIsLoaded(false);
-      setIsLoadedForecast(false);
+      //setIsLoaded(false);
+      //setIsLoadedForecast(false);
       setCanRefresh(false);
     };
   }, [isLocated, refreshFetch]);
@@ -288,7 +288,7 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
     }
     return () => {
       abortController.abort();
-      setIsForecasted(false);
+      //setIsForecasted(false);
       setCanRefresh(false);
     };
   }, [isLocated, refreshFetch]);

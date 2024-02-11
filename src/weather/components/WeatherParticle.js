@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { animated } from "react-spring";
 
 export default function WeatherParticle(props) {
   const {
@@ -10,6 +11,7 @@ export default function WeatherParticle(props) {
     setglobalindex,
     isdusted,
     setisdusted,
+    springanimation,
   } = props;
 
   const dustGrade = [
@@ -21,7 +23,10 @@ export default function WeatherParticle(props) {
   ];
 
   return (
-    <div className={`inline-flex h-fit w-full justify-end`}>
+    <animated.div
+      style={springanimation ? { ...springanimation } : {}}
+      className={`inline-flex h-fit w-full justify-end`}
+    >
       <div
         className={`${
           pm10.flag !== null || !pm10
@@ -64,6 +69,6 @@ export default function WeatherParticle(props) {
           {pm25.flag && <p className="text-xl">오류: {pm25.flag}</p>}
         </div>
       </div>
-    </div>
+    </animated.div>
   );
 }

@@ -3,9 +3,10 @@ import { QueryContext } from "../../App";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 import { Tooltip } from "react-tooltip";
+import { animated } from "react-spring";
 
 export default function WeatherPrediction24(props) {
-  const { tempnextdays, skynextdays, rainnextdays } = props;
+  const { tempnextdays, skynextdays, rainnextdays, springanimation } = props;
   const { baseDate, images, isDarkTheme } = useContext(QueryContext);
 
   const chartRef = useRef(null);
@@ -130,7 +131,8 @@ export default function WeatherPrediction24(props) {
   };
 
   return (
-    <div
+    <animated.div
+      style={springanimation ? { ...springanimation } : {}}
       className={`border-1 h-fit w-full items-center justify-center overflow-auto rounded-2xl border-solid border-transparent bg-white bg-opacity-25 scrollbar-hide`}
     >
       <div className="mx-4 flex w-fit flex-col items-center justify-center overflow-x-scroll scrollbar-hide">
@@ -176,6 +178,6 @@ export default function WeatherPrediction24(props) {
         </div>
       </div>
       <Tooltip id="image24-tooltip" />
-    </div>
+    </animated.div>
   );
 }

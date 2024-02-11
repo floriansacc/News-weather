@@ -13,6 +13,9 @@ export default function WeatherCitySelector(props) {
         value={cityselector[0]}
         onChange={handlecityselector}
       >
+        <option value="" disabled hidden>
+          1
+        </option>
         <option
           className={`${isDarkTheme ? "bg-[#202639]" : ""}`}
           name="one"
@@ -38,6 +41,9 @@ export default function WeatherCitySelector(props) {
           value={cityselector[1]}
           onChange={handlecityselector}
         >
+          <option value="" disabled hidden>
+            2
+          </option>
           {Array.from(
             new Set(
               dataimport
@@ -62,6 +68,9 @@ export default function WeatherCitySelector(props) {
           value={cityselector[2]}
           onChange={handlecityselector}
         >
+          <option value="" disabled hidden>
+            3
+          </option>
           {Array.from(
             new Set(
               dataimport

@@ -2,9 +2,18 @@ import { useState, useContext, useEffect } from "react";
 import { QueryContext } from "../../App";
 import { IoPlaySkipForwardOutline } from "react-icons/io5";
 import { Tooltip } from "react-tooltip";
+import { animated } from "react-spring";
 
 export default function WeatherNow(props) {
-  const { raincond, humidity, hourrain, temp, windspeed, skyforecast } = props;
+  const {
+    raincond,
+    humidity,
+    hourrain,
+    temp,
+    windspeed,
+    skyforecast,
+    springanimation,
+  } = props;
 
   const { images, isDarkTheme } = useContext(QueryContext);
 
@@ -28,7 +37,8 @@ export default function WeatherNow(props) {
   const displaySky = skyNow();
 
   return (
-    <div
+    <animated.div
+      style={springanimation ? { ...springanimation } : {}}
       className={`flex h-fit select-none flex-wrap content-start justify-around rounded-2xl bg-transparent sm:w-full md:w-full lg:w-full `}
     >
       <div className="flex w-full flex-nowrap items-center justify-center whitespace-nowrap py-4 text-right ">
@@ -68,6 +78,6 @@ export default function WeatherNow(props) {
         </p>
       </div>
       <Tooltip id="image-tooltip" />
-    </div>
+    </animated.div>
   );
 }
