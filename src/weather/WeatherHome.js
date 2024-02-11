@@ -80,10 +80,11 @@ export default function WeatherHome(props) {
               setisradarok={setIsRadarDusted}
               timeTimer={200}
               tickDisplay={false}
+              iddiv={0}
             />
           )}
           {isRadarDusted && radarDust10 && radarDust25 && (
-            <>
+            <div className="mx-4 flex flex-row gap-2">
               <WeatherRadar
                 radar={radarDust10}
                 setradar={setRadarDust10}
@@ -91,6 +92,7 @@ export default function WeatherHome(props) {
                 setisradarok={setIsRadarRain}
                 timeTimer={3000}
                 tickDisplay={true}
+                iddiv={1}
               />
               <WeatherRadar
                 radar={radarDust25}
@@ -99,8 +101,9 @@ export default function WeatherHome(props) {
                 setisradarok={setIsRadarRain}
                 timeTimer={3000}
                 tickDisplay={true}
+                iddiv={2}
               />
-            </>
+            </div>
           )}
         </div>
       </div>

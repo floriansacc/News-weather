@@ -1,14 +1,21 @@
 import { useContext } from "react";
 import { QueryContext } from "../../App";
+import { IoSearchCircleOutline } from "react-icons/io5";
 
 export default function WeatherCitySelector(props) {
   const { cityselector, handlecityselector } = props;
   const { dataimport, isDarkTheme } = useContext(QueryContext);
 
+  const handleResearchCity = (e) => {};
+
   return (
-    <label className="flex h-fit w-fit flex-1 flex-col flex-nowrap items-end justify-start">
+    <label className="relative flex h-fit w-fit max-w-[18rem] flex-1 flex-col flex-nowrap items-end justify-start">
+      <IoSearchCircleOutline
+        className="absolute left-0 mt-1 h-8 w-8 cursor-pointer"
+        onClick={handleResearchCity}
+      />
       <select
-        className="m-1 flex w-[75%] min-w-[6rem] max-w-[14rem] flex-1 rounded-2xl bg-sky-100 bg-opacity-40 p-1"
+        className="m-1 flex w-[75%] min-w-[6rem] flex-1 rounded-2xl bg-sky-100 bg-opacity-40 p-1 text-right"
         name="one"
         value={cityselector[0]}
         onChange={handlecityselector}
@@ -36,7 +43,7 @@ export default function WeatherCitySelector(props) {
       </select>
       <div className="flex w-full flex-1 flex-nowrap justify-end">
         <select
-          className="m-1 flex min-w-[3rem] max-w-[8rem] flex-1 rounded-2xl bg-sky-100 bg-opacity-40 p-1"
+          className="m-1 flex w-3/6 flex-1 rounded-2xl bg-sky-100 bg-opacity-40 p-1"
           name="two"
           value={cityselector[1]}
           onChange={handlecityselector}
@@ -63,7 +70,7 @@ export default function WeatherCitySelector(props) {
           })}
         </select>
         <select
-          className="m-1 flex min-w-[3rem] max-w-[8rem] flex-1 rounded-2xl bg-sky-100 bg-opacity-40 p-1"
+          className="m-1 flex w-3/6 flex-1 rounded-2xl bg-sky-100 bg-opacity-40 p-1"
           name="three"
           value={cityselector[2]}
           onChange={handlecityselector}

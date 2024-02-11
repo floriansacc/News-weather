@@ -38,7 +38,7 @@ export default function WeatherParticle(props) {
     },
     {
       grade: 3,
-      color: "text-orange-500",
+      color: "text-orange-400",
       bgcolor: "bg-orange-500",
       border: [
         "border-l-orange-500 border-t-orange-500",
@@ -68,7 +68,7 @@ export default function WeatherParticle(props) {
           pm10.flag !== null || !pm10
             ? "border-red-600"
             : dustGrade[pm10.grade].border[0]
-        } m-2 flex flex-col gap-2 rounded-2xl border-2 border-solid border-transparent bg-white/50 p-2 text-sm`}
+        } m-2 flex flex-col gap-2 rounded-2xl border-4 border-solid border-transparent bg-white bg-opacity-40 p-2 text-sm`}
       >
         <div className="flex flex-row items-center gap-2">
           <p
@@ -108,7 +108,7 @@ export default function WeatherParticle(props) {
           pm25.flag !== null || !pm25
             ? "border-red-600"
             : dustGrade[pm25.grade].border[1]
-        } m-2 flex flex-col gap-2 rounded-2xl border-2 border-solid border-transparent bg-white/50 p-2 text-sm`}
+        } m-2 flex flex-col gap-2 rounded-2xl border-4 border-solid border-transparent bg-white bg-opacity-40 p-2 text-sm`}
       >
         <div className="flex flex-row items-center gap-2">
           <p

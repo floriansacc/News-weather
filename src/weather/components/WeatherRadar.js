@@ -5,7 +5,7 @@ import { FaPause } from "react-icons/fa6";
 import { MdFullscreen } from "react-icons/md";
 
 export default function WeatherRadar(props) {
-  const { radar, setradar, timeTimer, tickDisplay } = props;
+  const { radar, setradar, timeTimer, tickDisplay, iddiv } = props;
   const { baseTime, baseDate } = useContext(QueryContext);
 
   const [imgSrc, setImgSrc] = useState(0);
@@ -15,7 +15,7 @@ export default function WeatherRadar(props) {
   const isPausedRef = useRef(isPaused);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
-  const radarDiv = document.getElementById("radar-div");
+  const radarDiv = document.getElementById(`radar-div${iddiv}`);
 
   const handleChangeBar = (e) => {
     setImgSrc(parseInt(e.target.value));
@@ -41,7 +41,9 @@ export default function WeatherRadar(props) {
   const handleFullScreen = (e) => {
     if (!radarDiv) return;
     if (document.fullscreenElement) {
-      document.exitFullscreen();
+      document.exitFullscreen().then(() => {
+        radarDiv.scrollIntoView();
+      });
     } else {
       radarDiv.requestFullscreen();
     }
@@ -95,9 +97,9 @@ export default function WeatherRadar(props) {
 
   return (
     <div
-      className="flex h-fit w-[90%] items-center justify-center"
+      className="mb-8 flex h-fit w-[90%] items-center justify-center"
       tabIndex={0}
-      id="radar-div"
+      id={`radar-div${iddiv}`}
     >
       <div
         className={`${
@@ -112,7 +114,7 @@ export default function WeatherRadar(props) {
           <p className="font-bold">{widthBar.toFixed(1)}</p>
         </div>
         <img
-          className="h-full w-full"
+          className="h-full w-full cursor-pointer"
           src={radar[imgSrc]}
           onLoad={handleImageLoaded}
           onClick={() => handleClickImage("img")}
@@ -139,19 +141,22 @@ export default function WeatherRadar(props) {
           <div className="flex h-fit w-fit flex-row rounded-full bg-slate-100 p-1 transition-all">
             {isPaused && (
               <FaPlay
-                className={`mx-1 h-6 w-6 transition-colors lg:hover:animate-pulse lg:hover:text-[#53789e]`}
+                className={`mx-1 h-6 w-6 cursor-pointer transition-colors lg:hover:animate-pulse lg:hover:text-[#53789e]`}
                 onClick={() => handleClickImage(false)}
               />
             )}
             {!isPaused && (
               <FaPause
-                className={`mx-1 h-6 w-6 transition-colors lg:hover:animate-pulse lg:hover:text-[#53789e]`}
+                className={`mx-1 h-6 w-6 cursor-pointer transition-colors lg:hover:animate-pulse lg:hover:text-[#53789e]`}
                 onClick={() => handleClickImage(true)}
               />
             )}
           </div>
           <div className="flex h-fit w-fit flex-row rounded-full bg-slate-100 p-1 transition-all">
-            <MdFullscreen className="mx-1 h-6 w-6" onClick={handleFullScreen} />
+            <MdFullscreen
+              className="mx-1 h-6 w-6 cursor-pointer"
+              onClick={handleFullScreen}
+            />
           </div>
         </div>
       </div>

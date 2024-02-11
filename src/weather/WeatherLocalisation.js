@@ -433,7 +433,7 @@ export default function WeatherLocalisation(props) {
         </button>
       </div>
       <div
-        className={` my-2 flex h-fit w-full items-center justify-around rounded-2xl border-y border-solid border-white`}
+        className={`my-2 flex h-fit w-full items-center justify-between rounded-2xl border-y border-solid border-white`}
       >
         <div className="ml-2 flex flex-col flex-nowrap justify-start">
           <p className="block text-xl font-bold">Weather</p>
