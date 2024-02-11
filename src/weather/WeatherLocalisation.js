@@ -346,10 +346,8 @@ export default function WeatherLocalisation(props) {
   }, [updateDates]);
 
   useEffect(() => {
-    if (isLoaded && isLoadedForecast) {
-      bgFunction();
-    }
-  }, [bgSet, isLoaded, isLoadedForecast]);
+    bgFunction();
+  }, [skyForecast]);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(succesLocation, errorLocation);

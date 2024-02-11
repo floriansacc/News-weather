@@ -38,12 +38,11 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
     "https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst";
 
   useEffect(() => {
-    const abortController = new AbortController();
-    const getWeather = async () => {
+    const getWeather = async (signal) => {
       const getUrlWeatherNow = `${weatherUrlNow}?serviceKey=${serviceKey}&numOfRows=60&dataType=JSON&pageNo=1&base_date=${baseDate}&base_time=${baseTime}&nx=${city[3]}&ny=${city[4]}`;
       try {
         const response = await fetch(getUrlWeatherNow, {
-          signal: abortController.signal,
+          signal: signal,
           headers: {
             Accept: "application / json",
           },
@@ -80,15 +79,14 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
     };
     if (isLocated) {
       let fetchAll = async (attempt = 1) => {
+        const abortController = new AbortController();
         console.log("try fetch Weather 1", attempt);
         try {
-          await getWeather();
+          await getWeather(abortController.signal);
           setIsLoaded(true);
           setCanRefresh(true);
         } catch (e) {
           console.log(e);
-          setIsLoaded(false);
-          setCanRefresh(true);
           const maxRetries = 3;
           if (attempt < maxRetries) {
             setTimeout(() => {
@@ -96,13 +94,14 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
               fetchAll(attempt + 1);
             }, 3000);
           }
+          setIsLoaded(false);
+          setCanRefresh(true);
         }
       };
       fetchAll();
     }
     return () => {
-      abortController.abort();
-      //setIsLoaded(false);
+      // setIsLoaded(false);
       // setIsLoadedForecast(false);
       setCanRefresh(false);
     };
@@ -183,12 +182,11 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
   }, [isLocated, refreshFetch]);
 
   useEffect(() => {
-    const abortController = new AbortController();
-    const getWeather3 = async () => {
+    const getWeather3 = async (signal) => {
       const getUrlWeatherNextDay = `${weatherNextDay}?serviceKey=${serviceKey}&numOfRows=800&dataType=JSON&pageNo=1&base_date=${baseDateFuture}&base_time=${futureTime}&nx=${city[3]}&ny=${city[4]}`;
       try {
         const response = await fetch(getUrlWeatherNextDay, {
-          signal: abortController.signal,
+          signal: signal,
           headers: {
             Accept: "application / json",
           },
@@ -266,9 +264,10 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
     };
     if (isLocated) {
       let fetchAll = async (attempt = 1) => {
+        const abortController = new AbortController();
         console.log("try fetch Weather 3:", attempt);
         try {
-          await getWeather3();
+          await getWeather3(abortController.signal);
           setIsForecasted(true);
           setCanRefresh(true);
         } catch (e) {
@@ -287,7 +286,6 @@ export default function useFetchLocation(city, isLocated, refreshFetch) {
       fetchAll();
     }
     return () => {
-      abortController.abort();
       //setIsForecasted(false);
       setCanRefresh(false);
     };
