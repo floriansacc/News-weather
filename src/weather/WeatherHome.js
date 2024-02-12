@@ -20,6 +20,10 @@ export default function WeatherHome(props) {
     setRadarDust25,
     isRadarDusted,
     setIsRadarDusted,
+    dustCause10,
+    setDustCause10,
+    dustCause25,
+    setDustCause25,
   } = useFetchPartRadar();
 
   /*

@@ -8,6 +8,8 @@ import WeatherPrediction24 from "./components/WeatherPrediction24";
 import WeatherCitySelector from "./components/WeatherCitySelector";
 import WeatherParticle from "./components/WeatherParticle";
 import { useSpring, useSpringRef } from "react-spring";
+import { IoSearchCircleOutline } from "react-icons/io5";
+import SearchBar from "./components/SearchBar";
 
 export default function WeatherLocalisation(props) {
   const { mouseenter, mouseleave } = props;
@@ -36,6 +38,12 @@ export default function WeatherLocalisation(props) {
   ]);
   const [refreshGeoloc, setRefreshGeoloc] = useState(0);
   const [refreshFetch, setRefreshFetch] = useState(0);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchedCity, setSearchedCity] = useState({
+    no1: "",
+    no2: "",
+    no3: "",
+  });
 
   const {
     weatherInfoNow,
@@ -197,6 +205,7 @@ export default function WeatherLocalisation(props) {
   const handleRefresh = (e) => {
     refreshList();
     setRefreshGeoloc((prev) => prev + 1);
+    setIsSearching(false);
   };
 
   const handleCitySelector = (e) => {
@@ -410,6 +419,27 @@ export default function WeatherLocalisation(props) {
     });
   }, [pm10]);
 
+  useEffect(() => {
+    if (!searchedCity.no3) return;
+    let [coord] = Array.from(
+      new Set(
+        dataimport
+          .filter((word) => word.Part3 === searchedCity.no3)
+          .map((x) => [x.nx, x.ny, x.stationName]),
+      ),
+    );
+    setCitySelector([
+      searchedCity.no1,
+      searchedCity.no2,
+      searchedCity.no3,
+      coord[0],
+      coord[1],
+      coord[2],
+    ]);
+    refreshList();
+    setRefreshFetch((prev) => prev + 1);
+  }, [searchedCity]);
+
   return (
     <div
       className={`${activeTab === 1 ? "" : "mb-20"} ${
@@ -442,13 +472,28 @@ export default function WeatherLocalisation(props) {
             {isLoaded ? `${weatherInfoNow[3].time.slice(0, 2)}:30` : "00:00"})
           </p>
         </div>
-
-        <WeatherCitySelector
-          cityselector={citySelector}
-          handlecityselector={handleCitySelector}
-          mouseenter={mouseenter}
-          mouseleave={mouseleave}
-        />
+        <div className="relative inline-flex w-fit max-w-[18rem] flex-1 flex-row justify-end">
+          <IoSearchCircleOutline
+            className={`${
+              isSearching ? "text-red-500" : ""
+            } left-0 mt-1 h-8 w-8 cursor-pointer transition-colors`}
+            onClick={() => setIsSearching(!isSearching)}
+          />
+          <SearchBar
+            issearching={isSearching}
+            setissearching={setIsSearching}
+            searchedcity={searchedCity}
+            setsearchedcity={setSearchedCity}
+          />
+          <WeatherCitySelector
+            issearching={isSearching}
+            setissearching={setIsSearching}
+            cityselector={citySelector}
+            handlecityselector={handleCitySelector}
+            mouseenter={mouseenter}
+            mouseleave={mouseleave}
+          />
+        </div>
       </div>
 
       {isLoaded && isLoadedForecast && (

@@ -6,7 +6,8 @@ export default function useFetchPartRadar(isLocated, refreshFetch) {
 
   const [radarDust10, setRadarDust10] = useState([]);
   const [radarDust25, setRadarDust25] = useState([]);
-  const [radar25, setRadr25] = useState([]);
+  const [dustCause10, setDustCause10] = useState([]);
+  const [dustCause25, setDustCause25] = useState([]);
   const [isRadarDusted, setIsRadarDusted] = useState(false);
 
   const serviceKey = process.env.REACT_APP_WEATHER_KEY;
@@ -46,6 +47,7 @@ export default function useFetchPartRadar(isLocated, refreshFetch) {
               x.imageUrl2,
               x.imageUrl3,
             ]);
+            setDustCause10((prev) => [...prev, x.informCause]);
           }
           if (
             x.informCode === "PM25" &&
@@ -58,6 +60,7 @@ export default function useFetchPartRadar(isLocated, refreshFetch) {
               x.imageUrl5,
               x.imageUrl6,
             ]);
+            setDustCause25((prev) => [...prev, x.informCause]);
           }
         });
       } catch (error) {
@@ -87,5 +90,9 @@ export default function useFetchPartRadar(isLocated, refreshFetch) {
     setRadarDust25,
     isRadarDusted,
     setIsRadarDusted,
+    dustCause10,
+    setDustCause10,
+    dustCause25,
+    setDustCause25,
   };
 }

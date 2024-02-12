@@ -3,17 +3,15 @@ import { QueryContext } from "../../App";
 import { IoSearchCircleOutline } from "react-icons/io5";
 
 export default function WeatherCitySelector(props) {
-  const { cityselector, handlecityselector } = props;
+  const { cityselector, handlecityselector, issearching } = props;
   const { dataimport, isDarkTheme } = useContext(QueryContext);
 
-  const handleResearchCity = (e) => {};
-
   return (
-    <label className="relative flex h-fit w-fit max-w-[18rem] flex-1 flex-col flex-nowrap items-end justify-start">
-      <IoSearchCircleOutline
-        className="absolute left-0 mt-1 h-8 w-8 cursor-pointer"
-        onClick={handleResearchCity}
-      />
+    <label
+      className={`${
+        !issearching ? "flex" : "pointer-events-none select-none opacity-0"
+      } relative h-fit w-fit max-w-[18rem] flex-1 flex-col flex-nowrap items-end justify-start transition-all`}
+    >
       <select
         className="m-1 flex w-[75%] min-w-[6rem] flex-1 rounded-2xl bg-sky-100 bg-opacity-40 p-1 text-right"
         name="one"
