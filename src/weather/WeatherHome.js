@@ -5,6 +5,7 @@ import { QueryContext } from "../App";
 import useFetchRadar from "../fetch/useFetchRadar";
 import WeatherRadar from "./components/WeatherRadar";
 import useFetchPartRadar from "../fetch/useFetchPartRadar";
+import WeatherRadarDouble from "./components/WeatherRadarDouble";
 
 export default function WeatherHome(props) {
   const { mouseenter, mouseleave, resizew } = props;
@@ -88,26 +89,19 @@ export default function WeatherHome(props) {
             />
           )}
           {isRadarDusted && radarDust10 && radarDust25 && (
-            <div className="mx-4 flex flex-row gap-2">
-              <WeatherRadar
-                radar={radarDust10}
-                setradar={setRadarDust10}
-                isradarok={isRadarDusted}
-                setisradarok={setIsRadarRain}
-                timeTimer={3000}
-                tickDisplay={true}
-                iddiv={1}
-              />
-              <WeatherRadar
-                radar={radarDust25}
-                setradar={setRadarDust25}
-                isradarok={isRadarDusted}
-                setisradarok={setIsRadarRain}
-                timeTimer={3000}
-                tickDisplay={true}
-                iddiv={2}
-              />
-            </div>
+            <WeatherRadarDouble
+              radar1={radarDust10}
+              setradar1={setRadarDust10}
+              radar2={radarDust25}
+              setradar2={setRadarDust25}
+              isradarok={isRadarDusted}
+              setisradarok={setIsRadarRain}
+              cause1={dustCause10}
+              cause2={dustCause25}
+              timeTimer={3000}
+              tickDisplay={true}
+              iddiv={1}
+            />
           )}
         </div>
       </div>
