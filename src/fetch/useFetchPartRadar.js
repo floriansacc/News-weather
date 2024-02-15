@@ -68,8 +68,19 @@ export default function useFetchPartRadar(isLocated, refreshFetch) {
       }
     };
     let fetchAll = async () => {
+      let x;
       try {
         await getRadarDust();
+        setRadarDust10((prev) =>
+          prev.filter((item, index) => prev.indexOf(item) === index),
+        );
+        setRadarDust25((prev) =>
+          prev.filter((item, index) => prev.indexOf(item) === index),
+        );
+        x = dustCause10.filter(
+          (item, index) => dustCause10.indexOf(item) === index,
+        );
+        console.log(x);
         setIsRadarDusted(true);
       } catch (e) {
         console.log(e);

@@ -123,7 +123,10 @@ export default function WeatherRadarDouble(props) {
           <p className="font-bold">{imgSrc}</p>
           <p className="font-bold">{widthBar.toFixed(1)}</p>
         </div>
-        <p>{cause1[imgSrc]}</p>
+        <div className="mb-4 flex h-20 w-full items-end justify-center">
+          <p>{cause1[imgSrc]}</p>
+        </div>
+
         <div className="flex h-full w-full flex-row items-center justify-center gap-2">
           <img
             className="h-auto w-3/6 cursor-pointer"

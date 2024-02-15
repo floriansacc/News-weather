@@ -65,7 +65,7 @@ export default function WeatherHome(props) {
     >
       <div className="flex w-full flex-col items-start justify-around sm:items-center lg:flex-row">
         <div className="flex w-[93%] flex-col lg:w-[40%]">
-          <p className=" my-2 self-center rounded-2xl border border-solid border-red-400 p-2 text-2xl">
+          <p className="my-2 self-center rounded-2xl border-4 border-solid border-white p-2 text-2xl">
             Location
           </p>
           <WeatherLocalisation
@@ -74,7 +74,7 @@ export default function WeatherHome(props) {
           />
         </div>
         <div className="flex w-full flex-col items-center justify-center">
-          <p className=" my-2 self-center rounded-2xl border border-solid border-red-400 p-2 text-2xl">
+          <p className="my-2 self-center rounded-2xl border-4 border-solid border-white p-2 text-2xl">
             Radar
           </p>
           {isRadarRain && radarRain && (
