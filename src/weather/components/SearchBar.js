@@ -51,10 +51,12 @@ export default function SearchBar(props) {
     };
     document.getElementById("search-div").addEventListener("keydown", escPress);
     return () =>
-      document
-        .getElementById("search-div")
-        .removeEventListener("keydown", escPress);
-  });
+      document.getElementById("search-div")
+        ? document
+            .getElementById("search-div")
+            .removeEventListener("keydown", escPress)
+        : null;
+  }, []);
 
   // <p> {Object.keys(searchedcity).map((x, i) => `${searchedcity[x]}, `)}</p>
 

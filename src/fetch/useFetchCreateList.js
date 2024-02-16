@@ -300,22 +300,18 @@ export default function useFetchCreateList(liste, refreshFetch) {
           return Promise.reject(error);
         }
       };
-      let fetchAll = async () => {
-        try {
-          await saveDataNow();
-          await saveDataForecast();
-          await saveDataNextDays();
+      Promise.all([saveDataNow(), saveDataForecast(), saveDataNextDays()])
+        .then(() => {
           setIsFetch(true);
           setIsLoaded(true);
           setIsLoadedForecast(true);
           setisForecasted(true);
           setCanRefresh(true);
-        } catch (e) {
+        })
+        .catch(() => {
           setCanRefresh(true);
           setIsFetch(false);
-        }
-      };
-      fetchAll();
+        });
     }
     return () => {
       setIsFetch(false);
@@ -568,24 +564,20 @@ export default function useFetchCreateList(liste, refreshFetch) {
           }
         }
       };
-      let fetchAll = async () => {
-        try {
-          await saveDataNow();
-          await saveDataForecast();
-          await saveDataNextDays();
+      Promise.all([saveDataNow(), saveDataForecast(), saveDataNextDays()])
+        .then(() => {
           console.log("List recover sucess");
           setIsFetch(true);
           setIsLoaded(true);
           setIsLoadedForecast(true);
           setisForecasted(true);
           setCanRefresh(true);
-        } catch (e) {
+        })
+        .catch((e) => {
           console.log(`List recover fail: ${e}`);
           setCanRefresh(true);
           setIsFetch(false);
-        }
-      };
-      fetchAll();
+        });
     }
     return () => {
       setIsFetch(false);
