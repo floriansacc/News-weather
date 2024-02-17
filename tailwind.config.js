@@ -3,6 +3,7 @@
 module.exports = {
   content: [
     "./src/*.js",
+    "./src/layout/*.js",
     "./src/weather/*.js",
     "./src/weather/components/*.js",
   ],

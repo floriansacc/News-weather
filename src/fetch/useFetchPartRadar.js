@@ -80,7 +80,6 @@ export default function useFetchPartRadar(isLocated, refreshFetch) {
         x = dustCause10.filter(
           (item, index) => dustCause10.indexOf(item) === index,
         );
-        console.log(x);
         setIsRadarDusted(true);
       } catch (e) {
         console.log(e);

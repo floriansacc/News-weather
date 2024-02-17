@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { QueryContext } from "../layout/RootLayout";
 import useFetchLocation from "../fetch/useFetchLocation";
 import useFetchParticle from "../fetch/useFetchParticle";
@@ -9,14 +9,13 @@ import WeatherCitySelector from "./components/WeatherCitySelector";
 import WeatherParticle from "./components/WeatherParticle";
 import { useSpring, useSpringRef } from "react-spring";
 import { IoSearchCircleOutline } from "react-icons/io5";
+import { RiErrorWarningLine } from "react-icons/ri";
 import SearchBar from "./components/SearchBar";
+import { Tooltip } from "react-tooltip";
 
 export default function WeatherLocalisation(props) {
-  const { mouseenter, mouseleave } = props;
-
   const {
     dataimport,
-    activeTab,
     menuOn,
     setMenuOn,
     updateDates,
@@ -44,6 +43,11 @@ export default function WeatherLocalisation(props) {
     no2: "",
     no3: "",
   });
+  const [storageSearch, setStorageSearch] = useState(
+    sessionStorage.getItem("searchedValue")
+      ? sessionStorage.getItem("searchedValue").split(",")
+      : null,
+  );
 
   const {
     weatherInfoNow,
@@ -206,6 +210,8 @@ export default function WeatherLocalisation(props) {
     refreshList();
     setRefreshGeoloc((prev) => prev + 1);
     setIsSearching(false);
+    setStorageSearch(null);
+    sessionStorage.removeItem("searchedValue");
   };
 
   const handleCitySelector = (e) => {
@@ -222,6 +228,14 @@ export default function WeatherLocalisation(props) {
         ),
       );
       setCitySelector([
+        citySelector[0],
+        citySelector[1],
+        e.target.value,
+        coord[0],
+        coord[1],
+        coord[2],
+      ]);
+      sessionStorage.setItem("searchedValue", [
         citySelector[0],
         citySelector[1],
         e.target.value,
@@ -277,15 +291,17 @@ export default function WeatherLocalisation(props) {
           (word) => word.nx === temporary.x && word.ny === temporary.y,
         ),
       );
-      setCitySelector([
-        cityName.Part1,
-        cityName.Part2,
-        cityName.Part3,
-        temporary.x,
-        temporary.y,
-        cityName.stationName,
-      ]);
-      setIsLocated(true);
+      if (!storageSearch) {
+        setCitySelector([
+          cityName.Part1,
+          cityName.Part2,
+          cityName.Part3,
+          temporary.x,
+          temporary.y,
+          cityName.stationName,
+        ]);
+        setIsLocated(true);
+      }
     } catch (e) {
       window.console.log(e);
     }
@@ -299,13 +315,13 @@ export default function WeatherLocalisation(props) {
   };
 
   function bgFunction() {
-    if (!weatherInfoNow[0] || !skyForecast || !isLoaded || !isLoadedForecast) {
+    if (!skyForecast || !isLoadedForecast) {
       if (previousBg) {
         bgSet = previousBg;
         setPreviousBg(bgSet);
         return;
       }
-      bgSet = "bg-yellow-100";
+      bgSet = "bg-perso6";
       setPreviousBg(bgSet);
       return;
     } else {
@@ -359,11 +375,19 @@ export default function WeatherLocalisation(props) {
   }, [skyForecast]);
 
   useEffect(() => {
+    if (storageSearch) {
+      setCitySelector(storageSearch);
+      console.log(storageSearch);
+      setIsLocated(true);
+    }
     navigator.geolocation.getCurrentPosition(succesLocation, errorLocation);
     return () => {
       setIsLocated(false);
       setCitySelector([null, null, null, null, null]);
-      document.getElementById("refresh-button").innerHTML = "Refresh Location";
+      if (document.getElementById("refresh-button")) {
+        document.getElementById("refresh-button").innerHTML =
+          "Refresh Location";
+      }
     };
   }, [refreshGeoloc]);
 
@@ -438,16 +462,31 @@ export default function WeatherLocalisation(props) {
     ]);
     refreshList();
     setRefreshFetch((prev) => prev + 1);
+    sessionStorage.setItem("searchedValue", [
+      searchedCity.no1,
+      searchedCity.no2,
+      searchedCity.no3,
+      coord[0],
+      coord[1],
+      coord[2],
+    ]);
   }, [searchedCity]);
 
   return (
     <div
-      className={`${activeTab === 1 ? "" : "mb-20"} ${
+      className={`${
         isDarkTheme ? "text-light" : "text-dark"
       } z-10 m-0 box-border flex h-full  w-fit min-w-full select-none flex-col flex-nowrap items-center justify-start overflow-hidden duration-500 sm:w-full md:w-full lg:h-fit lg:w-full lg:min-w-0 lg:rounded-2xl`}
       onClick={() => (menuOn ? setMenuOn(false) : null)}
     >
       <div className=" m-1 mb-2 flex items-end justify-end self-end">
+        <RiErrorWarningLine
+          className={`${
+            storageSearch && isLocated ? "" : "hidden"
+          } h-8 w-8 text-red-300`}
+          data-tooltip-id="error-location-tooltip"
+          data-tooltip-content="현재 표시되고 있는 날씨는 사용자 위치의 날씨가 아닙니다"
+        />
         <button
           className={`m-1.5 mb-0 flex h-8 w-fit items-center rounded-full border border-solid border-white/50 p-1.5 ${
             canRefersh
@@ -455,8 +494,6 @@ export default function WeatherLocalisation(props) {
               : "pointer-events-none bg-gradient-to-r from-red-300/75 to-red-700/75"
           }`}
           onClick={handleRefresh}
-          onMouseEnter={mouseenter}
-          onMouseLeave={mouseleave}
           id="refresh-button"
         >
           Refresh location
@@ -490,8 +527,6 @@ export default function WeatherLocalisation(props) {
             setissearching={setIsSearching}
             cityselector={citySelector}
             handlecityselector={handleCitySelector}
-            mouseenter={mouseenter}
-            mouseleave={mouseleave}
           />
         </div>
       </div>
@@ -545,6 +580,7 @@ export default function WeatherLocalisation(props) {
           />
         </>
       )}
+      <Tooltip id="error-location-tooltip" />
     </div>
   );
 }

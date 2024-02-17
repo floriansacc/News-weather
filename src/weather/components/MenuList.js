@@ -205,11 +205,11 @@ export default function MenuList(props) {
             <p className="relative w-fit min-w-25 text-center" key={`p3${i}`}>
               {x.Phase3}
               <span
-                class="absolute -top-2 right-1 h-4 w-4"
+                className="absolute -top-2 right-1 h-4 w-4"
                 onClick={() => handleDeleteElem(i)}
               >
-                <IoCloseCircleOutline class="absolute z-10 inline-flex h-full w-full rounded-full opacity-75 hover:animate-ping hover:bg-sky-500" />
-                <IoCloseCircleOutline class="absolute inline-flex h-4 w-4 rounded-full bg-slate-100" />
+                <IoCloseCircleOutline className="absolute z-10 inline-flex h-full w-full rounded-full opacity-75 hover:animate-ping hover:bg-sky-500" />
+                <IoCloseCircleOutline className="absolute inline-flex h-4 w-4 rounded-full bg-slate-100" />
               </span>
             </p>
           </>

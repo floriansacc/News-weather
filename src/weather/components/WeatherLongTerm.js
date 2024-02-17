@@ -62,17 +62,27 @@ export default function WeatherLongTerm(props) {
       className="m-2 mt-0 flex h-fit w-full flex-wrap self-center rounded-2xl border-2 border-solid border-transparent bg-white bg-opacity-25 p-2"
     >
       {arrayToMap.map((x, i) => (
-        <ul className="mx-1 flex h-fit w-fit min-w-fit flex-col items-center justify-center rounded-2xl bg-white bg-opacity-10">
+        <ul
+          className="mx-1 flex h-fit w-fit min-w-fit flex-col items-center justify-center rounded-2xl bg-white bg-opacity-10"
+          key={`ul${x.Phase3}${i}`}
+        >
           <li
             style={{ color: `${x.color}` }}
             className={`mb-0 self-start px-2 font-bold`}
+            key={`${x.color}${i}`}
           >
             {x.set}
           </li>
-          <div className="flex w-full items-center justify-around p-1">
+          <div
+            className="flex w-full items-center justify-around p-1"
+            key={`div long term ${x.Phase3}${i}`}
+          >
             {x.rain.map((y, j) => (
-              <div className="flex flex-col items-center justify-center">
-                <p>{j === 0 ? "오전" : "오후"}</p>
+              <div
+                className="flex flex-col items-center justify-center"
+                key={`${x.rain}${i}${j}`}
+              >
+                <p key={`${x.set}${j}`}>{j === 0 ? "오전" : "오후"}</p>
                 <img
                   src={
                     images[
@@ -93,10 +103,25 @@ export default function WeatherLongTerm(props) {
               </div>
             ))}
           </div>
-          <div className="rounded-b-2x relative flex w-full items-center justify-center px-2">
-            <li className="text-2xl text-blue-700">{x.lowest.value}</li>
-            <li className="text-2xl text-black">/</li>
-            <li className="text-2xl text-red-700">{x.highest.value}</li>
+          <div
+            className="rounded-b-2x relative flex w-full items-center justify-center px-2"
+            key={`div for lowest ${x.Phase3}${i}`}
+          >
+            <li
+              className="text-2xl text-blue-500"
+              key={`${x.lowest.value}${i}${x.Phase3}`}
+            >
+              {x.lowest.value}
+            </li>
+            <li className="text-2xl text-black" key={`middle${i}${x.Phase3}`}>
+              /
+            </li>
+            <li
+              className="text-2xl text-red-500"
+              key={`${x.highest.value}${i}${x.Phase3}`}
+            >
+              {x.highest.value}
+            </li>
           </div>
         </ul>
       ))}

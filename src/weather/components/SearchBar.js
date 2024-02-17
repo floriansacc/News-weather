@@ -3,7 +3,7 @@ import { QueryContext } from "../../layout/RootLayout";
 import { IoSearchCircleSharp } from "react-icons/io5";
 
 export default function SearchBar(props) {
-  const { issearching, setissearching, searchedcity, setsearchedcity } = props;
+  const { issearching, setissearching, setsearchedcity } = props;
   const { dataimport, isDarkTheme } = useContext(QueryContext);
   const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState(null);
@@ -64,7 +64,7 @@ export default function SearchBar(props) {
     <div
       className={`${
         issearching ? "flex" : "hidden "
-      } absolute top-0 z-50 flex h-fit w-[80%] flex-1 flex-row flex-nowrap items-end justify-end p-2 transition-all scrollbar-default`}
+      } absolute top-0 z-50 flex h-fit w-[80%] flex-1 flex-row flex-nowrap items-end justify-end p-2 text-black transition-all scrollbar-default`}
       id="search-div"
     >
       <input

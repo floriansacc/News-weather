@@ -1,14 +1,12 @@
 import { useContext } from "react";
 import WeatherLocalisation from "./WeatherLocalisation";
-import WeatherCreateMyList from "./WeatherCreateMyList";
 import { QueryContext } from "../layout/RootLayout";
 import useFetchRadar from "../fetch/useFetchRadar";
-import WeatherRadar from "./components/WeatherRadar";
+import WeatherRadarRain from "./components/WeatherRadarRain";
 import useFetchPartRadar from "../fetch/useFetchPartRadar";
-import WeatherRadarDouble from "./components/WeatherRadarDouble";
+import WeatherRadarParticle from "./components/WeatherRadarParticle";
 
 export default function WeatherHome(props) {
-  const { mouseenter, mouseleave, resizew } = props;
   const { menuOn, setMenuOn, isDarkTheme } = useContext(QueryContext);
 
   const { radarRain, setRadarRain, isRadarRain, setIsRadarRain } =
@@ -63,22 +61,19 @@ export default function WeatherHome(props) {
       } flex h-fit w-full flex-col flex-wrap items-start justify-around overflow-hidden sm:w-full sm:flex-col sm:flex-nowrap sm:items-center md:w-full md:flex-col md:flex-nowrap lg:m-2 lg:h-fit`}
       onClick={() => (menuOn ? setMenuOn(false) : null)}
     >
-      <div className="flex w-full flex-col items-start justify-around sm:items-center lg:flex-row">
+      <div className="flex w-full flex-col items-start justify-around sm:items-center md:items-center lg:flex-row">
         <div className="flex w-[93%] flex-col lg:w-[40%]">
           <p className="my-2 self-center rounded-2xl border-4 border-solid border-white p-2 text-2xl">
             Location
           </p>
-          <WeatherLocalisation
-            mouseenter={mouseenter}
-            mouseleave={mouseleave}
-          />
+          <WeatherLocalisation />
         </div>
         <div className="flex w-full flex-col items-center justify-center">
           <p className="my-2 self-center rounded-2xl border-4 border-solid border-white p-2 text-2xl">
             Radar
           </p>
           {isRadarRain && radarRain && (
-            <WeatherRadar
+            <WeatherRadarRain
               radar={radarRain}
               setradar={setRadarRain}
               isradarok={isRadarRain}
@@ -89,7 +84,7 @@ export default function WeatherHome(props) {
             />
           )}
           {isRadarDusted && radarDust10 && radarDust25 && (
-            <WeatherRadarDouble
+            <WeatherRadarParticle
               radar1={radarDust10}
               setradar1={setRadarDust10}
               radar2={radarDust25}

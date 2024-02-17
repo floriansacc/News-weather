@@ -1,24 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { QueryContext } from "../layout/RootLayout";
 
 export default function Navigator(props) {
   const { menu } = props;
-  const { menuOn, setMenuOn, menuListOn, activeTab, setActiveTab } =
-    useContext(QueryContext);
-
-  const tabSelection = (e) => {
-    menu.forEach((x, i) => {
-      if (e.target.innerHTML === menu[i]) {
-        if (activeTab !== i) {
-          setActiveTab(i);
-          setMenuOn(false);
-          sessionStorage.setItem("lastTab", i);
-        }
-      }
-    });
-  };
+  const { menuOn, setMenuOn, menuListOn } = useContext(QueryContext);
 
   return (
     <div className="fixed left-0 top-0 z-50 h-screen w-fit select-none lg:sticky lg:w-[250px] lg:pr-6">
@@ -30,23 +17,27 @@ export default function Navigator(props) {
       />
 
       <div
-        className={`fixed left-0 top-0 z-30 flex h-full w-40 flex-col items-center overflow-hidden bg-opacity-80 bg-perso6 transition-transform duration-150 ease-out ${
+        className={`fixed left-0 top-0 z-30 flex h-full w-40 flex-col items-center overflow-hidden bg-opacity-80 bg-perso1 transition-transform duration-150 ease-out ${
           menuOn ? `shadow-dim` : `sm:-translate-x-48 md:-translate-x-48`
         }`}
       >
         <div className="mt-20 flex w-full flex-col items-start rounded-lg px-2">
           {menu.map((item, i) => (
-            <Link
-              to={`${i === 0 ? "/" : item}`}
-              onClick={tabSelection}
-              className={`relative my-5 w-full rounded-sm p-3 transition-colors duration-75 ease-in  ${
-                activeTab === i
-                  ? "bg-blue-300/50 text-white"
-                  : "hover:bg-white hover:bg-opacity-60"
-              }`}
+            <NavLink
+              key={item}
+              to={`${i === 0 ? "/" : item.toLowerCase()}`}
+              onClick={() => setMenuOn(false)}
+              className={({ isActive }) => {
+                return (
+                  `relative my-5 w-full rounded-sm p-3 transition-colors duration-75 ease-in ` +
+                  (isActive
+                    ? `bg-blue-300/50 text-white`
+                    : `hover:bg-white hover:bg-opacity-60`)
+                );
+              }}
             >
               {item}
-            </Link>
+            </NavLink>
           ))}
         </div>
       </div>

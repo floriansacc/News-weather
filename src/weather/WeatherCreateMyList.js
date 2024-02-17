@@ -8,20 +8,19 @@ import WeatherLongTerm from "./components/WeatherLongTerm";
 import WeatherPrediction24 from "./components/WeatherPrediction24";
 
 export default function WeatherCreateMyList(props) {
-  const { mouseenter, mouseleave, resizew } = props;
   const {
     dataimport,
     menuOn,
     setMenuOn,
     menuListOn,
     setMenuListOn,
-    activeTab,
     lastSessionListe,
     setLastSessionListe,
     toggleTheme,
     isDarkTheme,
     previousBg,
     setPreviousBg,
+    resizeWidth,
   } = useContext(QueryContext);
   const [liste, setListe] = useState([]);
   const [elem, setElem] = useState([]);
@@ -185,7 +184,7 @@ export default function WeatherCreateMyList(props) {
 
   const handleOverallMove = (e) => {
     if (!touchStart || !touchEnd) return;
-    let minDist = e === "touch" ? 50 : resizew / 5;
+    let minDist = e === "touch" ? 50 : resizeWidth / 5;
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > minDist;
     const isRightSwipe = distance < -minDist;
@@ -369,7 +368,7 @@ export default function WeatherCreateMyList(props) {
   }, [listeCounter]);
 
   useEffect(() => {
-    !lastSessionListe && activeTab === 2
+    !lastSessionListe
       ? setMenuListOn(true)
       : setMenuListOn(false);
     document.getElementById("displaydescription").style.background = "#d45950";
@@ -419,8 +418,6 @@ export default function WeatherCreateMyList(props) {
               : "pointer-events-none bg-gradient-to-r from-red-300/75 to-red-700/75"
           }`}
           onClick={handleRefresh}
-          onMouseEnter={mouseenter}
-          onMouseLeave={mouseleave}
           id="refresh-button"
         >
           Refresh fetch
@@ -594,8 +591,6 @@ export default function WeatherCreateMyList(props) {
       )}
       <MenuList
         addtolist={handleAddToList}
-        mouseenter={mouseenter}
-        mouseleave={mouseleave}
         fetchcheck={[isFetch, fetchFail]}
         elem={elem}
         liste={liste}

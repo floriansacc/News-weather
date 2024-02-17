@@ -4,9 +4,9 @@ import { FaPlay } from "react-icons/fa6";
 import { FaPause } from "react-icons/fa6";
 import { MdFullscreen } from "react-icons/md";
 
-export default function WeatherRadar(props) {
+export default function WeatherRadarRain(props) {
   const { radar, setradar, timeTimer, tickDisplay, iddiv } = props;
-  const { baseTime, baseDate } = useContext(QueryContext);
+  const { baseTime, baseDate, menuOn } = useContext(QueryContext);
 
   const [imgSrc, setImgSrc] = useState(0);
   const [widthBar, setWidthBar] = useState(0);
@@ -97,10 +97,15 @@ export default function WeatherRadar(props) {
 
   return (
     <div
-      className="mb-8 flex h-fit w-[90%] items-center justify-center"
+      className={`mb-8 flex h-fit w-[90%] flex-col items-center justify-center ${
+        menuOn ? "pointer-events-none" : ""
+      }`}
       tabIndex={0}
       id={`radar-div${iddiv}`}
     >
+      <p className="my-2 flex w-full items-end justify-center">
+        강수량 레이더영상
+      </p>
       <div
         className={`${
           document.fullscreenElement

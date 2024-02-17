@@ -1,6 +1,5 @@
-import { useState, useContext, useEffect } from "react";
+import { useContext } from "react";
 import { QueryContext } from "../../layout/RootLayout";
-import { IoPlaySkipForwardOutline } from "react-icons/io5";
 import { Tooltip } from "react-tooltip";
 import { animated } from "react-spring";
 
@@ -15,7 +14,7 @@ export default function WeatherNow(props) {
     springanimation,
   } = props;
 
-  const { images, isDarkTheme } = useContext(QueryContext);
+  const { images } = useContext(QueryContext);
 
   function skyNow() {
     const x =

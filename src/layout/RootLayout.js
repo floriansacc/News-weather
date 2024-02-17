@@ -11,16 +11,13 @@ import night from "../images/night logo.png";
 import { useTheme } from "../hook/useTheme";
 
 import Navigator from "../weather/Navigator";
+import { menu } from "../router";
 
 const images = [sunny, "", pCloudy, cloudy, rainy, snowy, night];
-const menu = ["Home", "Location", "My list"];
 
 export const QueryContext = React.createContext();
 
 export default function RootLayout() {
-  const [activeTab, setActiveTab] = useState(
-    parseInt(sessionStorage["lastTab"] ? sessionStorage.getItem("lastTab") : 0),
-  );
   const [menuOn, setMenuOn] = useState(false);
   const [menuListOn, setMenuListOn] = useState(false);
   const [resizeWidth, setResizeWidth] = useState(null);
@@ -177,16 +174,6 @@ export default function RootLayout() {
     }
   };
 
-  const handleButtonEnter = (e) => {
-    e.target.style.cursor = "pointer";
-    e.target.style.filter = "contrast(90%)";
-  };
-
-  const handleButtonLeave = (e) => {
-    e.target.style.cursor = "";
-    e.target.style.filter = "";
-  };
-
   useEffect(() => {
     const handleResize = () => {
       setResizeWidth(window.innerWidth);
@@ -214,8 +201,6 @@ export default function RootLayout() {
     <QueryContext.Provider
       value={{
         dataimport,
-        activeTab,
-        setActiveTab,
         menuOn,
         setMenuOn,
         menuListOn,
@@ -236,13 +221,14 @@ export default function RootLayout() {
         isDarkTheme,
         previousBg,
         setPreviousBg,
+        resizeWidth,
       }}
     >
       <div
-        className={`${previousBg} flex h-fit min-h-screen w-full flex-row items-start justify-start overflow-x-hidden `}
+        className={`${previousBg} flex h-fit min-h-screen w-full flex-row items-start justify-start overflow-x-hidden`}
       >
         <Navigator menu={menu} />
-        <div className="flex w-full flex-col lg:w-[calc(100%-250px)]">
+        <div className="flex w-full flex-col items-end lg:w-[calc(100%-400px)]">
           <Outlet />
           <div
             className={` ${

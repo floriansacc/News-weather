@@ -4,7 +4,7 @@ import { FaPlay } from "react-icons/fa6";
 import { FaPause } from "react-icons/fa6";
 import { MdFullscreen } from "react-icons/md";
 
-export default function WeatherRadarDouble(props) {
+export default function WeatherRadarParticle(props) {
   const {
     radar1,
     setradar1,
@@ -16,7 +16,7 @@ export default function WeatherRadarDouble(props) {
     tickDisplay,
     iddiv,
   } = props;
-  const { baseTime, baseDate } = useContext(QueryContext);
+  const { baseTime, baseDate, menuOn } = useContext(QueryContext);
 
   const [imgSrc, setImgSrc] = useState(0);
   const [widthBar, setWidthBar] = useState(0);
@@ -107,7 +107,9 @@ export default function WeatherRadarDouble(props) {
 
   return (
     <div
-      className="mb-8 flex h-fit w-[90%] items-center justify-center"
+      className={`mb-8 flex h-fit w-[90%] items-center justify-center ${
+        menuOn ? "pointer-events-none" : ""
+      }`}
       tabIndex={0}
       id={`radar-div${iddiv}`}
     >
@@ -126,6 +128,9 @@ export default function WeatherRadarDouble(props) {
         <div className="mb-4 flex h-20 w-full items-end justify-center">
           <p>{cause1[imgSrc]}</p>
         </div>
+        <p className="my-2 flex w-full items-end justify-center">
+          미세먼지 (좌) 및 초미세먼지 (우) 레이더영상
+        </p>
 
         <div className="flex h-full w-full flex-row items-center justify-center gap-2">
           <img
@@ -154,7 +159,7 @@ export default function WeatherRadarDouble(props) {
           {tickDisplay && (
             <datalist id={radar1[0]}>
               {radar1.map((x, i) => (
-                <option value={i} />
+                <option value={i} key={`tick${x.radar1} ${i}`} />
               ))}
             </datalist>
           )}
