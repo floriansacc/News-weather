@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { QueryContext } from "../../App";
+import { QueryContext } from "../../layout/RootLayout";
 import { IoSearchCircleOutline } from "react-icons/io5";
 
 export default function WeatherCitySelector(props) {

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { QueryContext } from "../../App";
+import { QueryContext } from "../../layout/RootLayout";
 import WeatherPredictionNextDays from "./WeatherPredictionNextDays";
 import { animated } from "react-spring";
 

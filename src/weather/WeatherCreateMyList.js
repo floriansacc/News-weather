@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import MenuList from "./components/MenuList";
 import ButtonOpenClose from "./components/ButtonOpenClose";
-import { QueryContext } from "../App";
+import { QueryContext } from "../layout/RootLayout";
 import useFetchCreateList from "../fetch/useFetchCreateList";
 import WeatherNow from "./components/WeatherNow";
 import WeatherLongTerm from "./components/WeatherLongTerm";

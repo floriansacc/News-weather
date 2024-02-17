@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { IoIosAddCircleOutline } from "react-icons/io";
-import { QueryContext } from "../../App";
+import { QueryContext } from "../../layout/RootLayout";
 
 export default function ButtonOpenClose(props) {
   const { foropen } = props;

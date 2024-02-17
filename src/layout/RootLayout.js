@@ -1,25 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { HashRouter as Router, Route, Routes } from "react-router-dom";
-import Navigator from "./weather/Navigator";
-import WeatherHome from "./weather/WeatherHome";
-import WeatherLocalisation from "./weather/WeatherLocalisation";
-import WeatherCreateMyList from "./weather/WeatherCreateMyList";
-import dataimport from "./fetch/dataimport.json";
+import { Outlet } from "react-router-dom";
+import dataimport from "../fetch/dataimport.json";
 
-import sunny from "./images/sunny logo.png";
-import pCloudy from "./images/partial cloudy logo.png";
-import cloudy from "./images/cloudy logo.png";
-import rainy from "./images/rainy logo.png";
-import snowy from "./images/snow logo.png";
-import night from "./images/night logo.png";
-import { useTheme } from "./hook/useTheme";
+import sunny from "../images/sunny logo.png";
+import pCloudy from "../images/partial cloudy logo.png";
+import cloudy from "../images/cloudy logo.png";
+import rainy from "../images/rainy logo.png";
+import snowy from "../images/snow logo.png";
+import night from "../images/night logo.png";
+import { useTheme } from "../hook/useTheme";
 
-const menu = ["Home", "Location", "My list"];
+import Navigator from "../weather/Navigator";
+
 const images = [sunny, "", pCloudy, cloudy, rainy, snowy, night];
+const menu = ["Home", "Location", "My list"];
 
 export const QueryContext = React.createContext();
 
-export default function App() {
+export default function RootLayout() {
   const [activeTab, setActiveTab] = useState(
     parseInt(sessionStorage["lastTab"] ? sessionStorage.getItem("lastTab") : 0),
   );
@@ -213,101 +211,65 @@ export default function App() {
   }, []);
 
   return (
-    <Router>
-      <QueryContext.Provider
-        value={{
-          dataimport,
-          activeTab,
-          setActiveTab,
-          menuOn,
-          setMenuOn,
-          menuListOn,
-          setMenuListOn,
-          lastSessionListe,
-          setLastSessionListe,
-          images,
-          updateDates,
-          baseDate,
-          baseDateFuture,
-          baseTime,
-          baseTimeForecast,
-          baseTimeDust,
-          tomorrowDate,
-          afterTomorrowDate,
-          futureTime,
-          toggleTheme,
-          isDarkTheme,
-          previousBg,
-          setPreviousBg,
-        }}
+    <QueryContext.Provider
+      value={{
+        dataimport,
+        activeTab,
+        setActiveTab,
+        menuOn,
+        setMenuOn,
+        menuListOn,
+        setMenuListOn,
+        lastSessionListe,
+        setLastSessionListe,
+        images,
+        updateDates,
+        baseDate,
+        baseDateFuture,
+        baseTime,
+        baseTimeForecast,
+        baseTimeDust,
+        tomorrowDate,
+        afterTomorrowDate,
+        futureTime,
+        toggleTheme,
+        isDarkTheme,
+        previousBg,
+        setPreviousBg,
+      }}
+    >
+      <div
+        className={`${previousBg} flex h-fit min-h-screen w-full flex-row items-start justify-start overflow-x-hidden `}
       >
-        <div
-          className={`${previousBg} flex h-fit min-h-screen w-full flex-row items-start justify-start overflow-x-hidden `}
-        >
-          <Navigator menu={menu} />
-          <div className="flex w-full flex-col lg:w-[calc(100%-250px)]">
-            <Routes>
-              <Route
-                exact
-                path="/"
-                element={
-                  <WeatherHome
-                    mouseenter={handleButtonEnter}
-                    mouseleave={handleButtonLeave}
-                    resizew={resizeWidth}
-                  />
-                }
-              ></Route>
-              <Route
-                path="/Location"
-                element={
-                  <WeatherLocalisation
-                    mouseenter={handleButtonEnter}
-                    mouseleave={handleButtonLeave}
-                    size="screen"
-                  />
-                }
-              ></Route>
-              <Route
-                path={`/${menu[2]}`}
-                element={
-                  <WeatherCreateMyList
-                    mouseenter={handleButtonEnter}
-                    mouseleave={handleButtonLeave}
-                    resizew={resizeWidth}
-                  />
-                }
-              ></Route>
-            </Routes>
-            <div
-              className={` ${
-                isDarkTheme ? "text-light" : "text-gray-600"
-              } mt-2 flex h-fit w-9/12 flex-col self-end bg-inherit pr-3 text-right`}
-            >
-              <span className="whitespace-pre-line text-xs">
-                데이터는 실시간 관측된 자료이며 측정소 현지 사정이나 예기치 않은
-                문제 등으로 오류가 있을 수 있습니다
+        <Navigator menu={menu} />
+        <div className="flex w-full flex-col lg:w-[calc(100%-250px)]">
+          <Outlet />
+          <div
+            className={` ${
+              isDarkTheme ? "text-light" : "text-gray-600"
+            } mt-2 flex h-fit w-9/12 flex-col self-end bg-inherit pr-3 text-right`}
+          >
+            <span className="whitespace-pre-line text-xs">
+              데이터는 실시간 관측된 자료이며 측정소 현지 사정이나 예기치 않은
+              문제 등으로 오류가 있을 수 있습니다
+            </span>
+            <span className="text-xs"></span>
+            <div className="flex flex-row justify-end">
+              <span className="whitespace-pre text-xs font-bold">
+                데이터 출처:{" "}
               </span>
-              <span className="text-xs"></span>
-              <div className="flex flex-row justify-end">
-                <span className="whitespace-pre text-xs font-bold">
-                  데이터 출처:{" "}
-                </span>
 
-                <div className="flex flex-col items-start justify-end">
-                  <span className="text-xs">
-                    - 단기예보 조회서비스 (기상청)
-                  </span>
-                  <span className="text-xs">
-                    - 레이더영상 조회서비스 (기상청)
-                  </span>
-                  <span className="text-xs">- 대기오염정보 (한국환경공단)</span>
-                </div>
+              <div className="flex flex-col items-start justify-end">
+                <span className="text-xs">- 단기예보 조회서비스 (기상청)</span>
+                <span className="text-xs">
+                  - 레이더영상 조회서비스 (기상청)
+                </span>
+                <span className="text-xs">- 대기오염정보 (한국환경공단)</span>
               </div>
             </div>
           </div>
         </div>
-      </QueryContext.Provider>
-    </Router>
+      </div>
+    </QueryContext.Provider>
   );
 }

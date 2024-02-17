@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { QueryContext } from "../../App";
+import { QueryContext } from "../../layout/RootLayout";
 import { FaPlay } from "react-icons/fa6";
 import { FaPause } from "react-icons/fa6";
 import { MdFullscreen } from "react-icons/md";

@@ -1,5 +1,5 @@
 import { useState, useContext, useEffect } from "react";
-import { QueryContext } from "../../App";
+import { QueryContext } from "../../layout/RootLayout";
 import { Line } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 

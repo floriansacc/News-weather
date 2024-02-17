@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { QueryContext } from "../App";
+import { QueryContext } from "../layout/RootLayout";
 import useFetchLocation from "../fetch/useFetchLocation";
 import useFetchParticle from "../fetch/useFetchParticle";
 import WeatherNow from "./components/WeatherNow";

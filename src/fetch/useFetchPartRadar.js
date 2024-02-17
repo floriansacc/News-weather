@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { QueryContext } from "../App";
+import { QueryContext } from "../layout/RootLayout";
 
 export default function useFetchPartRadar(isLocated, refreshFetch) {
   const { baseTimeDust } = useContext(QueryContext);

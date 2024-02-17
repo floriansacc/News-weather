@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import ButtonOpenClose from "./ButtonOpenClose";
-import { QueryContext } from "../../App";
+import { QueryContext } from "../../layout/RootLayout";
 import { IoCloseCircleOutline } from "react-icons/io5";
 
 export default function MenuList(props) {

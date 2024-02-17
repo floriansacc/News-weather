@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import WeatherLocalisation from "./WeatherLocalisation";
 import WeatherCreateMyList from "./WeatherCreateMyList";
-import { QueryContext } from "../App";
+import { QueryContext } from "../layout/RootLayout";
 import useFetchRadar from "../fetch/useFetchRadar";
 import WeatherRadar from "./components/WeatherRadar";
 import useFetchPartRadar from "../fetch/useFetchPartRadar";
