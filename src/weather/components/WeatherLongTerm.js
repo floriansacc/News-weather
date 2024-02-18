@@ -64,7 +64,7 @@ export default function WeatherLongTerm(props) {
       {arrayToMap.map((x, i) => (
         <ul
           className="mx-1 flex h-fit w-fit min-w-fit flex-col items-center justify-center rounded-2xl bg-white bg-opacity-10"
-          key={`ul${x.Phase3}${i}`}
+          key={`ul${x.sky[i]}${i}`}
         >
           <li
             style={{ color: `${x.color}` }}
@@ -75,12 +75,12 @@ export default function WeatherLongTerm(props) {
           </li>
           <div
             className="flex w-full items-center justify-around p-1"
-            key={`div long term ${x.Phase3}${i}`}
+            key={`div long term ${x.sky[i]}${i}`}
           >
             {x.rain.map((y, j) => (
               <div
                 className="flex flex-col items-center justify-center"
-                key={`${x.rain}${i}${j}`}
+                key={`test${x.rain}${i}${j}`}
               >
                 <p key={`${x.set}${j}`}>{j === 0 ? "오전" : "오후"}</p>
                 <img
@@ -105,20 +105,20 @@ export default function WeatherLongTerm(props) {
           </div>
           <div
             className="rounded-b-2x relative flex w-full items-center justify-center px-2"
-            key={`div for lowest ${x.Phase3}${i}`}
+            key={`div for lowest ${x.sky[i]}${i}`}
           >
             <li
               className="text-2xl text-blue-500"
-              key={`${x.lowest.value}${i}${x.Phase3}`}
+              key={`${x.lowest.value}${i}${x.sky[i]}`}
             >
               {x.lowest.value}
             </li>
-            <li className="text-2xl text-black" key={`middle${i}${x.Phase3}`}>
+            <li className="text-2xl text-black" key={`middle${i}${x.sky[i]}`}>
               /
             </li>
             <li
               className="text-2xl text-red-500"
-              key={`${x.highest.value}${i}${x.Phase3}`}
+              key={`${x.highest.value}${i}${x.sky[i]}`}
             >
               {x.highest.value}
             </li>

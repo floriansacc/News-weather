@@ -315,7 +315,7 @@ export default function WeatherLocalisation(props) {
   };
 
   function bgFunction() {
-    if (!skyForecast || !isLoadedForecast) {
+    if (!skyForecast || !isLoadedForecast || !weatherInfoNow[0]) {
       if (previousBg) {
         bgSet = previousBg;
         setPreviousBg(bgSet);
