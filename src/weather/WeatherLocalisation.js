@@ -321,7 +321,7 @@ export default function WeatherLocalisation(props) {
         setPreviousBg(bgSet);
         return;
       }
-      bgSet = "bg-perso6";
+      bgSet = "bg-perso3";
       setPreviousBg(bgSet);
       return;
     } else {
