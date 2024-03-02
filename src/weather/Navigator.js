@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import { NavLink } from "react-router-dom";
 import { QueryContext } from "../layout/RootLayout";
@@ -10,7 +10,7 @@ export default function Navigator(props) {
   return (
     <div className="fixed left-0 top-0 z-50 h-screen w-fit select-none lg:sticky lg:w-[250px] lg:pr-6">
       <AiOutlineMenu
-        className={`absolute left-7 top-5 z-20 h-10 w-10 rounded-xl border border-solid bg-slate-200 p-2 transition-all duration-150 hover:animate-pulse  hover:bg-slate-300 lg:hidden ${
+        className={`absolute left-7 top-5 z-20 h-10 w-10 rounded-xl border border-solid bg-slate-200 p-2 transition-all duration-150 hover:animate-pulse hover:bg-slate-300 lg:hidden ${
           menuOn ? "-rotate-180" : ""
         } `}
         onClick={!menuListOn ? () => setMenuOn(!menuOn) : null}

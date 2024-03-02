@@ -5,6 +5,7 @@ import useFetchRadar from "../fetch/useFetchRadar";
 import WeatherRadarRain from "./components/WeatherRadarRain";
 import useFetchPartRadar from "../fetch/useFetchPartRadar";
 import WeatherRadarParticle from "./components/WeatherRadarParticle";
+import { LinearTextGradient } from "react-text-gradients-and-animations";
 
 export default function WeatherHome(props) {
   const { menuOn, setMenuOn, isDarkTheme } = useContext(QueryContext);
@@ -24,6 +25,10 @@ export default function WeatherHome(props) {
     dustCause25,
     setDustCause25,
   } = useFetchPartRadar();
+
+  const colorTitles = isDarkTheme
+    ? ["#37d67a", "#0000FF"]
+    : ["#d637c4", "#f8ff00"];
 
   /*
   <div className=" my-10 flex h-fit w-fit flex-col items-center justify-center bg-green-900 px-10 py-10 text-white sm:w-full md:w-full">
@@ -63,15 +68,30 @@ export default function WeatherHome(props) {
     >
       <div className="flex w-full flex-col items-start justify-around sm:items-center md:items-center lg:flex-row">
         <div className="flex w-[93%] flex-col lg:w-[40%]">
-          <p className="my-2 self-center rounded-2xl border-4 border-solid border-white p-2 text-2xl">
+          <LinearTextGradient
+            angle={45}
+            colors={["#974ee7", "#218fff"]}
+            animate={true}
+            animateDirection={"horizontal"}
+            animateDuration={5}
+            className="my-2 self-center p-2 text-4xl font-bold sm:text-2xl"
+          >
             Location
-          </p>
+          </LinearTextGradient>
+
           <WeatherLocalisation />
         </div>
         <div className="flex w-full flex-col items-center justify-center">
-          <p className="my-2 self-center rounded-2xl border-4 border-solid border-white p-2 text-2xl">
+          <LinearTextGradient
+            angle={45}
+            colors={["#974ee7", "#218fff"]}
+            animate={true}
+            animateDirection={"horizontal"}
+            animateDuration={5}
+            className="my-2 self-center p-2 text-4xl font-bold sm:text-2xl"
+          >
             Radar
-          </p>
+          </LinearTextGradient>
           {isRadarRain && radarRain && (
             <WeatherRadarRain
               radar={radarRain}

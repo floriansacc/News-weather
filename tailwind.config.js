@@ -13,6 +13,9 @@ module.exports = {
       md: { min: "600px", max: "1100px" },
       lg: { min: "1100px", max: "3000px" },
     },
+    fontFamily: {
+      sans: ["Noto Sans KR", "Noto Sans"],
+    },
     extend: {
       textColor: {
         light: "#f1f1f1",

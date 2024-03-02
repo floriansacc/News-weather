@@ -20,6 +20,7 @@
     "react-scripts": "^5.0.1",
     "react-slick": "^0.29.0",
     "react-spring": "^9.7.3",
+    "react-text-gradients-and-animations": "^1.1.7",
     "react-tooltip": "^5.25.2",
     "slick-carousel": "^1.8.1",
     "tailwind-scrollbar-hide": "^1.1.7",

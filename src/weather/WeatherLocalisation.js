@@ -372,7 +372,7 @@ export default function WeatherLocalisation(props) {
 
   useEffect(() => {
     bgFunction();
-  }, [skyForecast]);
+  }, [skyForecast, weatherInfoNow]);
 
   useEffect(() => {
     if (storageSearch) {
@@ -561,7 +561,7 @@ export default function WeatherLocalisation(props) {
       )}
       {isLoadedForecast && isForecasted && (
         <>
-          <div className="m-2 mb-0 w-full p-2 pb-6">
+          <div className="m-2 mb-0 w-full py-2 pb-6">
             <WeatherPrediction24
               highestnextdays={highestNextDays}
               tempnextdays={tempNextDays}
